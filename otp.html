@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Tile Depot - OTP</title>
+    <title>Tile Depot - Authenticator</title>
 
     <!-- Bootstrap -->
     <link
@@ -123,6 +123,45 @@
 
         .email {
             font-style: italic;
+        }
+
+        .enroll-panel {
+            margin-top: 18px;
+        }
+
+        .enroll-panel.is-hidden {
+            display: none;
+        }
+
+        .totp-qr {
+            width: 180px;
+            height: 180px;
+            background: #f7f7f7;
+            border: 1px solid #d1d1d1;
+        }
+
+        .totp-secret-label {
+            margin-top: 10px;
+            color: #666666;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .totp-secret {
+            margin-top: 4px;
+            color: #111111;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            word-break: break-all;
+        }
+
+        .authenticator-hint {
+            margin: 12px 18px 0;
+            color: #858585;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.4;
         }
 
 
@@ -395,7 +434,7 @@
             ========================= -->
 
             <h1 class="otp-title">
-                Confirm Your Email
+                Authenticator Code
             </h1>
 
 
@@ -405,18 +444,18 @@
 
             <div class="otp-description">
 
-                Enter the six-digit code sent to your email
+                Enter the six-digit code from Google Authenticator
 
-                <br>
-
-                address
-
-                <span class="email">
-                    (ro****@gmail.com)
-                </span>
+                <span class="email"></span>
 
                 below.
 
+            </div>
+
+            <div id="enrollPanel" class="enroll-panel is-hidden">
+                <img id="totpQr" class="totp-qr" alt="Google Authenticator QR code">
+                <div class="totp-secret-label">Can't scan? Enter this key</div>
+                <div id="totpSecret" class="totp-secret"></div>
             </div>
 
 
@@ -455,16 +494,16 @@
             </button>
 
 
-            <!-- =========================
-                 RESEND CODE
-            ========================= -->
+            <p class="authenticator-hint">
+                Use Google Authenticator. The code refreshes about every 30 seconds.
+            </p>
 
             <a
-                href="#"
+                href="index.html"
                 class="resend"
-                id="resendBtn"
+                id="backToLogin"
             >
-                RESEND CODE
+                BACK TO LOGIN
             </a>
 
 

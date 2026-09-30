@@ -1,96 +1,50 @@
+import QRCode from "https://cdn.jsdelivr.net/npm/qrcode@1.5.3/+esm";
 import { auth } from "./firebase-config.js";
+import {
+    getMultiFactorResolver,
+    multiFactor,
+    onAuthStateChanged,
+    sendEmailVerification,
+    signInWithEmailAndPassword,
+    signOut,
+    TotpMultiFactorGenerator,
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { clearTotpChallenge, getTotpChallenge, TOTP_PASSWORD_KEY } from "./totp-session.js";
 
 const inputs = document.querySelectorAll(".otp-input");
 const status = document.getElementById("verificationStatus");
-const resendBtn = document.getElementById("resendBtn");
-const emailElement = document.querySelector(".email");
-const RESEND_DELAY_MS = 2 * 60 * 1000;
-const COOLDOWN_KEY = "otpResendCooldownUntil";
-let resendCooldownUntil = Number(sessionStorage.getItem(COOLDOWN_KEY)) || 0;
+const titleElement = document.querySelector(".otp-title");
+const descriptionElement = document.querySelector(".otp-description");
+const enrollPanel = document.getElementById("enrollPanel");
+const totpQr = document.getElementById("totpQr");
+const totpSecret = document.getElementById("totpSecret");
+const APP_NAME = "Tile Depot";
+
 let hideStatusTimer = null;
+let totpSecretObject = null;
+let mfaResolver = null;
+let totpHint = null;
+let currentMode = "";
 
-function getTargetEmail() {
-    const savedEmail = sessionStorage.getItem("verificationEmail") || "";
-    const activeEmail = auth?.currentUser?.email || savedEmail;
-    const finalEmail = activeEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(activeEmail.trim()) ? activeEmail.trim() : "";
-
-    if (finalEmail) {
-        sessionStorage.setItem("verificationEmail", finalEmail);
-    } else {
-        sessionStorage.removeItem("verificationEmail");
-    }
-
-    return finalEmail;
+function waitForAuthUser() {
+    return new Promise((resolve) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            unsubscribe();
+            resolve(user);
+        });
+    });
 }
 
-const email = getTargetEmail();
-
-if (email && emailElement) {
-    emailElement.textContent = `(${email})`;
-} else if (emailElement) {
-    emailElement.textContent = "(sign in again)";
-}
-
-function setResendButtonDisabled(isDisabled) {
-    if (!resendBtn) return;
-
-    resendBtn.setAttribute("aria-disabled", String(isDisabled));
-    resendBtn.tabIndex = isDisabled ? -1 : 0;
-    resendBtn.style.pointerEvents = isDisabled ? "none" : "auto";
-    resendBtn.style.opacity = isDisabled ? "0.55" : "1";
-}
-
-function formatCountdown(ms) {
-    const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}:${String(seconds).padStart(2, "0")}`;
+function hasTotpFactor(user) {
+    return multiFactor(user).enrolledFactors.some(
+        (factor) => factor.factorId === TotpMultiFactorGenerator.FACTOR_ID
+    );
 }
 
 function hideStatus() {
     if (!status) return;
     status.className = "message-container";
     status.innerHTML = "";
-}
-
-function updateResendButton() {
-    if (!resendBtn) return;
-
-    const remainingMs = Math.max(0, resendCooldownUntil - Date.now());
-
-    if (remainingMs > 0) {
-        resendBtn.textContent = `RESEND CODE (${formatCountdown(remainingMs)})`;
-        setResendButtonDisabled(true);
-        return;
-    }
-
-    resendBtn.textContent = "RESEND CODE";
-    setResendButtonDisabled(false);
-}
-
-function tickResendCooldown() {
-    updateResendButton();
-
-    if (window.resendTimer) {
-        clearInterval(window.resendTimer);
-    }
-
-    if (resendCooldownUntil <= Date.now()) {
-        return;
-    }
-
-    window.resendTimer = setInterval(() => {
-        updateResendButton();
-        if (Date.now() >= resendCooldownUntil) {
-            clearInterval(window.resendTimer);
-        }
-    }, 250);
-}
-
-function startResendCooldown() {
-    resendCooldownUntil = Date.now() + RESEND_DELAY_MS;
-    sessionStorage.setItem(COOLDOWN_KEY, String(resendCooldownUntil));
-    tickResendCooldown();
 }
 
 function showStatus(message, type) {
@@ -119,52 +73,129 @@ function showStatus(message, type) {
     hideStatusTimer = setTimeout(hideStatus, 5000);
 }
 
-async function sendOtpToEmail(targetEmail = email) {
-    if (!targetEmail) {
-        showStatus("No email found. Please log in again.", "error");
-        return false;
+function setEnrollCopy(email) {
+    if (titleElement) {
+        titleElement.textContent = "Set Up Authenticator";
     }
 
-    const response = await fetch("http://localhost:3000/api/send-otp", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: targetEmail }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-        showStatus(data.message || "Could not resend OTP.", "error");
-        return false;
+    if (descriptionElement) {
+        descriptionElement.innerHTML = `
+            Scan the QR code in Google Authenticator, then enter the six-digit code
+            <span class="email">${email ? `(${email})` : ""}</span>
+            below.
+        `;
     }
 
-    return true;
+    enrollPanel?.classList.remove("is-hidden");
 }
 
-async function verifyOtp(code) {
-    const targetEmail = getTargetEmail();
-
-    if (!targetEmail) {
-        throw new Error("No email found. Please log in again.");
+function setVerifyCopy(email) {
+    if (titleElement) {
+        titleElement.textContent = "Authenticator Code";
     }
 
-    const response = await fetch("http://localhost:3000/api/verify-otp", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: targetEmail, code }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.message || "Invalid OTP.");
+    if (descriptionElement) {
+        descriptionElement.innerHTML = `
+            Enter the six-digit code from Google Authenticator
+            <span class="email">${email ? `(${email})` : ""}</span>
+            below. Codes refresh about every 30 seconds.
+        `;
     }
 
-    return data;
+    enrollPanel?.classList.add("is-hidden");
+}
+
+function mapTotpError(error) {
+    const code = error?.code || "";
+
+    if (code === "auth/invalid-verification-code" || code === "auth/invalid-multi-factor-session") {
+        return "Invalid or expired authenticator code. Try the newest six-digit code.";
+    }
+
+    if (code === "auth/unverified-email") {
+        return "Verify this email address in Firebase Auth before using authenticator codes.";
+    }
+
+    if (code === "auth/operation-not-allowed" || code === "auth/unsupported-first-factor") {
+        return "TOTP MFA is not enabled on smarthub-capstone-4b179. Enable Identity Platform TOTP MFA in Firebase Authentication.";
+    }
+
+    return error?.message || "Could not verify the authenticator code.";
+}
+
+async function startEnrollment(user) {
+    currentMode = "enroll";
+    setEnrollCopy(user.email || "");
+
+    if (!user.emailVerified) {
+        try {
+            await sendEmailVerification(user);
+        } catch (error) {
+            console.warn("Could not send verification email:", error);
+        }
+    }
+
+    const session = await multiFactor(user).getSession();
+    totpSecretObject = await TotpMultiFactorGenerator.generateSecret(session);
+    const totpUri = totpSecretObject.generateQrCodeUrl(user.email || APP_NAME, APP_NAME);
+
+    if (totpQr) {
+        totpQr.src = await QRCode.toDataURL(totpUri, { width: 180, margin: 1 });
+        totpQr.alt = "Google Authenticator QR code";
+    }
+
+    if (totpSecret) {
+        totpSecret.textContent = totpSecretObject.secretKey;
+    }
+}
+
+async function startVerification(email, password) {
+    currentMode = "verify";
+    setVerifyCopy(email);
+
+    try {
+        const credential = await signInWithEmailAndPassword(auth, email, password);
+        if (hasTotpFactor(credential.user)) {
+            clearTotpChallenge();
+            window.location.href = "dashboard.html";
+            return;
+        }
+
+        await startEnrollment(credential.user);
+    } catch (error) {
+        if (error.code !== "auth/multi-factor-auth-required") {
+            throw error;
+        }
+
+        mfaResolver = getMultiFactorResolver(auth, error);
+        totpHint = mfaResolver.hints.find(
+            (hint) => hint.factorId === TotpMultiFactorGenerator.FACTOR_ID
+        );
+
+        if (!totpHint) {
+            throw new Error("This account does not have a Google Authenticator factor yet.");
+        }
+    }
+}
+
+async function verifyAuthenticatorCode(code) {
+    if (currentMode === "enroll") {
+        const user = auth.currentUser;
+        if (!user || !totpSecretObject) {
+            throw new Error("Authenticator setup is not ready. Sign in again.");
+        }
+
+        const assertion = TotpMultiFactorGenerator.assertionForEnrollment(totpSecretObject, code);
+        await multiFactor(user).enroll(assertion, "Google Authenticator");
+        return;
+    }
+
+    if (!mfaResolver || !totpHint) {
+        throw new Error("Authenticator sign-in is not ready. Sign in again.");
+    }
+
+    const assertion = TotpMultiFactorGenerator.assertionForSignIn(totpHint.uid, code);
+    await mfaResolver.resolveSignIn(assertion);
 }
 
 if (inputs.length) {
@@ -182,8 +213,33 @@ if (inputs.length) {
                 inputs[index - 1].focus();
             }
         });
+
+        input.addEventListener("paste", (event) => {
+            const pasted = event.clipboardData?.getData("text") || "";
+            const digits = pasted.replace(/\D/g, "").slice(0, inputs.length);
+
+            if (!digits) {
+                return;
+            }
+
+            event.preventDefault();
+            inputs.forEach((otpInput, otpIndex) => {
+                otpInput.value = digits[otpIndex] || "";
+            });
+            inputs[Math.min(digits.length, inputs.length) - 1].focus();
+        });
     });
 }
+
+document.getElementById("backToLogin")?.addEventListener("click", async (event) => {
+    event.preventDefault();
+    clearTotpChallenge();
+    try {
+        await signOut(auth);
+    } finally {
+        window.location.href = "index.html";
+    }
+});
 
 document.getElementById("verifyBtn")?.addEventListener("click", async () => {
     const code = Array.from(inputs).map((input) => input.value).join("");
@@ -194,54 +250,49 @@ document.getElementById("verifyBtn")?.addEventListener("click", async () => {
     }
 
     try {
-        await verifyOtp(code);
+        await verifyAuthenticatorCode(code);
+        clearTotpChallenge();
         showStatus("Verification successful. Redirecting...", "success");
-        sessionStorage.removeItem("verificationEmail");
-        sessionStorage.removeItem(COOLDOWN_KEY);
         setTimeout(() => {
             window.location.href = "dashboard.html";
         }, 800);
     } catch (error) {
-        showStatus(error.message || "Invalid OTP.", "error");
+        showStatus(mapTotpError(error), "error");
     }
 });
 
-resendBtn?.addEventListener("click", async (event) => {
-    event.preventDefault();
-
-    if (Date.now() < resendCooldownUntil) {
-        updateResendButton();
-        return;
-    }
-
-    const currentEmail = getTargetEmail();
-    if (!currentEmail) {
-        showStatus("No email found. Please log in again.", "error");
-        return;
-    }
-
-    setResendButtonDisabled(true);
-    showStatus("Sending a new code...", "success");
+async function initTotpPage() {
+    const challenge = getTotpChallenge();
+    const user = await waitForAuthUser();
 
     try {
-        const sent = await sendOtpToEmail(currentEmail);
-        if (!sent) {
-            setResendButtonDisabled(false);
+        if (challenge.mode === "verify" && challenge.email && challenge.password) {
+            await startVerification(challenge.email, challenge.password);
+            sessionStorage.removeItem(TOTP_PASSWORD_KEY);
             return;
         }
 
-        showStatus("Email has been re-sent.", "success");
-        startResendCooldown();
-    } catch (error) {
-        setResendButtonDisabled(false);
-        showStatus(error.message || "Could not resend OTP. Please try again.", "error");
-    }
-});
+        if (user && !hasTotpFactor(user)) {
+            await startEnrollment(user);
+            return;
+        }
 
-if (resendCooldownUntil > Date.now()) {
-    tickResendCooldown();
-} else if (!sessionStorage.getItem(COOLDOWN_KEY) && email) {
-    startResendCooldown();
-} else {
-    updateResendButton();
+        if (user && hasTotpFactor(user)) {
+            clearTotpChallenge();
+            window.location.href = "dashboard.html";
+            return;
+        }
+
+        window.location.href = "index.html";
+    } catch (error) {
+        showStatus(mapTotpError(error), "error");
+        if (error.code === "auth/invalid-credential") {
+            clearTotpChallenge();
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 1600);
+        }
+    }
 }
+
+initTotpPage();
