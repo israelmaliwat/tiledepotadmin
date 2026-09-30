@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sales - Tile Depot Inventory</title>
+
+    <!-- Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        /* =========================================
+           GENERAL
+        ========================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #f1f2f5;
+            color: #111;
+            overflow-x: auto;
+        }
+
+
+        /* =========================================
+           SIDEBAR
+        ========================================= */
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #292929;
+
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            width: 250px;
+            height: 78px;
+
+            background: #1800ad;
+
+            display: flex;
+            align-items: center;
+
+            padding-left: 27px;
+        }
+
+        .sidebar-header h1 {
+            color: white;
+
+            font-size: 18px;
+            font-weight: 700;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================================
+           SIDEBAR MENU
+        ========================================= */
+
+        .sidebar-menu {
+            padding-top: 27px;
+        }
+
+        .sidebar-menu a {
+            height: 53px;
+
+            display: flex;
+            align-items: center;
+
+            padding-left: 18px;
+
+            color: #999999;
+
+            text-decoration: none;
+
+            font-size: 17px;
+            font-weight: 700;
+
+            transition: 0.2s;
+        }
+
+        .sidebar-menu a:hover {
+            background: #333333;
+            color: white;
+        }
+
+        .sidebar-menu a.active {
+            color: white;
+        }
+
+        .sidebar-menu i {
+            width: 33px;
+
+            margin-right: 14px;
+
+            text-align: center;
+
+            font-size: 25px;
+        }
+
+
+        /* =========================================
+           LOGOUT
+        ========================================= */
+
+        .logout-button {
+            position: absolute;
+
+            left: 91px;
+            bottom: 105px;
+
+            width: 38px;
+            height: 42px;
+
+            border: none;
+            border-radius: 4px;
+
+            background: #999999;
+            color: #292929;
+
+            font-size: 22px;
+
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background: #bbbbbb;
+        }
+
+
+        /* =========================================
+           TOPBAR
+        ========================================= */
+
+        .topbar {
+            position: fixed;
+
+            top: 0;
+            left: 250px;
+            right: 0;
+
+            height: 78px;
+
+            background: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 25px 0 20px;
+
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+
+            z-index: 900;
+        }
+
+        .date {
+            color: #999999;
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           PROFILE
+        ========================================= */
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-circle {
+            width: 42px;
+            height: 42px;
+
+            border: 4px solid #1800ad;
+
+            border-radius: 50%;
+
+            color: #1800ad;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+        .profile-name {
+            width: 175px;
+            height: 23px;
+
+            border-radius: 15px;
+
+            background: #1800ad;
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+
+        /* =========================================
+           MAIN
+        ========================================= */
+
+        .main {
+            margin-left: 250px;
+
+            padding-top: 78px;
+
+            min-height: 100vh;
+
+            background: #f1f2f5;
+        }
+
+
+        /* =========================================
+           SALES CONTENT
+        ========================================= */
+
+        .sales-content {
+            width: calc(100% - 76px);
+
+            margin-left: 38px;
+            margin-right: 38px;
+
+            padding-top: 18px;
+            padding-bottom: 60px;
+        }
+
+
+        /* =========================================
+           SALES TITLE
+        ========================================= */
+
+        .sales-title {
+            width: 100%;
+
+            height: 34px;
+
+            display: flex;
+            align-items: flex-start;
+
+            border-bottom: 3px solid #1800ad;
+
+            margin-bottom: 22px;
+        }
+
+        .sales-title h1 {
+            font-size: 25px;
+            font-weight: 700;
+
+            line-height: 28px;
+        }
+
+
+        /* =========================================
+           TOP CHARTS
+        ========================================= */
+
+        .top-charts {
+            width: 100%;
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 22px;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* =========================================
+           CHART CONTAINER
+        ========================================= */
+
+        .chart-card {
+            background: white;
+
+            border: 1px solid #dddddd;
+
+            box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .chart-card-title {
+            height: 34px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 12px;
+
+            border-bottom: 1px solid #1800ad;
+
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .chart-area {
+            height: 235px;
+
+            padding: 12px 15px 10px 15px;
+        }
+
+
+        /* =========================================
+           BAR CHART
+        ========================================= */
+
+        .bar-chart-wrapper {
+            width: 100%;
+            height: 100%;
+        }
+
+        #bestSellingChart {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+
+        /* =========================================
+           CATEGORY CHART
+        ========================================= */
+
+        .category-chart-wrapper {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            position: relative;
+        }
+
+        #categoryChart {
+            max-width: 205px !important;
+            max-height: 205px !important;
+        }
+
+
+        /* =========================================
+           POPULAR PRODUCT LINES
+        ========================================= */
+
+        .popular-card {
+            width: 100%;
+
+            background: white;
+
+            border: 1px solid #dddddd;
+
+            box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.15);
+
+            margin-bottom: 24px;
+        }
+
+        .popular-title {
+            height: 34px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 24px;
+
+            border-bottom: 1px solid #1800ad;
+
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .popular-chart {
+            height: 270px;
+
+            padding: 14px 25px 20px 25px;
+        }
+
+        #popularChart {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+
+        /* =========================================
+           CURRENT DAY SALES
+        ========================================= */
+
+        .current-sales {
+            width: 100%;
+
+            background: white;
+
+            margin-left: -38px;
+
+            width: calc(100% + 76px);
+
+            box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.15);
+
+            margin-top: 0;
+        }
+
+
+        /* =========================================
+           CURRENT SALES HEADER
+        ========================================= */
+
+        .current-sales-header {
+            height: 75px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 22px;
+
+            border-bottom: 1px solid #cccccc;
+
+            gap: 12px;
+        }
+
+        .sales-date-icon {
+            width: 32px;
+            height: 32px;
+
+            border: 3px solid #1800ad;
+
+            border-radius: 50%;
+
+            color: #1800ad;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            flex-shrink: 0;
+        }
+
+        .current-sales-title {
+            font-size: 11px;
+            font-weight: 700;
+
+            white-space: nowrap;
+        }
+
+        .current-sales-time {
+            color: #999999;
+
+            font-size: 12px;
+
+            white-space: nowrap;
+        }
+
+        .sales-filter-controls {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sales-period-select,
+        .sales-date-input {
+            height: 30px;
+            border: 1px solid #d5d5d5;
+            border-radius: 12px;
+            background: white;
+            color: #111;
+            font-family: "Poppins", sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 0 10px;
+        }
+
+        .sales-period-select {
+            min-width: 105px;
+        }
+
+        .sales-date-input {
+            width: 126px;
+        }
+
+
+        /* =========================================
+           SALES DATE BUTTON
+        ========================================= */
+
+        .sales-date-button {
+            width: 120px;
+            height: 30px;
+
+            border: none;
+            border-radius: 15px;
+
+            background: #1800ad;
+
+            color: white;
+
+            font-family: "Poppins", sans-serif;
+
+            font-size: 9px;
+            font-weight: 600;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 7px;
+
+            cursor: pointer;
+        }
+
+        .sales-date-button i {
+            font-size: 12px;
+        }
+
+
+        /* =========================================
+           SALES TABLE
+        ========================================= */
+
+        .sales-table-container {
+            width: 100%;
+
+            background: white;
+
+            overflow-x: auto;
+        }
+
+        .sales-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            table-layout: fixed;
+        }
+
+        .sales-table th {
+            height: 40px;
+
+            background: #f7f7f7;
+
+            border-right: 1px solid #999999;
+            border-bottom: 1px solid #999999;
+
+            text-align: center;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            padding: 0 5px;
+        }
+
+        .sales-table td {
+            height: 32px;
+
+            border-right: 1px solid #999999;
+            border-bottom: 1px solid #999999;
+
+            text-align: center;
+
+            font-size: 10px;
+            font-weight: 400;
+
+            padding: 0 5px;
+        }
+
+        .sales-table th:last-child,
+        .sales-table td:last-child {
+            border-right: none;
+        }
+
+
+        /* COLUMN WIDTHS */
+
+        .sales-table th:nth-child(1),
+        .sales-table td:nth-child(1) {
+            width: 10%;
+        }
+
+        .sales-table th:nth-child(2),
+        .sales-table td:nth-child(2) {
+            width: 4%;
+        }
+
+        .sales-table th:nth-child(3),
+        .sales-table td:nth-child(3) {
+            width: 15%;
+        }
+
+        .sales-table th:nth-child(4),
+        .sales-table td:nth-child(4) {
+            width: 15%;
+        }
+
+        .sales-table th:nth-child(5),
+        .sales-table td:nth-child(5) {
+            width: 13%;
+        }
+
+        .sales-table th:nth-child(6),
+        .sales-table td:nth-child(6) {
+            width: 13%;
+        }
+
+        .sales-table th:nth-child(7),
+        .sales-table td:nth-child(7) {
+            width: 15%;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 1100px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .sidebar-header {
+                width: 220px;
+            }
+
+            .topbar {
+                left: 220px;
+            }
+
+            .main {
+                margin-left: 220px;
+            }
+
+            .sales-content {
+                width: calc(100% - 50px);
+
+                margin-left: 25px;
+                margin-right: 25px;
+            }
+
+            .current-sales {
+                margin-left: -25px;
+                width: calc(100% + 50px);
+            }
+
+            .top-charts {
+                gap: 15px;
+            }
+
+        }
+
+
+        @media (max-width: 850px) {
+
+            .top-charts {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-area {
+                height: 250px;
+            }
+
+            .popular-chart {
+                height: 250px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================= -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+
+            <h1>
+                TILE DEPOT INVENTORY
+            </h1>
+
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <a href="dashboard.html">
+
+                <i class="fa-solid fa-house"></i>
+
+                <span>
+                    DASHBOARD
+                </span>
+
+            </a>
+
+
+            <a href="user-management.html">
+
+                <i class="fa-solid fa-user"></i>
+
+                <span>
+                    USER MANAGEMENT
+                </span>
+
+            </a>
+
+
+            <a href="deliveries.html">
+
+                <i class="fa-solid fa-truck"></i>
+
+                <span>
+                    DELIVERIES
+                </span>
+
+            </a>
+
+
+            <a href="products.html">
+
+                <i class="fa-solid fa-box"></i>
+
+                <span>
+                    PRODUCTS
+                </span>
+
+            </a>
+
+
+            <a
+                href="sales.html"
+                class="active"
+            >
+
+                <i class="fa-solid fa-peso-sign"></i>
+
+                <span>
+                    SALES
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <button
+            class="logout-button"
+            onclick="logout()"
+        >
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+        </button>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         TOPBAR
+    ========================================= -->
+
+    <header class="topbar">
+
+        <div class="date">
+
+            May 8, 2026, 08:51 PM
+
+        </div>
+
+
+        <div class="profile">
+
+            <div class="profile-circle">
+
+                <i class="fa-regular fa-user"></i>
+
+            </div>
+
+
+            <div class="profile-name">
+
+                MALIWAT, ISRAEL ANDY
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================
+         MAIN
+    ========================================= -->
+
+    <main class="main">
+
+
+        <div class="sales-content">
+
+
+            <!-- =========================================
+                 SALES TITLE
+            ========================================= -->
+
+            <div class="sales-title">
+
+                <h1>
+                    SALES
+                </h1>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 TOP CHARTS
+            ========================================= -->
+
+            <div class="top-charts">
+
+
+                <!-- BEST SELLING -->
+
+                <div class="chart-card">
+
+                    <div class="chart-card-title">
+
+                        BEST SELLING TILES SIZES
+
+                    </div>
+
+
+                    <div class="chart-area">
+
+                        <div class="bar-chart-wrapper">
+
+                            <canvas id="bestSellingChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CATEGORY SPLIT -->
+
+                <div class="chart-card">
+
+                    <div class="chart-card-title">
+
+                        PRODUCT CATEGORY SPLIT
+
+                        <button
+                            class="sales-date-button"
+                            style="
+                                width: 86px;
+                                height: 22px;
+                                margin-left: auto;
+                                border-radius: 12px;
+                                font-size: 8px;
+                            "
+                        >
+
+                            <i class="fa-solid fa-calendar-days"></i>
+
+                            MAY
+
+                            <i class="fa-solid fa-caret-down"></i>
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="chart-area">
+
+                        <div class="category-chart-wrapper">
+
+                            <canvas id="categoryChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =========================================
+                 POPULAR PRODUCT LINES
+            ========================================= -->
+
+            <div class="popular-card">
+
+
+                <div class="popular-title">
+
+                    POPULAR PRODUCT LINES
+
+                </div>
+
+
+                <div class="popular-chart">
+
+                    <canvas id="popularChart"></canvas>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =========================================
+                 CURRENT DAY SALES
+            ========================================= -->
+
+            <section class="current-sales">
+
+
+                <div class="current-sales-header">
+
+
+                    <div class="sales-date-icon" id="salesCountBadge">
+
+                        0
+
+                    </div>
+
+
+                    <div class="current-sales-title" id="salesTitle">
+
+                        CURRENT DAY SALES
+
+                    </div>
+
+
+                    <div class="current-sales-time" id="salesTimeRange">
+
+                        May 8, 2026, 08:00 AM – 08:51 PM
+
+                    </div>
+
+                    <div class="sales-filter-controls">
+                        <select class="sales-period-select" id="salesPeriodSelect">
+                            <option value="day">Current Day</option>
+                            <option value="last30">Last 30 Days</option>
+                        </select>
+
+                        <input class="sales-date-input" type="date" id="salesDatePicker" value="">
+
+                        <button class="sales-date-button" id="salesDateButton" type="button">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <span id="salesDateButtonText">MAY 8, 2026</span>
+                        </button>
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- =========================================
+                     TABLE
+                ========================================= -->
+
+                <div class="sales-table-container">
+
+                    <table class="sales-table">
+
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    TIMESTAMP
+                                </th>
+
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    PRODUCT NAME
+                                </th>
+
+                                <th>
+                                    CATEGORIES
+                                </th>
+
+                                <th>
+                                    QUANTITY SOLD
+                                </th>
+
+                                <th>
+                                    TOTAL
+                                </th>
+
+                                <th>
+                                    DATE
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="salesTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+
+            </section>
+
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================= -->
+
+    <script>
+
+        const salesData = [
+            { timestamp: "8:20 AM", number: 1, product: "BRICK-X", category: "TERRACOTTA", quantity: 30, total: 1200, date: "2026-09-26" },
+            { timestamp: "8:41 AM", number: 2, product: "LUXURY WHITE", category: "PORCELAIN", quantity: 5, total: 250, date: "2026-09-24" },
+            { timestamp: "10:39 AM", number: 3, product: "LUXURY WHITE", category: "PORCELAIN", quantity: 10, total: 500, date: "2026-09-20" },
+            { timestamp: "12:45 PM", number: 4, product: "WOODEN-NARA", category: "CERAMIC", quantity: 25, total: 750, date: "2026-09-18" },
+            { timestamp: "1:03 PM", number: 5, product: "WOODEN-BROWN", category: "CERAMIC", quantity: 48, total: 1440, date: "2026-09-16" },
+            { timestamp: "1:40 PM", number: 6, product: "BEIGE-MARBLE", category: "PORCELAIN", quantity: 30, total: 1500, date: "2026-09-12" },
+            { timestamp: "2:09 PM", number: 7, product: "WOODEN-LIGHT", category: "CERAMIC", quantity: 40, total: 1200, date: "2026-09-10" },
+            { timestamp: "3:30 PM", number: 8, product: "LUXURY BLACK", category: "PORCELAIN", quantity: 25, total: 1250, date: "2026-09-08" },
+            { timestamp: "9:15 AM", number: 9, product: "SANDSTONE", category: "CEMENT", quantity: 18, total: 900, date: "2026-09-22" },
+            { timestamp: "11:05 AM", number: 10, product: "MARBLE-ASH", category: "PORCELAIN", quantity: 12, total: 640, date: "2026-09-15" },
+            { timestamp: "4:25 PM", number: 11, product: "LUXURY BLACK", category: "PORCELAIN", quantity: 20, total: 1000, date: "2026-09-26" },
+            { timestamp: "7:10 AM", number: 12, product: "WOODEN-DARK", category: "CERAMIC", quantity: 22, total: 660, date: "2026-09-28" },
+            { timestamp: "10:20 AM", number: 13, product: "CHARCOAL", category: "PAVING BLOCKS", quantity: 14, total: 840, date: "2026-09-27" },
+            { timestamp: "12:10 PM", number: 14, product: "BROWN-EDGE", category: "VITRIFIED", quantity: 16, total: 1120, date: "2026-09-21" }
+        ];
+
+        const salesState = {
+            mode: "day",
+            selectedDate: new Date().toISOString().slice(0, 10)
+        };
+
+        function formatLongDate(dateString) {
+            const date = new Date(dateString + "T00:00:00");
+            return new Intl.DateTimeFormat("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric"
+            }).format(date).toUpperCase();
+        }
+
+        function formatShortDate(dateString) {
+            const date = new Date(dateString + "T00:00:00");
+            return new Intl.DateTimeFormat("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric"
+            }).format(date);
+        }
+
+        function getSalesRows() {
+            const selectedDate = new Date(salesState.selectedDate + "T00:00:00");
+            const rows = salesData.filter((row) => {
+                const rowDate = new Date(row.date + "T00:00:00");
+                if (salesState.mode === "day") {
+                    return row.date === salesState.selectedDate;
+                }
+
+                const start = new Date(selectedDate);
+                start.setDate(start.getDate() - 29);
+                return rowDate >= start && rowDate <= selectedDate;
+            });
+
+            return rows.sort((a, b) => new Date(b.date + "T00:00:00") - new Date(a.date + "T00:00:00"));
+        }
+
+        function renderSalesTable() {
+            const tbody = document.getElementById("salesTableBody");
+            const rows = getSalesRows();
+            const selectedDate = new Date(salesState.selectedDate + "T00:00:00");
+            const endDate = selectedDate;
+            const startDate = new Date(selectedDate);
+            startDate.setDate(startDate.getDate() - 29);
+
+            document.getElementById("salesDatePicker").value = salesState.selectedDate;
+            document.getElementById("salesPeriodSelect").value = salesState.mode;
+
+            if (salesState.mode === "day") {
+                document.getElementById("salesTitle").textContent = "CURRENT DAY SALES";
+                document.getElementById("salesTimeRange").textContent = formatShortDate(salesState.selectedDate) + " (Selected Day)";
+                document.getElementById("salesDateButtonText").textContent = formatLongDate(salesState.selectedDate);
+            } else {
+                document.getElementById("salesTitle").textContent = "LAST 30 DAYS SALES";
+                document.getElementById("salesTimeRange").textContent = `${formatShortDate(startDate.toISOString().slice(0, 10))} – ${formatShortDate(endDate.toISOString().slice(0, 10))}`;
+                document.getElementById("salesDateButtonText").textContent = "LAST 30 DAYS";
+            }
+
+            document.getElementById("salesCountBadge").textContent = rows.length;
+
+            tbody.innerHTML = "";
+
+            if (!rows.length) {
+                tbody.innerHTML = '<tr><td colspan="7" style="padding: 18px; text-align: center; color: #666;">No sales found for this period.</td></tr>';
+                return;
+            }
+
+            rows.forEach((row) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${row.timestamp}</td>
+                    <td>${row.number}</td>
+                    <td>${row.product}</td>
+                    <td>${row.category}</td>
+                    <td>${row.quantity}X</td>
+                    <td>${Number(row.total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td>${row.date}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.getElementById("salesPeriodSelect").addEventListener("change", function () {
+            salesState.mode = this.value;
+            renderSalesTable();
+        });
+
+        document.getElementById("salesDatePicker").addEventListener("change", function () {
+            salesState.selectedDate = this.value || new Date().toISOString().slice(0, 10);
+            renderSalesTable();
+        });
+
+        document.getElementById("salesDateButton").addEventListener("click", function () {
+            document.getElementById("salesDatePicker").showPicker?.();
+            document.getElementById("salesDatePicker").focus();
+        });
+
+        renderSalesTable();
+
+
+        /* =========================================
+           BEST SELLING TILE SIZES
+        ========================================= */
+
+        const bestSellingCtx =
+            document.getElementById(
+                "bestSellingChart"
+            );
+
+
+        new Chart(
+            bestSellingCtx,
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: [
+                        "60x60 cm",
+                        "30x60 cm",
+                        "120x120 cm",
+                        "50x80 cm",
+                        "10x60 cm",
+                        "20x40 cm"
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            label: "Sales",
+
+                            data: [
+                                700,
+                                560,
+                                545,
+                                430,
+                                300,
+                                210
+                            ],
+
+                            backgroundColor: "#1800ad",
+
+                            borderWidth: 0
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    indexAxis: "y",
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+
+                            beginAtZero: true,
+
+                            max: 850,
+
+                            ticks: {
+
+                                font: {
+                                    family: "Poppins",
+                                    size: 9
+                                }
+
+                            },
+
+                            grid: {
+                                color: "#bbbbbb"
+                            }
+
+                        },
+
+                        y: {
+
+                            ticks: {
+
+                                font: {
+                                    family: "Poppins",
+                                    size: 9
+                                }
+
+                            },
+
+                            grid: {
+                                display: false
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+
+        /* =========================================
+           PRODUCT CATEGORY SPLIT
+        ========================================= */
+
+        const categoryCtx =
+            document.getElementById(
+                "categoryChart"
+            );
+
+
+        new Chart(
+            categoryCtx,
+            {
+
+                type: "doughnut",
+
+                data: {
+
+                    labels: [
+
+                        "Porcelain Tiles",
+                        "Vitrified Tiles",
+                        "Cement Tiles",
+                        "Paving Blocks",
+                        "Paving Tiles",
+                        "Ceramic Tiles"
+
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            data: [
+                                40,
+                                1,
+                                2,
+                                4,
+                                25,
+                                28
+                            ],
+
+                            backgroundColor: [
+
+                                "#1800ad",
+                                "#666666",
+                                "#999999",
+                                "#b6afff",
+                                "#8176ff",
+                                "#5548ff"
+
+                            ],
+
+                            borderWidth: 0
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    cutout: "55%",
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+
+        /* =========================================
+           POPULAR PRODUCT LINES
+        ========================================= */
+
+        const popularCtx =
+            document.getElementById(
+                "popularChart"
+            );
+
+
+        new Chart(
+            popularCtx,
+            {
+
+                type: "scatter",
+
+                data: {
+
+                    datasets: [
+
+                        {
+
+                            label: "Wooden Style Dark",
+
+                            data: [
+                                {
+                                    x: 35,
+                                    y: 420
+                                }
+                            ],
+
+                            pointRadius: 10,
+
+                            pointBackgroundColor:
+                                "transparent",
+
+                            pointBorderColor:
+                                "white",
+
+                            pointBorderWidth: 2
+
+                        },
+
+
+                        {
+
+                            label: "Wooden Style Light",
+
+                            data: [
+                                {
+                                    x: 38,
+                                    y: 385
+                                }
+                            ],
+
+                            pointRadius: 9,
+
+                            pointBackgroundColor:
+                                "transparent",
+
+                            pointBorderColor:
+                                "white",
+
+                            pointBorderWidth: 2
+
+                        },
+
+
+                        {
+
+                            label: "Wooden Style Brown",
+
+                            data: [
+                                {
+                                    x: 57,
+                                    y: 450
+                                }
+                            ],
+
+                            pointRadius: 9,
+
+                            pointBackgroundColor:
+                                "transparent",
+
+                            pointBorderColor:
+                                "white",
+
+                            pointBorderWidth: 2
+
+                        },
+
+
+                        {
+
+                            label: "Luxury White",
+
+                            data: [
+                                {
+                                    x: 88,
+                                    y: 405
+                                }
+                            ],
+
+                            pointRadius: 20,
+
+                            pointBackgroundColor:
+                                "transparent",
+
+                            pointBorderColor:
+                                "white",
+
+                            pointBorderWidth: 2
+
+                        },
+
+
+                        {
+
+                            label: "Luxury Black",
+
+                            data: [
+                                {
+                                    x: 108,
+                                    y: 355
+                                }
+                            ],
+
+                            pointRadius: 19,
+
+                            pointBackgroundColor:
+                                "transparent",
+
+                            pointBorderColor:
+                                "white",
+
+                            pointBorderWidth: 2
+
+                        },
+
+
+                        {
+
+                            label: "Wooden Style White",
+
+                            data: [
+                                {
+                                    x: 124,
+                                    y: 440
+                                }
+                            ],
+
+                            pointRadius: 13,
+
+                            pointBackgroundColor:
+                                "transparent",
+
+                            pointBorderColor:
+                                "white",
+
+                            pointBorderWidth: 2
+
+                        },
+
+
+                        {
+
+                            label: "Ash Gray Marble",
+
+                            data: [
+                                {
+                                    x: 123,
+                                    y: 370
+                                }
+                            ],
+
+                            pointRadius: 12,
+
+                            pointBackgroundColor:
+                                "transparent",
+
+                            pointBorderColor:
+                                "white",
+
+                            pointBorderWidth: 2
+
+                        },
+
+
+                        {
+
+                            label: "Brick Style",
+
+                            data: [
+                                {
+                                    x: 80,
+                                    y: 100
+                                }
+                            ],
+
+                            pointRadius: 9,
+
+                            pointBackgroundColor:
+                                "transparent",
+
+                            pointBorderColor:
+                                "white",
+
+                            pointBorderWidth: 2
+
+                        },
+
+
+                        {
+
+                            label: "Red Marble",
+
+                            data: [
+                                {
+                                    x: 122,
+                                    y: 160
+                                }
+                            ],
+
+                            pointRadius: 7,
+
+                            pointBackgroundColor:
+                                "transparent",
+
+                            pointBorderColor:
+                                "white",
+
+                            pointBorderWidth: 2
+
+                        },
+
+
+                        {
+
+                            label: "Cement Alloy",
+
+                            data: [
+                                {
+                                    x: 132,
+                                    y: 110
+                                }
+                            ],
+
+                            pointRadius: 12,
+
+                            pointBackgroundColor:
+                                "transparent",
+
+                            pointBorderColor:
+                                "white",
+
+                            pointBorderWidth: 2
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        },
+
+                        tooltip: {
+                            enabled: true
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+
+                            min: 0,
+
+                            max: 160,
+
+                            title: {
+
+                                display: true,
+
+                                text:
+                                    "INVENTORY AGE (DAYS ON HAND)",
+
+                                font: {
+
+                                    family:
+                                        "Poppins",
+
+                                    size: 9
+
+                                }
+
+                            },
+
+                            ticks: {
+
+                                stepSize: 10,
+
+                                font: {
+
+                                    family:
+                                        "Poppins",
+
+                                    size: 8
+
+                                }
+
+                            },
+
+                            grid: {
+
+                                color:
+                                    "rgba(80,80,80,0.3)"
+
+                            }
+
+                        },
+
+                        y: {
+
+                            min: 0,
+
+                            max: 500,
+
+                            title: {
+
+                                display: true,
+
+                                text:
+                                    "MONTHLY SALES VOLUME (UNITS)",
+
+                                font: {
+
+                                    family:
+                                        "Poppins",
+
+                                    size: 9
+
+                                }
+
+                            },
+
+                            ticks: {
+
+                                stepSize: 100,
+
+                                font: {
+
+                                    family:
+                                        "Poppins",
+
+                                    size: 8
+
+                                }
+
+                            },
+
+                            grid: {
+
+                                color:
+                                    "rgba(80,80,80,0.3)"
+
+                            }
+
+                        }
+
+                    },
+
+                    animation: false
+
+                }
+
+            }
+        );
+
+
+
+        /* =========================================
+           LOGOUT
+        ========================================= */
+
+        function logout() {
+
+            window.location.href =
+                "index.html";
+
+        }
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tile Depot Inventory</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #f1f2f5;
+    overflow-x: auto;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    background: #292929;
+
+    z-index: 1000;
+}
+
+.sidebar-header {
+    width: 250px;
+    height: 78px;
+
+    background: #1800ad;
+
+    display: flex;
+    align-items: center;
+
+    padding-left: 27px;
+}
+
+.sidebar-header h1 {
+    color: white;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SIDEBAR MENU
+========================================================= */
+
+.sidebar-menu {
+    padding-top: 27px;
+}
+
+.sidebar-menu a {
+    height: 53px;
+
+    display: flex;
+    align-items: center;
+
+    padding-left: 18px;
+
+    color: #999999;
+
+    text-decoration: none;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.sidebar-menu a:hover {
+    background: #333333;
+    color: white;
+}
+
+.sidebar-menu i {
+    width: 33px;
+
+    margin-right: 14px;
+
+    text-align: center;
+
+    font-size: 25px;
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+.logout-button {
+    position: absolute;
+
+    left: 91px;
+    bottom: 105px;
+
+    width: 38px;
+    height: 42px;
+
+    border: none;
+    border-radius: 4px;
+
+    background: #999999;
+
+    color: #292929;
+
+    font-size: 22px;
+
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background: #bbbbbb;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topbar {
+    position: fixed;
+
+    top: 0;
+    left: 250px;
+    right: 0;
+
+    height: 78px;
+
+    background: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 25px 0 20px;
+
+    box-shadow: 0 2px 4px rgba(0,0,0,.25);
+
+    z-index: 900;
+}
+
+.date {
+    color: #999999;
+
+    font-size: 14px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.profile-circle {
+    width: 42px;
+    height: 42px;
+
+    border: 4px solid #1800ad;
+
+    border-radius: 50%;
+
+    color: #1800ad;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 22px;
+}
+
+.profile-name {
+    width: 175px;
+    height: 23px;
+
+    border-radius: 15px;
+
+    background: #1800ad;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 9px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main {
+    margin-left: 250px;
+
+    padding-top: 78px;
+
+    min-height: 100vh;
+
+    background: #f1f2f5;
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard-content {
+    width: calc(100% - 76px);
+
+    margin-left: 38px;
+    margin-right: 38px;
+
+    padding-top: 30px;
+    padding-bottom: 70px;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.summary {
+    display: grid;
+
+    grid-template-columns:
+        250px
+        250px
+        250px
+        250px;
+
+    gap: 65px;
+}
+
+.summary-card {
+    width: 250px;
+    height: 185px;
+
+    background: white;
+
+    display: flex;
+
+    box-shadow:
+        1px 2px 6px rgba(0,0,0,.25);
+}
+
+
+/* =========================================================
+   SUMMARY ICON
+========================================================= */
+
+.summary-icon {
+    width: 76px;
+    min-width: 76px;
+    height: 185px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    font-size: 41px;
+}
+
+.users-icon {
+    background: #1900b5;
+}
+
+.delivery-icon {
+    background: #00ad00;
+}
+
+.product-icon {
+    background: #c80000;
+}
+
+.sales-icon {
+    background: #ffa500;
+}
+
+
+/* =========================================================
+   SUMMARY INFORMATION
+========================================================= */
+
+.summary-info {
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding-left: 22px;
+}
+
+.summary-number {
+    color: #888888;
+
+    font-size: 45px;
+
+    line-height: 1;
+
+    font-weight: 700;
+}
+
+.summary-label {
+    color: #999999;
+
+    font-size: 14px;
+
+    margin-top: 12px;
+}
+
+.sales-number {
+    font-size: 23px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   THREE PRODUCT CARDS
+========================================================= */
+
+.table-section {
+    display: grid;
+
+    grid-template-columns:
+        390px
+        390px
+        390px;
+
+    gap: 28px;
+
+    margin-top: 22px;
+}
+
+.table-card {
+    width: 360px;
+    height: 315px;
+
+    background: white;
+
+    box-shadow:
+        1px 2px 6px rgba(0,0,0,.23);
+}
+
+
+/* =========================================================
+   PRODUCT CARD HEADER
+========================================================= */
+
+.table-card-header {
+    height: 62px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding-left: 14px;
+
+    border-bottom: 1px solid #777777;
+
+    color: #111111;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.table-card-header i {
+    width: 42px;
+
+    margin-right: 9px;
+
+    color: #1800b5;
+
+    font-size: 28px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   SMALL TABLE
+========================================================= */
+
+.small-table {
+    width: 320px;
+
+    margin: 11px auto 0;
+
+    border-collapse: collapse;
+
+    table-layout: fixed;
+}
+
+.small-table th {
+    height: 38px;
+
+    background: #f8f8f8;
+
+    border: 1px solid #888888;
+
+    color: #111111;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+.small-table td {
+    height: 56px;
+
+    border: 1px solid #888888;
+
+    padding: 10px;
+
+    text-align: center;
+
+    color: #555555;
+
+    font-size: 12px;
+}
+
+.small-table th:first-child,
+.small-table td:first-child {
+    width: 48%;
+}
+
+.small-table th:nth-child(2),
+.small-table td:nth-child(2) {
+    width: 30%;
+}
+
+.small-table th:nth-child(3),
+.small-table td:nth-child(3) {
+    width: 32%;
+}
+
+
+/* =========================================================
+   PRODUCT TEXT
+========================================================= */
+
+.product-name {
+    text-align: left !important;
+
+    color: #111111 !important;
+
+    font-size: 12px !important;
+
+    font-weight: 700 !important;
+
+    line-height: 1.1;
+}
+
+.product-description {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #555555;
+
+    font-size: 10px;
+
+    font-weight: 400;
+
+    line-height: 1.15;
+}
+
+
+/* =========================================================
+   CURRENT DAY SALES
+========================================================= */
+
+.sales-section {
+    width: calc(100% + 76px);
+
+    margin-left: -38px;
+    margin-right: -38px;
+
+    margin-top: 20px;
+
+    background: white;
+}
+
+
+/* =========================================================
+   SALES HEADER
+========================================================= */
+
+.sales-header {
+    height: 68px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding-left: 0;
+
+    border-bottom: 1px solid #aaaaaa;
+}
+
+.sales-clock {
+    width: 48px;
+    height: 48px;
+
+    margin-left: 15px;
+    margin-right: 15px;
+
+    border: 3px solid #1800ad;
+
+    border-radius: 50%;
+
+    color: #1800ad;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+
+    font-weight: 700;
+}
+
+.sales-title {
+    color: #111111;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+.sales-date {
+    color: #999999;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   SALES TABLE
+========================================================= */
+
+.sales-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    table-layout: fixed;
+}
+
+.sales-table th {
+    height: 50px;
+
+    background: #f7f7f7;
+
+    border: 1px solid #999999;
+
+    color: #111111;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+.sales-table td {
+    height: 46px;
+
+    border: 1px solid #999999;
+
+    text-align: center;
+
+    color: #333333;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   SALES TABLE COLUMN WIDTH
+========================================================= */
+
+.sales-table th:nth-child(1) {
+    width: 11%;
+}
+
+.sales-table th:nth-child(2) {
+    width: 5%;
+}
+
+.sales-table th:nth-child(3) {
+    width: 18%;
+}
+
+.sales-table th:nth-child(4) {
+    width: 18%;
+}
+
+.sales-table th:nth-child(5) {
+    width: 15%;
+}
+
+.sales-table th:nth-child(6) {
+    width: 14%;
+}
+
+.sales-table th:nth-child(7) {
+    width: 19%;
+}
+
+
+/* =========================================================
+   NO SCALING
+========================================================= */
+
+.main,
+.dashboard-content,
+.summary,
+.table-section,
+.sales-section {
+    transform: none;
+}
+
+
+/* =========================================================
+   LARGE SCREEN
+========================================================= */
+
+@media (min-width: 1500px) {
+
+    .dashboard-content {
+        margin-left: 40px;
+        margin-right: 40px;
+
+        width: calc(100% - 80px);
+    }
+
+    .sales-section {
+        width: calc(100% + 80px);
+
+        margin-left: -40px;
+        margin-right: -40px;
+    }
+
+}
+
+
+/* =========================================================
+   MEDIUM SCREEN
+========================================================= */
+
+@media (max-width: 1350px) {
+
+    .dashboard-content {
+        width: calc(100% - 50px);
+
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+
+    .summary {
+        grid-template-columns:
+            230px
+            230px
+            230px
+            230px;
+
+        gap: 20px;
+    }
+
+    .summary-card {
+        width: 230px;
+    }
+
+    .table-section {
+        grid-template-columns:
+            300px
+            300px
+            300px;
+
+        gap: 20px;
+    }
+
+    .table-card {
+        width: 300px;
+    }
+
+    .small-table {
+        width: 270px;
+    }
+
+    .sales-section {
+        width: calc(100% + 50px);
+
+        margin-left: -25px;
+        margin-right: -25px;
+    }
+
+    .sales-table {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   SMALLER SCREEN
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+    .sidebar-header {
+        width: 220px;
+    }
+
+    .topbar {
+        left: 220px;
+    }
+
+    .main {
+        margin-left: 220px;
+    }
+
+    .dashboard-content {
+        margin-left: 25px;
+        margin-right: 25px;
+
+        width: calc(100% - 50px);
+    }
+
+    .sales-section {
+        width: calc(100% + 50px);
+
+        margin-left: -25px;
+        margin-right: -25px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-header">
+        <h1>TILE DEPOT INVENTORY</h1>
+    </div>
+
+
+    <nav class="sidebar-menu">
+
+        <a href="dashboard.html">
+            <i class="fa-solid fa-house"></i>
+            <span>DASHBOARD</span>
+        </a>
+
+        <a href="user-management.html">
+            <i class="fa-solid fa-user"></i>
+            <span>USER MANAGEMENT</span>
+        </a>
+
+        <a href="deliveries.html">
+            <i class="fa-solid fa-truck"></i>
+            <span>DELIVERIES</span>
+        </a>
+
+        <a href="#">
+            <i class="fa-solid fa-box"></i>
+            <span>PRODUCTS</span>
+        </a>
+
+        <a href="#">
+            <i class="fa-solid fa-peso-sign"></i>
+            <span>SALES</span>
+        </a>
+
+    </nav>
+
+
+    <button class="logout-button" onclick="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i>
+    </button>
+
+</aside>
+
+
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
+
+<header class="topbar">
+
+    <div class="date">
+        May 8, 2026, 08:51 PM
+    </div>
+
+
+    <div class="profile">
+
+        <div class="profile-circle">
+            <i class="fa-regular fa-user"></i>
+        </div>
+
+        <div class="profile-name">
+            MALIWAT, ISRAEL ANDY
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+<div class="dashboard-content">
+
+
+<!-- =====================================================
+     SUMMARY CARDS
+===================================================== -->
+
+<section class="summary">
+
+
+<!-- USERS -->
+
+<div class="summary-card">
+
+    <div class="summary-icon users-icon">
+        <i class="fa-solid fa-user"></i>
+    </div>
+
+    <div class="summary-info">
+
+        <div class="summary-number">
+            4
+        </div>
+
+        <div class="summary-label">
+            Users
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- DELIVERIES -->
+
+<div class="summary-card">
+
+    <div class="summary-icon delivery-icon">
+        <i class="fa-solid fa-truck"></i>
+    </div>
+
+    <div class="summary-info">
+
+        <div class="summary-number">
+            3
+        </div>
+
+        <div class="summary-label">
+            Deliveries
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- PRODUCTS -->
+
+<div class="summary-card">
+
+    <div class="summary-icon product-icon">
+        <i class="fa-solid fa-box"></i>
+    </div>
+
+    <div class="summary-info">
+
+        <div class="summary-number">
+            392
+        </div>
+
+        <div class="summary-label">
+            Products
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- SALES -->
+
+<div class="summary-card">
+
+    <div class="summary-icon sales-icon">
+        <i class="fa-solid fa-peso-sign"></i>
+    </div>
+
+    <div class="summary-info">
+
+        <div class="summary-number sales-number">
+            30,670.00
+        </div>
+
+        <div class="summary-label">
+            Sales
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     PRODUCT TABLE CARDS
+========================================================= -->
+
+<section class="table-section">
+
+
+<!-- HIGHEST SELLING -->
+
+<div class="table-card">
+
+    <div class="table-card-header">
+
+        <i class="fa-solid fa-box-open"></i>
+
+        HIGHEST SELLING PRODUCTS
+
+    </div>
+
+
+    <table class="small-table">
+
+        <thead>
+
+            <tr>
+                <th>PRODUCT</th>
+                <th>SOLD</th>
+                <th>AMOUNT</th>
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <tr>
+
+                <td class="product-name">
+                    Tile #001101
+
+                    <span class="product-description">
+                        LUXURY BLACK<br>
+                        PORCELAIN
+                    </span>
+
+                </td>
+
+                <td>328X</td>
+
+                <td>16,400.00</td>
+
+            </tr>
+
+
+            <tr>
+
+                <td class="product-name">
+                    Tile #011001
+
+                    <span class="product-description">
+                        WOODEN-BROWN<br>
+                        CERAMIC
+                    </span>
+
+                </td>
+
+                <td>301X</td>
+
+                <td>15,050.00</td>
+
+            </tr>
+
+
+            <tr>
+
+                <td class="product-name">
+                    Tile #010011
+
+                    <span class="product-description">
+                        WOODEN-DARK<br>
+                        CERAMIC
+                    </span>
+
+                </td>
+
+                <td>292X</td>
+
+                <td>8,760.00</td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- LATEST SALES -->
+
+<div class="table-card">
+
+    <div class="table-card-header">
+
+        <i class="fa-solid fa-list"></i>
+
+        LATEST SALES
+
+    </div>
+
+
+    <table class="small-table">
+
+        <thead>
+
+            <tr>
+                <th>PRODUCT</th>
+                <th>SOLD</th>
+                <th>AMOUNT</th>
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <tr>
+
+                <td class="product-name">
+                    Tile #001101
+
+                    <span class="product-description">
+                        LUXURY BLACK<br>
+                        PORCELAIN
+                    </span>
+
+                </td>
+
+                <td>30X</td>
+
+                <td>1,500.00</td>
+
+            </tr>
+
+
+            <tr>
+
+                <td class="product-name">
+                    Tile #010101
+
+                    <span class="product-description">
+                        WOODEN-LIGHT<br>
+                        CERAMIC
+                    </span>
+
+                </td>
+
+                <td>40X</td>
+
+                <td>1,200.00</td>
+
+            </tr>
+
+
+            <tr>
+
+                <td class="product-name">
+                    Tile #010100
+
+                    <span class="product-description">
+                        BEIGE-MARBLE<br>
+                        PORCELAIN
+                    </span>
+
+                </td>
+
+                <td>25X</td>
+
+                <td>1,250.00</td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- RECENTLY ADDED -->
+
+<div class="table-card">
+
+    <div class="table-card-header">
+
+        <i class="fa-solid fa-certificate"></i>
+
+        RECENTLY ADDED PRODUCTS
+
+    </div>
+
+
+    <table class="small-table">
+
+        <thead>
+
+            <tr>
+                <th>PRODUCT</th>
+                <th>QUANTITY</th>
+                <th>AMOUNT</th>
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <tr>
+
+                <td class="product-name">
+                    Tile #000101
+
+                    <span class="product-description">
+                        LUXURY WHITE<br>
+                        PORCELAIN
+                    </span>
+
+                </td>
+
+                <td>230X</td>
+
+                <td>13,800.00</td>
+
+            </tr>
+
+
+            <tr>
+
+                <td class="product-name">
+                    Tile #010101
+
+                    <span class="product-description">
+                        BRICK-LIGHT<br>
+                        TERRACOTTA
+                    </span>
+
+                </td>
+
+                <td>300X</td>
+
+                <td>12,000.00</td>
+
+            </tr>
+
+
+            <tr>
+
+                <td class="product-name">
+                    Tile #010100
+
+                    <span class="product-description">
+                        LONGITUDE<br>
+                        PAVING BLOCKS
+                    </span>
+
+                </td>
+
+                <td>150X</td>
+
+                <td>6,000.00</td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</section>
+
+
+<!-- =====================================================
+     CURRENT DAY SALES
+========================================================= -->
+
+<section class="sales-section">
+
+
+<div class="sales-header">
+
+    <div class="sales-clock">
+        24
+    </div>
+
+    <div class="sales-title">
+        CURRENT DAY SALES
+    </div>
+
+    <div class="sales-date">
+        May 8, 2026, 08:00 AM – 08:51 PM
+    </div>
+
+</div>
+
+
+<table class="sales-table">
+
+    <thead>
+
+        <tr>
+
+            <th>TIMESTAMP</th>
+            <th>#</th>
+            <th>PRODUCT NAME</th>
+            <th>CATEGORIES</th>
+            <th>QUANTITY SOLD</th>
+            <th>TOTAL</th>
+            <th>DATE</th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody>
+
+        <tr>
+
+            <td>8:20 AM</td>
+            <td>1</td>
+            <td>BRICK-X</td>
+            <td>TERRACOTTA</td>
+            <td>30X</td>
+            <td>1,200.00</td>
+            <td>2026-05-08</td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>8:41 AM</td>
+            <td>2</td>
+            <td>LUXURY WHITE</td>
+            <td>PORCELAIN</td>
+            <td>5X</td>
+            <td>250.00</td>
+            <td>2026-05-08</td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>10:39 AM</td>
+            <td>3</td>
+            <td>LUXURY WHITE</td>
+            <td>PORCELAIN</td>
+            <td>10X</td>
+            <td>500.00</td>
+            <td>2026-05-08</td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>12:45 PM</td>
+            <td>4</td>
+            <td>WOODEN-NARA</td>
+            <td>CERAMIC</td>
+            <td>25X</td>
+            <td>750.00</td>
+            <td>2026-05-08</td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>1:30 PM</td>
+            <td>5</td>
+            <td>LUXURY BLACK</td>
+            <td>PORCELAIN</td>
+            <td>8X</td>
+            <td>400.00</td>
+            <td>2026-05-08</td>
+
+        </tr>
+
+    </tbody>
+
+</table>
+
+
+</section>
+
+
+</div>
+
+</main>
+
+
+<script>
+
+function logout() {
+    window.location.href = "index.html";
+}
+
+</script>
+
+
+</body>
+
+</html>

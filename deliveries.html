@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Deliveries - Tile Depot Inventory</title>
+
+    <!-- Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #f1f2f5;
+            overflow-x: auto;
+            color: #111;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #292929;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            width: 250px;
+            height: 78px;
+            background: #1800ad;
+            display: flex;
+            align-items: center;
+            padding-left: 27px;
+        }
+
+        .sidebar-header h1 {
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .sidebar-menu {
+            padding-top: 27px;
+        }
+
+        .sidebar-menu a {
+            height: 53px;
+            display: flex;
+            align-items: center;
+            padding-left: 18px;
+            color: #999999;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+
+        .sidebar-menu a:hover {
+            background: #333333;
+            color: white;
+        }
+
+        .sidebar-menu a.active {
+            color: white;
+        }
+
+        .sidebar-menu i {
+            width: 33px;
+            margin-right: 14px;
+            text-align: center;
+            font-size: 25px;
+        }
+
+        /* Logout */
+
+        .logout-button {
+            position: absolute;
+            left: 91px;
+            bottom: 105px;
+            width: 38px;
+            height: 42px;
+            border: none;
+            border-radius: 4px;
+            background: #999999;
+            color: #292929;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background: #bbbbbb;
+        }
+
+        /* =========================
+           TOP HEADER
+        ========================= */
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            height: 78px;
+            background: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 25px 0 20px;
+
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+
+            z-index: 900;
+        }
+
+        .date {
+            color: #999999;
+            font-size: 14px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-circle {
+            width: 42px;
+            height: 42px;
+
+            border: 4px solid #1800ad;
+            border-radius: 50%;
+
+            color: #1800ad;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+        .profile-name {
+            width: 175px;
+            height: 23px;
+
+            border-radius: 15px;
+            background: #1800ad;
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: 250px;
+            padding-top: 78px;
+            min-height: 100vh;
+            background: #f1f2f5;
+        }
+
+        .deliveries-content {
+            width: calc(100% - 76px);
+            margin-left: 38px;
+            margin-right: 38px;
+
+            padding-top: 17px;
+            padding-bottom: 70px;
+        }
+
+        /* =========================
+           DELIVERY SECTION
+        ========================= */
+
+        .delivery-section {
+            width: 100%;
+            margin-bottom: 29px;
+        }
+
+        .section-header {
+            height: 35px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom: 3px solid #1800ad;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .section-actions {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .action-button {
+            height: 22px;
+            min-width: 73px;
+
+            border: none;
+            border-radius: 3px;
+
+            color: white;
+
+            font-family: "Poppins", sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 5px;
+
+            padding: 0 9px;
+
+            cursor: pointer;
+        }
+
+        .action-button i {
+            font-size: 10px;
+        }
+
+        .complete-button {
+            background: #00a51a;
+        }
+
+        .complete-button:hover {
+            background: #008b16;
+        }
+
+        .delete-button {
+            background: #d40000;
+        }
+
+        .delete-button:hover {
+            background: #ad0000;
+        }
+
+        .add-button,
+        .edit-button,
+        .reorder-button,
+        .restore-button {
+            background: #1800ad;
+        }
+
+        .add-button:hover,
+        .edit-button:hover,
+        .reorder-button:hover,
+        .restore-button:hover {
+            background: #100078;
+        }
+
+        .add-button {
+            min-width: 123px;
+        }
+
+        .edit-button {
+            min-width: 75px;
+        }
+
+        .reorder-button {
+            min-width: 84px;
+        }
+
+        .restore-button {
+            min-width: 75px;
+        }
+
+        /* =========================
+           DELIVERY MODALS
+        ========================= */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 24px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-card {
+            width: min(860px, 80vw);
+            background: #f0f0f0;
+            border-radius: 14px;
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
+            padding: 26px 34px 24px;
+        }
+
+        .modal-card h3 {
+            font-size: 38px;
+            font-weight: 800;
+            line-height: 1.2;
+            text-align: center;
+            margin-bottom: 22px;
+            color: #111;
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111;
+            margin-left: 4px;
+        }
+
+        .field input {
+            width: 100%;
+            height: 42px;
+            border: 2px solid #444;
+            border-radius: 10px;
+            background: white;
+            padding: 0 14px;
+            font-family: "Poppins", sans-serif;
+            font-size: 19px;
+            color: #111;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 18px;
+        }
+
+        .modal-action {
+            min-width: 180px;
+            height: 50px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+            font-family: "Poppins", sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-action.cancel {
+            background: #d40000;
+        }
+
+        .modal-action.confirm {
+            background: #1800ad;
+        }
+
+        /* =========================
+           DELIVERY TABLE
+        ========================= */
+
+        .delivery-list {
+            width: 100%;
+            margin-top: 9px;
+        }
+
+        .delivery-row {
+            width: 100%;
+            height: 32px;
+
+            display: flex;
+            align-items: center;
+
+            background: #f8f8f8;
+
+            border-bottom: 1px solid #bcbcbc;
+
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.18);
+
+            margin-bottom: 0;
+        }
+
+        .delivery-row:nth-child(1) {
+            background: #e7e7e7;
+        }
+
+        .delivery-checkbox {
+            width: 36px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .delivery-checkbox input {
+            appearance: none;
+
+            width: 16px;
+            height: 16px;
+
+            background: #f8f8f8;
+
+            border: 1px solid #555555;
+
+            cursor: pointer;
+
+            position: relative;
+        }
+
+        .delivery-checkbox input:checked::after {
+            content: "✓";
+
+            position: absolute;
+
+            left: 2px;
+            top: -4px;
+
+            font-size: 18px;
+            font-weight: 500;
+
+            color: #00a51a;
+        }
+
+        .delivery-supplier {
+            width: 105px;
+
+            font-size: 9px;
+            font-weight: 500;
+
+            white-space: nowrap;
+        }
+
+        .delivery-date {
+            width: 130px;
+
+            font-size: 9px;
+            font-weight: 500;
+
+            white-space: nowrap;
+        }
+
+        .delivery-quantity {
+            flex: 1;
+
+            font-size: 9px;
+            font-weight: 500;
+
+            white-space: nowrap;
+        }
+
+        /* =========================
+           HISTORY
+        ========================= */
+
+        .history-section {
+            margin-top: 2px;
+        }
+
+        .history-section .section-header {
+            height: 35px;
+        }
+
+        .history-list {
+            margin-top: 17px;
+        }
+
+        .history-row {
+            width: 100%;
+            height: 32px;
+
+            display: flex;
+            align-items: center;
+
+            background: #f8f8f8;
+
+            border-bottom: 1px solid #bcbcbc;
+
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.18);
+        }
+
+        .history-row .delivery-checkbox input {
+            background: white;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .sidebar-header {
+                width: 220px;
+            }
+
+            .topbar {
+                left: 220px;
+            }
+
+            .main {
+                margin-left: 220px;
+            }
+
+            .deliveries-content {
+                width: calc(100% - 50px);
+                margin-left: 25px;
+                margin-right: 25px;
+            }
+
+            .section-title {
+                font-size: 15px;
+            }
+
+            .section-actions {
+                gap: 4px;
+            }
+
+            .action-button {
+                font-size: 8px;
+                padding: 0 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         SIDEBAR
+    ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+            <h1>TILE DEPOT INVENTORY</h1>
+        </div>
+
+        <nav class="sidebar-menu">
+
+            <a href="dashboard.html">
+                <i class="fa-solid fa-house"></i>
+                <span>DASHBOARD</span>
+            </a>
+
+            <a href="user-management.html">
+                <i class="fa-solid fa-user"></i>
+                <span>USER MANAGEMENT</span>
+            </a>
+
+            <a href="deliveries.html" class="active">
+                <i class="fa-solid fa-truck"></i>
+                <span>DELIVERIES</span>
+            </a>
+
+            <a href="products.html">
+                <i class="fa-solid fa-box"></i>
+                <span>PRODUCTS</span>
+            </a>
+
+            <a href="sales.html">
+                <i class="fa-solid fa-peso-sign"></i>
+                <span>SALES</span>
+            </a>
+
+        </nav>
+
+        <button class="logout-button" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+
+    </aside>
+
+
+    <!-- =========================
+         TOP HEADER
+    ========================= -->
+
+    <header class="topbar">
+
+        <div class="date">
+            May 8, 2026, 08:51 PM
+        </div>
+
+        <div class="profile">
+
+            <div class="profile-circle">
+                <i class="fa-regular fa-user"></i>
+            </div>
+
+            <div class="profile-name">
+                MALIWAT, ISRAEL ANDY
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================= -->
+
+    <main class="main">
+
+        <div class="deliveries-content">
+
+
+            <!-- =========================
+                 PENDING DELIVERIES - SUPPLIER
+            ========================= -->
+
+            <section class="delivery-section">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        PENDING DELIVERIES - Supplier
+                    </h2>
+
+                    <div class="section-actions">
+
+                        <button class="action-button complete-button"
+                                onclick="completeSelected('supplier')">
+                            <i class="fa-solid fa-trash-can"></i>
+                            COMPLETE
+                        </button>
+
+                        <button class="action-button delete-button"
+                                onclick="deleteSelected('supplier')">
+                            <i class="fa-solid fa-trash-can"></i>
+                            DELETE
+                        </button>
+
+                        <button class="action-button add-button"
+                                onclick="addDelivery()">
+                            <i class="fa-solid fa-plus"></i>
+                            ADD NEW DELIVERY
+                        </button>
+
+                        <button class="action-button edit-button"
+                                onclick="editDelivery('supplier')">
+                            <i class="fa-solid fa-pencil"></i>
+                            EDIT
+                        </button>
+
+                        <button class="action-button reorder-button"
+                                onclick="reorderDelivery('supplier')">
+                            <i class="fa-solid fa-arrows-up-down"></i>
+                            REORDER
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="delivery-list" id="supplierList">
+
+                    <div class="delivery-row">
+
+                        <div class="delivery-checkbox">
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="delivery-supplier">
+                            J&T EXPRESS
+                        </div>
+
+                        <div class="delivery-date">
+                            DATE: 5/20/2026
+                        </div>
+
+                        <div class="delivery-quantity">
+                            Quantity: 100 pcs
+                        </div>
+
+                    </div>
+
+
+                    <div class="delivery-row">
+
+                        <div class="delivery-checkbox">
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="delivery-supplier">
+                            TRANSPORTIFY
+                        </div>
+
+                        <div class="delivery-date">
+                            DATE: 5/25/2026
+                        </div>
+
+                        <div class="delivery-quantity">
+                            Quantity: 100 pcs
+                        </div>
+
+                    </div>
+
+
+                    <div class="delivery-row">
+
+                        <div class="delivery-checkbox">
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="delivery-supplier">
+                            LALAMOVE
+                        </div>
+
+                        <div class="delivery-date">
+                            DATE: 5/31/2026
+                        </div>
+
+                        <div class="delivery-quantity">
+                            Quantity: 100 pcs
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 PENDING DELIVERIES - CUSTOMER
+            ========================= -->
+
+            <section class="delivery-section">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        PENDING DELIVERIES - Customer
+                    </h2>
+
+                    <div class="section-actions">
+
+                        <button class="action-button complete-button"
+                                onclick="completeSelected('customer')">
+                            <i class="fa-solid fa-trash-can"></i>
+                            COMPLETE
+                        </button>
+
+                        <button class="action-button delete-button"
+                                onclick="deleteSelected('customer')">
+                            <i class="fa-solid fa-trash-can"></i>
+                            DELETE
+                        </button>
+
+                        <button class="action-button edit-button"
+                                onclick="editDelivery('customer')">
+                            <i class="fa-solid fa-pencil"></i>
+                            EDIT
+                        </button>
+
+                        <button class="action-button reorder-button"
+                                onclick="reorderDelivery('customer')">
+                            <i class="fa-solid fa-arrows-up-down"></i>
+                            REORDER
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="delivery-list" id="customerList">
+
+                    <div class="delivery-row">
+
+                        <div class="delivery-checkbox">
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="delivery-supplier">
+                            J&T EXPRESS
+                        </div>
+
+                        <div class="delivery-date">
+                            DATE: 5/20/2026
+                        </div>
+
+                        <div class="delivery-quantity">
+                            Quantity: 100 pcs
+                        </div>
+
+                    </div>
+
+
+                    <div class="delivery-row">
+
+                        <div class="delivery-checkbox">
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="delivery-supplier">
+                            TRANSPORTIFY
+                        </div>
+
+                        <div class="delivery-date">
+                            DATE: 5/25/2026
+                        </div>
+
+                        <div class="delivery-quantity">
+                            Quantity: 100 pcs
+                        </div>
+
+                    </div>
+
+
+                    <div class="delivery-row">
+
+                        <div class="delivery-checkbox">
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="delivery-supplier">
+                            LALAMOVE
+                        </div>
+
+                        <div class="delivery-date">
+                            DATE: 5/31/2026
+                        </div>
+
+                        <div class="delivery-quantity">
+                            Quantity: 100 pcs
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 HISTORY OF DELIVERIES
+            ========================= -->
+
+            <section class="delivery-section history-section">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        HISTORY OF DELIVERIES
+                    </h2>
+
+                    <div class="section-actions">
+
+                        <button class="action-button restore-button"
+                                onclick="restoreDelivery()">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            RESTORE
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="history-list" id="historyList">
+
+                    <div class="history-row">
+
+                        <div class="delivery-checkbox">
+                            <input type="checkbox">
+                        </div>
+
+                        <div class="delivery-supplier">
+                            LALAMOVE
+                        </div>
+
+                        <div class="delivery-date">
+                            DATE: 5/31/2026
+                        </div>
+
+                        <div class="delivery-quantity">
+                            Quantity: 100 pcs
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <div class="modal-overlay" id="addDeliveryModal">
+        <div class="modal-card">
+            <h3>Add New Delivery</h3>
+            <div class="modal-form">
+                <div class="field">
+                    <label for="newDeliveryCourier">Delivery Courier</label>
+                    <input id="newDeliveryCourier" type="text" value="">
+                </div>
+                <div class="field">
+                    <label for="newDeliveryDate">Date Ordered - Date Delivery</label>
+                    <input id="newDeliveryDate" type="text" value="">
+                </div>
+                <div class="field">
+                    <label for="newDeliveryQuantity">Quantity</label>
+                    <input id="newDeliveryQuantity" type="text" value="">
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-action cancel" type="button" onclick="closeModal('addDeliveryModal')">Cancel</button>
+                    <button class="modal-action confirm" type="button" onclick="confirmAddDelivery()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="editDeliveryModal">
+        <div class="modal-card">
+            <h3 id="editDeliveryTitle">Edit Delivery - Supplier</h3>
+            <div class="modal-form">
+                <div class="field">
+                    <label for="editDeliveryCourier">Delivery Courier</label>
+                    <input id="editDeliveryCourier" type="text" value="">
+                </div>
+                <div class="field">
+                    <label for="editDeliveryDate">Date Ordered - Date Delivery</label>
+                    <input id="editDeliveryDate" type="text" value="">
+                </div>
+                <div class="field">
+                    <label for="editDeliveryQuantity">Quantity</label>
+                    <input id="editDeliveryQuantity" type="text" value="">
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-action cancel" type="button" onclick="closeModal('editDeliveryModal')">Cancel</button>
+                    <button class="modal-action confirm" type="button" onclick="confirmEditDelivery()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+        const deliveryState = {
+            editRow: null,
+            editListId: null
+        };
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add("show");
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove("show");
+            }
+        }
+
+        function getSelected(listId) {
+
+            const list = document.getElementById(listId);
+
+            if (!list) {
+                return [];
+            }
+
+            return Array.from(
+                list.querySelectorAll("input[type='checkbox']:checked")
+            );
+        }
+
+
+        function completeSelected(type) {
+
+            const listId =
+                type === "supplier"
+                    ? "supplierList"
+                    : "customerList";
+
+            const selected = getSelected(listId);
+
+            if (selected.length === 0) {
+                alert("Please select a delivery first.");
+                return;
+            }
+
+            selected.forEach(function (checkbox) {
+
+                const row = checkbox.closest(".delivery-row");
+
+                if (row) {
+                    document.getElementById("historyList").appendChild(
+                        createHistoryRow(row)
+                    );
+
+                    row.remove();
+                }
+
+            });
+
+        }
+
+
+        function createHistoryRow(row) {
+
+            const historyRow = document.createElement("div");
+
+            historyRow.className = "history-row";
+
+            historyRow.innerHTML = `
+                <div class="delivery-checkbox">
+                    <input type="checkbox">
+                </div>
+
+                <div class="delivery-supplier">
+                    ${row.querySelector(".delivery-supplier").textContent.trim()}
+                </div>
+
+                <div class="delivery-date">
+                    ${row.querySelector(".delivery-date").textContent.trim()}
+                </div>
+
+                <div class="delivery-quantity">
+                    ${row.querySelector(".delivery-quantity").textContent.trim()}
+                </div>
+            `;
+
+            return historyRow;
+        }
+
+
+        function deleteSelected(type) {
+
+            const listId =
+                type === "supplier"
+                    ? "supplierList"
+                    : "customerList";
+
+            const selected = getSelected(listId);
+
+            if (selected.length === 0) {
+                alert("Please select a delivery first.");
+                return;
+            }
+
+            if (confirm("Are you sure you want to delete the selected delivery?")) {
+
+                selected.forEach(function (checkbox) {
+
+                    const row = checkbox.closest(".delivery-row");
+
+                    if (row) {
+                        row.remove();
+                    }
+
+                });
+
+            }
+
+        }
+
+
+        function addDelivery() {
+
+            document.getElementById("newDeliveryCourier").value = "";
+            document.getElementById("newDeliveryDate").value = "";
+            document.getElementById("newDeliveryQuantity").value = "";
+            openModal("addDeliveryModal");
+
+        }
+
+
+        function confirmAddDelivery() {
+
+            const courier = document.getElementById("newDeliveryCourier").value.trim();
+            const date = document.getElementById("newDeliveryDate").value.trim();
+            const quantity = document.getElementById("newDeliveryQuantity").value.trim();
+
+            if (!courier || !date || !quantity) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const list = document.getElementById("supplierList");
+            const row = document.createElement("div");
+            row.className = "delivery-row";
+            row.innerHTML = `
+                <div class="delivery-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="delivery-supplier">${courier}</div>
+                <div class="delivery-date">DATE: ${date}</div>
+                <div class="delivery-quantity">Quantity: ${quantity} pcs</div>
+            `;
+
+            list.appendChild(row);
+            closeModal("addDeliveryModal");
+
+        }
+
+
+        function editDelivery(type) {
+
+            const listId =
+                type === "supplier"
+                    ? "supplierList"
+                    : "customerList";
+
+            const selected = getSelected(listId);
+
+            if (selected.length === 0) {
+                alert("Please select a delivery to edit.");
+                return;
+            }
+
+            const row = selected[0].closest(".delivery-row");
+            deliveryState.editRow = row;
+            deliveryState.editListId = listId;
+
+            document.getElementById("editDeliveryTitle").textContent = "Edit Delivery - " + (type.charAt(0).toUpperCase() + type.slice(1));
+            document.getElementById("editDeliveryCourier").value = row.querySelector(".delivery-supplier").textContent.trim();
+            document.getElementById("editDeliveryDate").value = row.querySelector(".delivery-date").textContent.replace("DATE:", "").trim();
+            document.getElementById("editDeliveryQuantity").value = row.querySelector(".delivery-quantity").textContent.replace("Quantity:", "").replace("pcs", "").trim();
+
+            openModal("editDeliveryModal");
+
+        }
+
+
+        function confirmEditDelivery() {
+
+            if (!deliveryState.editRow) {
+                return;
+            }
+
+            const courier = document.getElementById("editDeliveryCourier").value.trim();
+            const date = document.getElementById("editDeliveryDate").value.trim();
+            const quantity = document.getElementById("editDeliveryQuantity").value.trim();
+
+            if (!courier || !date || !quantity) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const row = deliveryState.editRow;
+            row.querySelector(".delivery-supplier").textContent = courier;
+            row.querySelector(".delivery-date").textContent = "DATE: " + date;
+            row.querySelector(".delivery-quantity").textContent = "Quantity: " + quantity + " pcs";
+
+            closeModal("editDeliveryModal");
+            deliveryState.editRow = null;
+            deliveryState.editListId = null;
+
+        }
+
+
+        function reorderDelivery(type) {
+
+            const listId =
+                type === "supplier"
+                    ? "supplierList"
+                    : "customerList";
+
+            const selected = getSelected(listId);
+
+            if (selected.length === 0) {
+                alert("Please select a delivery to reorder.");
+                return;
+            }
+
+            alert("Reorder Delivery button clicked.");
+
+        }
+
+
+        function restoreDelivery() {
+
+            const selected = getSelected("historyList");
+
+            if (selected.length === 0) {
+                alert("Please select a delivery to restore.");
+                return;
+            }
+
+            selected.forEach(function (checkbox) {
+
+                const row = checkbox.closest(".history-row");
+
+                if (row) {
+                    document.getElementById("supplierList").appendChild(
+                        createDeliveryRow(row)
+                    );
+
+                    row.remove();
+                }
+
+            });
+
+        }
+
+
+        function createDeliveryRow(row) {
+
+            const deliveryRow = document.createElement("div");
+
+            deliveryRow.className = "delivery-row";
+
+            deliveryRow.innerHTML = `
+                <div class="delivery-checkbox">
+                    <input type="checkbox">
+                </div>
+
+                <div class="delivery-supplier">
+                    ${row.querySelector(".delivery-supplier").textContent.trim()}
+                </div>
+
+                <div class="delivery-date">
+                    ${row.querySelector(".delivery-date").textContent.trim()}
+                </div>
+
+                <div class="delivery-quantity">
+                    ${row.querySelector(".delivery-quantity").textContent.trim()}
+                </div>
+            `;
+
+            return deliveryRow;
+        }
+
+
+        function logout() {
+
+            window.location.href = "index.html";
+
+        }
+
+    </script>
+
+</body>
+</html>
