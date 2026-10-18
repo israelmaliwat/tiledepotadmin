@@ -1,10 +1,22 @@
 import { auth } from "./firebase-config.js";
 import {
+  browserLocalPersistence,
+  onAuthStateChanged,
+  setPersistence,
+  signOut,
   signInWithEmailAndPassword,
   multiFactor,
   TotpMultiFactorGenerator,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { setTotpChallenge } from "./totp-session.js";
+import { isRememberedTotpSession } from "./remember-browser.js";
+import {
+  consumeExplicitLogout,
+  getRememberedBrowserExpiry,
+  hasRememberedBrowser,
+  markRememberNoticePending,
+  setTotpChallenge,
+  TOTP_REAUTH_REQUIRED_KEY,
+} from "./totp-session.js";
 
 const loginForm = document.getElementById("loginForm");
 const loginStatus = document.getElementById("loginStatus");
@@ -12,6 +24,12 @@ const loginStatus = document.getElementById("loginStatus");
 function showLoginStatus(message, type) {
   loginStatus.textContent = message;
   loginStatus.className = `login-status ${type}`;
+}
+
+const reauthMessage = sessionStorage.getItem(TOTP_REAUTH_REQUIRED_KEY);
+if (reauthMessage) {
+  showLoginStatus(reauthMessage, "error");
+  sessionStorage.removeItem(TOTP_REAUTH_REQUIRED_KEY);
 }
 
 function isValidEmail(email) {
@@ -23,6 +41,43 @@ function hasTotpFactor(user) {
     (factor) => factor.factorId === TotpMultiFactorGenerator.FACTOR_ID
   );
 }
+
+function waitForInitialUser() {
+  return new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      unsubscribe();
+      resolve(user);
+    }, () => resolve(null));
+  });
+}
+
+async function ensureAuthPersistenceForRememberedBrowser() {
+  if (hasRememberedBrowser() && getRememberedBrowserExpiry()) {
+    await setPersistence(auth, browserLocalPersistence);
+  }
+}
+
+async function redirectIfRememberedSession(user, email) {
+  if (!(await isRememberedTotpSession(user))) return false;
+
+  if (email && user.email?.toLowerCase() !== email.toLowerCase()) {
+    return false;
+  }
+
+  markRememberNoticePending();
+  window.location.replace("dashboard.html");
+  return true;
+}
+
+const initialUserPromise = waitForInitialUser();
+initialUserPromise.then(async (user) => {
+  // After logout, stay on the login screen once — but the Firebase session
+  // stays alive when "remember this browser" is active.
+  if (consumeExplicitLogout()) return;
+  await redirectIfRememberedSession(user);
+}).catch((error) => {
+  console.error("Could not restore remembered sign-in:", error);
+});
 
 if (loginForm) {
   loginForm.addEventListener("submit", async function (event) {
@@ -46,11 +101,33 @@ if (loginForm) {
     showLoginStatus("Signing in...", "loading");
 
     try {
+      await ensureAuthPersistenceForRememberedBrowser();
+
+      const existingUser = auth.currentUser || (await initialUserPromise);
+      const sameAccount =
+        Boolean(existingUser?.email) &&
+        existingUser.email.toLowerCase() === email.toLowerCase();
+
+      // Remembered logout left the session signed in: skip TOTP for this account.
+      if (sameAccount && (await redirectIfRememberedSession(existingUser, email))) {
+        return;
+      }
+
+      // Different account: sign out the remembered session, but do NOT clear
+      // the 30-day browser timer — it keeps running for this device.
+      if (existingUser && !sameAccount) {
+        await signOut(auth);
+      }
+
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
       if (!user) {
         throw new Error("Login failed. Please try again.");
+      }
+
+      if (await redirectIfRememberedSession(user, email)) {
+        return;
       }
 
       if (hasTotpFactor(user)) {

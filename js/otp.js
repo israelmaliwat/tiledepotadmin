@@ -4,12 +4,24 @@ import {
     getMultiFactorResolver,
     multiFactor,
     onAuthStateChanged,
+    browserLocalPersistence,
+    browserSessionPersistence,
     sendEmailVerification,
+    setPersistence,
     signInWithEmailAndPassword,
     signOut,
     TotpMultiFactorGenerator,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { clearTotpChallenge, getTotpChallenge, TOTP_PASSWORD_KEY } from "./totp-session.js";
+import { isRememberedTotpSession } from "./remember-browser.js";
+import {
+    clearTotpChallenge,
+    getRememberedBrowserExpiry,
+    getTotpChallenge,
+    markRememberNoticePending,
+    rememberBrowserForThirtyDays,
+    TOTP_REAUTH_REQUIRED_KEY,
+    TOTP_PASSWORD_KEY,
+} from "./totp-session.js";
 
 const inputs = document.querySelectorAll(".otp-input");
 const status = document.getElementById("verificationStatus");
@@ -18,6 +30,8 @@ const descriptionElement = document.querySelector(".otp-description");
 const enrollPanel = document.getElementById("enrollPanel");
 const totpQr = document.getElementById("totpQr");
 const totpSecret = document.getElementById("totpSecret");
+const rememberBrowserOption = document.getElementById("rememberBrowserOption");
+const rememberBrowserCheckbox = document.getElementById("rememberBrowser");
 const APP_NAME = "Tile Depot";
 
 let hideStatusTimer = null;
@@ -87,6 +101,7 @@ function setEnrollCopy(email) {
     }
 
     enrollPanel?.classList.remove("is-hidden");
+    rememberBrowserOption.hidden = false;
 }
 
 function setVerifyCopy(email) {
@@ -103,10 +118,15 @@ function setVerifyCopy(email) {
     }
 
     enrollPanel?.classList.add("is-hidden");
+    rememberBrowserOption.hidden = false;
 }
 
 function mapTotpError(error) {
     const code = error?.code || "";
+
+    if (code === "auth/totp-challenge-timeout") {
+        return "Your sign-in challenge expired. Sign in again with your email and password.";
+    }
 
     if (code === "auth/invalid-verification-code" || code === "auth/invalid-multi-factor-session") {
         return "Invalid or expired authenticator code. Try the newest six-digit code.";
@@ -179,6 +199,15 @@ async function startVerification(email, password) {
 }
 
 async function verifyAuthenticatorCode(code) {
+    const rememberBrowser = Boolean(rememberBrowserCheckbox?.checked);
+    // Keep local persistence for the whole active 30-day window so a later
+    // account switch / logout does not wipe the trusted-browser session store.
+    const keepTrustedBrowser = rememberBrowser || Boolean(getRememberedBrowserExpiry());
+    await setPersistence(
+        auth,
+        keepTrustedBrowser ? browserLocalPersistence : browserSessionPersistence
+    );
+
     if (currentMode === "enroll") {
         const user = auth.currentUser;
         if (!user || !totpSecretObject) {
@@ -187,15 +216,38 @@ async function verifyAuthenticatorCode(code) {
 
         const assertion = TotpMultiFactorGenerator.assertionForEnrollment(totpSecretObject, code);
         await multiFactor(user).enroll(assertion, "Google Authenticator");
-        return;
+    } else {
+        if (!mfaResolver || !totpHint) {
+            throw new Error("Authenticator sign-in is not ready. Sign in again.");
+        }
+
+        const assertion = TotpMultiFactorGenerator.assertionForSignIn(totpHint.uid, code);
+        await mfaResolver.resolveSignIn(assertion);
     }
 
-    if (!mfaResolver || !totpHint) {
-        throw new Error("Authenticator sign-in is not ready. Sign in again.");
+    // Only start a window when checked. Never clear/reset an existing countdown
+    // (signing into another account must not end the 30 days).
+    if (rememberBrowser) {
+        rememberBrowserForThirtyDays();
     }
 
-    const assertion = TotpMultiFactorGenerator.assertionForSignIn(totpHint.uid, code);
-    await mfaResolver.resolveSignIn(assertion);
+    if (getRememberedBrowserExpiry()) {
+        markRememberNoticePending();
+    }
+}
+
+async function returnToLoginAfterChallengeTimeout() {
+    clearTotpChallenge();
+    sessionStorage.setItem(
+        TOTP_REAUTH_REQUIRED_KEY,
+        "Your sign-in challenge expired. Enter your email and password again."
+    );
+
+    try {
+        await signOut(auth);
+    } finally {
+        window.location.replace("index.html");
+    }
 }
 
 if (inputs.length) {
@@ -257,6 +309,11 @@ document.getElementById("verifyBtn")?.addEventListener("click", async () => {
             window.location.href = "dashboard.html";
         }, 800);
     } catch (error) {
+        if (error.code === "auth/totp-challenge-timeout") {
+            await returnToLoginAfterChallengeTimeout();
+            return;
+        }
+
         showStatus(mapTotpError(error), "error");
     }
 });
@@ -266,6 +323,17 @@ async function initTotpPage() {
     const user = await waitForAuthUser();
 
     try {
+        if (
+            user &&
+            challenge.email &&
+            user.email?.toLowerCase() === challenge.email.toLowerCase() &&
+            (await isRememberedTotpSession(user))
+        ) {
+            clearTotpChallenge();
+            window.location.replace("dashboard.html");
+            return;
+        }
+
         if (challenge.mode === "verify" && challenge.email && challenge.password) {
             await startVerification(challenge.email, challenge.password);
             sessionStorage.removeItem(TOTP_PASSWORD_KEY);
@@ -285,6 +353,11 @@ async function initTotpPage() {
 
         window.location.href = "index.html";
     } catch (error) {
+        if (error.code === "auth/totp-challenge-timeout") {
+            await returnToLoginAfterChallengeTimeout();
+            return;
+        }
+
         showStatus(mapTotpError(error), "error");
         if (error.code === "auth/invalid-credential") {
             clearTotpChallenge();

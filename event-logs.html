@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Event Logs - Tile Depot Inventory</title>
+    <link rel="icon" type="image/png" href="images/inventory_icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #f1f2f5;
+            overflow-x: auto;
+            color: #111;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #292929;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            width: 250px;
+            height: 78px;
+            background: #1800ad;
+            display: flex;
+            align-items: center;
+            padding-left: 27px;
+        }
+
+        .sidebar-header h1 {
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .sidebar-menu {
+            padding-top: 27px;
+        }
+
+        .sidebar-menu a {
+            height: 53px;
+            display: flex;
+            align-items: center;
+            padding-left: 18px;
+            color: #999999;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .sidebar-menu a:hover {
+            background: #333333;
+            color: white;
+        }
+
+        .sidebar-menu a.active {
+            color: white;
+            background: #333333;
+        }
+
+        .sidebar-menu i {
+            width: 33px;
+            margin-right: 14px;
+            text-align: center;
+            font-size: 25px;
+        }
+
+        .logout-button {
+            position: absolute;
+            left: 91px;
+            bottom: 105px;
+            width: 38px;
+            height: 42px;
+            border: none;
+            border-radius: 4px;
+            background: #999999;
+            color: #292929;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background: #bbbbbb;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            height: 78px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px 0 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
+            z-index: 900;
+        }
+
+        .date {
+            color: #999999;
+            font-size: 14px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-circle {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #1800ad;
+            border-radius: 50%;
+            color: #1800ad;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .profile-name {
+            max-width: 175px;
+            height: 23px;
+            padding: 0 12px;
+            border-radius: 15px;
+            background: #1800ad;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .main {
+            margin-left: 250px;
+            padding-top: 78px;
+            min-height: 100vh;
+        }
+
+        .event-logs-content {
+            width: calc(100% - 76px);
+            margin: 0 38px;
+            padding: 18px 0 60px;
+            box-sizing: border-box;
+        }
+
+        .event-logs-page-title {
+            margin-bottom: 22px;
+            padding-bottom: 5px;
+            border-bottom: 3px solid #1800ad;
+            font-size: 26px;
+            font-weight: 800;
+            color: #111111;
+        }
+
+        .event-logs-panel {
+            background: #ffffff;
+            border: 1px solid #d1d1d1;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .event-logs-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .event-logs-toolbar p {
+            color: #666666;
+            font-size: 13px;
+        }
+
+        .event-logs-filter {
+            height: 38px;
+            min-width: 160px;
+            border: 1px solid #999999;
+            border-radius: 8px;
+            padding: 0 12px;
+            font-family: "Poppins", sans-serif;
+            font-size: 13px;
+            background: #ffffff;
+            outline: none;
+        }
+
+        .event-logs-filter:focus {
+            border-color: #1800ad;
+        }
+
+        .event-logs-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .event-log-entry {
+            display: grid;
+            grid-template-columns: 110px minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: start;
+            padding: 14px 8px;
+            border-bottom: 1px solid #bcbcbc;
+        }
+
+        .event-log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .event-log-source {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 28px;
+            padding: 0 10px;
+            border-radius: 999px;
+            background: #ece8ff;
+            color: #1800ad;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .event-log-description {
+            display: grid;
+            gap: 3px;
+            min-width: 0;
+            font-size: 13px;
+        }
+
+        .event-log-description strong {
+            font-weight: 700;
+        }
+
+        .event-log-entry.is-deleted .event-log-description strong,
+        .event-log-entry.is-deleted .event-log-source {
+            color: #c62828;
+        }
+
+        .event-log-entry.is-deleted .event-log-source {
+            background: #fdecea;
+        }
+
+        .event-log-entry.is-complete .event-log-description strong,
+        .event-log-entry.is-complete .event-log-source {
+            color: #16803c;
+        }
+
+        .event-log-entry.is-complete .event-log-source {
+            background: #e8f5e9;
+        }
+
+        .event-log-entry.is-restored .event-log-description strong,
+        .event-log-entry.is-restored .event-log-source {
+            color: #b8860b;
+        }
+
+        .event-log-entry.is-restored .event-log-source {
+            background: #fff8e1;
+        }
+
+        .event-log-details,
+        .event-log-time,
+        .event-logs-empty {
+            color: #666666;
+            font-size: 12px;
+        }
+
+        .event-log-time {
+            flex-shrink: 0;
+            white-space: nowrap;
+            text-align: right;
+        }
+
+        .event-logs-empty {
+            padding: 28px 8px;
+            text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+            .main {
+                margin-left: 0;
+            }
+
+            .event-logs-content {
+                width: calc(100% - 24px);
+                margin: 0 12px;
+                padding: 14px 0 24px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .event-logs-page-title {
+                font-size: 22px;
+                margin-bottom: 10px;
+            }
+
+            .event-log-entry {
+                grid-template-columns: 1fr;
+                gap: 6px;
+                padding: 12px 4px;
+            }
+
+            .event-log-time {
+                text-align: left;
+                white-space: normal;
+            }
+
+            .event-logs-toolbar {
+                align-items: stretch;
+            }
+
+            .event-logs-filter {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="css/nav.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1>TILE DEPOT INVENTORY</h1>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="dashboard.html">
+                <i class="fa-solid fa-house"></i>
+                <span>DASHBOARD</span>
+            </a>
+
+            <a href="deliveries.html">
+                <i class="fa-solid fa-truck"></i>
+                <span>DELIVERIES</span>
+            </a>
+
+            <a href="products.html">
+                <i class="fa-solid fa-box"></i>
+                <span>PRODUCTS</span>
+            </a>
+
+            <a href="sales.html">
+                <i class="fa-solid fa-peso-sign"></i>
+                <span>SALES</span>
+            </a>
+
+            <a href="event-logs.html" class="active">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>EVENT LOGS</span>
+            </a>
+
+            <a href="profile.html">
+                <i class="fa-solid fa-user"></i>
+                <span>PROFILE</span>
+            </a>
+        </nav>
+
+        <button class="logout-button" onclick="window.logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+    </aside>
+
+    <div class="nav-overlay"></div>
+
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="topbar-branding">
+                <p class="mobile-brand">TILE DEPOT INVENTORY</p>
+                <div class="date" data-current-date></div>
+            </div>
+        </div>
+
+        <div class="profile">
+            <div class="profile-circle">
+                <i class="fa-regular fa-user"></i>
+            </div>
+            <div class="profile-name">ACCOUNT</div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="event-logs-content">
+            <h1 class="event-logs-page-title">Event Logs</h1>
+
+            <section class="event-logs-panel" aria-labelledby="eventLogsHeading">
+                <div class="event-logs-toolbar">
+                    <p id="eventLogsHeading">Recent activity</p>
+                    <label class="visually-hidden" for="eventLogSourceFilter">Filter by source</label>
+                    <select id="eventLogSourceFilter" class="event-logs-filter" aria-label="Filter by source">
+                        <option value="all">All sources</option>
+                        <option value="Products">Products</option>
+                        <option value="Deliveries">Deliveries</option>
+                    </select>
+                </div>
+
+                <ol class="event-logs-list" id="eventLogsList" aria-live="polite"></ol>
+            </section>
+        </div>
+    </main>
+
+    <style>
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+
+    <script type="module">
+        import { loadEventLogs } from "./js/event-log.js";
+
+        const eventLogsList = document.getElementById("eventLogsList");
+        const sourceFilter = document.getElementById("eventLogSourceFilter");
+
+        function collectEventLogs() {
+            return loadEventLogs()
+                .map((entry) => ({
+                    source: entry.source || "System",
+                    action: entry.action || "Updated",
+                    details: entry.details || "",
+                    actor: entry.actor || "Unknown User",
+                    timestamp: entry.timestamp || "",
+                }))
+                .sort((a, b) => {
+                    const aTime = Date.parse(a.timestamp) || 0;
+                    const bTime = Date.parse(b.timestamp) || 0;
+                    return bTime - aTime;
+                });
+        }
+
+        function renderEventLogs() {
+            const selectedSource = sourceFilter.value;
+            const entries = collectEventLogs().filter((entry) =>
+                selectedSource === "all" || entry.source === selectedSource
+            );
+
+            eventLogsList.replaceChildren();
+
+            if (!entries.length) {
+                const emptyState = document.createElement("li");
+                emptyState.className = "event-logs-empty";
+                emptyState.textContent = "No event logs yet.";
+                eventLogsList.appendChild(emptyState);
+                return;
+            }
+
+            const formatter = new Intl.DateTimeFormat(undefined, {
+                dateStyle: "medium",
+                timeStyle: "short",
+            });
+
+            entries.forEach((entry) => {
+                const listItem = document.createElement("li");
+                const actionKey = String(entry.action || "").toLowerCase();
+                let toneClass = "";
+                if (actionKey.includes("delete")) {
+                    toneClass = " is-deleted";
+                } else if (actionKey.includes("complete")) {
+                    toneClass = " is-complete";
+                } else if (actionKey.includes("restore")) {
+                    toneClass = " is-restored";
+                }
+                listItem.className = `event-log-entry${toneClass}`;
+
+                const source = document.createElement("span");
+                source.className = "event-log-source";
+                source.textContent = entry.source;
+
+                const description = document.createElement("div");
+                description.className = "event-log-description";
+
+                const action = document.createElement("strong");
+                action.textContent = `${entry.action} by ${entry.actor}`;
+
+                const details = document.createElement("span");
+                details.className = "event-log-details";
+                details.textContent = entry.details;
+
+                const time = document.createElement("time");
+                time.className = "event-log-time";
+                if (entry.timestamp) {
+                    time.dateTime = entry.timestamp;
+                    const parsed = new Date(entry.timestamp);
+                    time.textContent = Number.isNaN(parsed.getTime())
+                        ? entry.timestamp
+                        : formatter.format(parsed);
+                } else {
+                    time.textContent = "—";
+                }
+
+                description.append(action, details);
+                listItem.append(source, description, time);
+                eventLogsList.appendChild(listItem);
+            });
+        }
+
+        sourceFilter.addEventListener("change", renderEventLogs);
+        window.addEventListener("storage", (event) => {
+            if (event.key === "tileDepotEventLogs") {
+                renderEventLogs();
+            }
+        });
+
+        renderEventLogs();
+    </script>
+    <script type="module" src="js/auth-guard.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/header-date.js"></script>
+
+</body>
+
+</html>

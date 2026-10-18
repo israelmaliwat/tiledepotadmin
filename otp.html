@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Tile Depot - Authenticator</title>
+    <link rel="icon" type="image/png" href="images/inventory_icon.png">
 
     <!-- Bootstrap -->
     <link
@@ -162,6 +163,27 @@
             font-size: 13px;
             font-weight: 500;
             line-height: 1.4;
+        }
+
+        .remember-browser {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            color: #555555;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .remember-browser[hidden] {
+            display: none;
+        }
+
+        .remember-browser input {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            accent-color: #0808a8;
         }
 
 
@@ -473,6 +495,11 @@
                 <input class="otp-input" maxlength="1" type="text" inputmode="numeric">
 
             </div>
+
+            <label class="remember-browser" id="rememberBrowserOption" hidden>
+                <input type="checkbox" id="rememberBrowser">
+                <span>Remember this browser for 30 days</span>
+            </label>
 
             <div class="message-container" id="verificationStatus" role="status" aria-live="polite"></div>
 

@@ -1,0 +1,319 @@
+.sidebar-header {
+    padding-right: 16px;
+}
+
+.remember-toast {
+    position: fixed;
+    top: 84px;
+    right: 24px;
+    z-index: 1200;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    max-width: min(360px, calc(100vw - 32px));
+    padding: 12px 14px;
+    border: 1px solid #b7d4c4;
+    border-radius: 8px;
+    background: #eef6f1;
+    color: #2f5d4d;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.35;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.remember-toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.remember-toast-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #2f5d4d;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.remember-toast-copy {
+    flex: 1;
+    min-width: 0;
+}
+
+.remember-toast-copy strong {
+    font-weight: 700;
+}
+
+.remember-toast-close {
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.7;
+}
+
+.remember-toast-close:hover {
+    opacity: 1;
+}
+
+@media (max-width: 1024px) {
+    .remember-toast {
+        top: 76px;
+        right: 12px;
+        left: 12px;
+        max-width: none;
+    }
+}
+
+.sidebar-header h1 {
+    max-width: 100%;
+    min-width: 0;
+    font-size: 16px;
+    line-height: 1.2;
+    white-space: normal;
+}
+
+.profile-name {
+    width: fit-content;
+    max-width: min(40vw, 360px);
+    height: auto;
+    min-height: 23px;
+    padding: 0 12px;
+    border-radius: 15px;
+    font-size: 9px;
+    font-weight: 600;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+    line-height: 1.2;
+}
+
+.menu-toggle,
+.nav-overlay {
+    display: none;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.topbar-branding {
+    display: contents;
+}
+
+.mobile-brand {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        margin-right: 12px;
+        border: none;
+        border-radius: 6px;
+        background: #1800ad;
+        color: #ffffff;
+        font-size: 18px;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .topbar {
+        left: 0 !important;
+        padding-left: 12px;
+    }
+
+    .date {
+        font-size: 12px;
+    }
+
+    .main {
+        margin-left: 0 !important;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+    }
+
+    body.nav-open .sidebar {
+        transform: translateX(0);
+    }
+
+    .nav-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 950;
+        transition: opacity 0.2s ease;
+    }
+
+    body.nav-open .nav-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .sidebar {
+        z-index: 1100;
+    }
+
+    .dashboard-content,
+    .products-content,
+    .sales-content,
+    .deliveries-content {
+        width: calc(100% - 24px) !important;
+        margin-left: 12px !important;
+        margin-right: 12px !important;
+    }
+
+    .sales-section,
+    .current-sales {
+        width: calc(100% + 24px) !important;
+        margin-left: -12px !important;
+        margin-right: 0 !important;
+    }
+
+    .sales-table,
+    .products-table,
+    .delivery-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 767px) {
+    html,
+    body {
+        overflow-x: hidden;
+    }
+
+    .topbar {
+        height: auto;
+        min-height: 64px;
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    .topbar-left {
+        flex: 1;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    .topbar-branding {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 0;
+        gap: 2px;
+    }
+
+    .mobile-brand {
+        display: block;
+        margin: 0;
+        color: #1800ad;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: 0.01em;
+    }
+
+    .menu-toggle {
+        width: 36px;
+        height: 36px;
+        margin-right: 0;
+        font-size: 16px;
+    }
+
+    .date {
+        font-size: 11px;
+        line-height: 1.2;
+        white-space: normal;
+    }
+
+    .profile {
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    .profile-circle {
+        width: 32px;
+        height: 32px;
+        border-width: 3px;
+        font-size: 15px;
+    }
+
+    .profile-name {
+        display: flex;
+        width: fit-content;
+        max-width: 45vw;
+        height: auto;
+        min-height: 22px;
+        padding: 3px 8px;
+        font-size: 8px;
+        font-weight: 600;
+        line-height: 1.15;
+        text-align: center;
+        white-space: normal;
+        overflow: visible;
+        overflow-wrap: anywhere;
+    }
+
+    .main {
+        padding-top: 76px;
+    }
+
+    .summary,
+    .table-section,
+    .top-charts,
+    .products-content {
+        grid-template-columns: 1fr !important;
+        flex-direction: column !important;
+    }
+
+    .products-panel,
+    .categories-panel {
+        width: 100% !important;
+    }
+
+    .dashboard-content {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 14px 12px 40px;
+        box-sizing: border-box;
+    }
+
+    .sales-section,
+    .current-sales {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        overflow-x: auto;
+    }
+}

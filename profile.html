@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profile - Tile Depot Inventory</title>
+    <link rel="icon" type="image/png" href="images/inventory_icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="css/password-toggle.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #f1f2f5;
+            overflow-x: auto;
+            color: #111;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #292929;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            width: 250px;
+            height: 78px;
+            background: #1800ad;
+            display: flex;
+            align-items: center;
+            padding-left: 27px;
+        }
+
+        .sidebar-header h1 {
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .sidebar-menu {
+            padding-top: 27px;
+        }
+
+        .sidebar-menu a {
+            height: 53px;
+            display: flex;
+            align-items: center;
+            padding-left: 18px;
+            color: #999999;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .sidebar-menu a:hover {
+            background: #333333;
+            color: white;
+        }
+
+        .sidebar-menu a.active {
+            color: white;
+            background: #333333;
+        }
+
+        .sidebar-menu i {
+            width: 33px;
+            margin-right: 14px;
+            text-align: center;
+            font-size: 25px;
+        }
+
+        .logout-button {
+            position: absolute;
+            left: 91px;
+            bottom: 105px;
+            width: 38px;
+            height: 42px;
+            border: none;
+            border-radius: 4px;
+            background: #999999;
+            color: #292929;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background: #bbbbbb;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            height: 78px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px 0 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
+            z-index: 900;
+        }
+
+        .date {
+            color: #999999;
+            font-size: 14px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-circle {
+            width: 42px;
+            height: 42px;
+            border: 4px solid #1800ad;
+            border-radius: 50%;
+            color: #1800ad;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .profile-name {
+            max-width: 175px;
+            height: 23px;
+            padding: 0 12px;
+            border-radius: 15px;
+            background: #1800ad;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .main {
+            margin-left: 250px;
+            padding-top: 78px;
+            min-height: 100vh;
+        }
+
+        .profile-content {
+            width: calc(100% - 76px);
+            margin: 0 38px;
+            padding: 18px 0 60px;
+            box-sizing: border-box;
+        }
+
+        .profile-page-title {
+            margin-bottom: 22px;
+            padding-bottom: 5px;
+            border-bottom: 3px solid #1800ad;
+            font-size: 26px;
+            font-weight: 800;
+            color: #111111;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 12px;
+            align-items: start;
+        }
+
+        .profile-card {
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border: 1px solid #d1d1d1;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            min-width: 0;
+        }
+
+        .profile-card form {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .profile-card h2 {
+            margin-bottom: 4px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .profile-card-copy {
+            margin-bottom: 12px;
+            color: #666666;
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .profile-email {
+            margin-bottom: 12px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            background: #f5f6f7;
+            color: #333333;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .profile-email span {
+            color: #1800ad;
+            font-weight: 700;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .field label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #222222;
+        }
+
+        .field input {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #999999;
+            border-radius: 8px;
+            padding: 0 12px;
+            font-family: "Poppins", sans-serif;
+            font-size: 14px;
+            outline: none;
+            background: #ffffff;
+        }
+
+        .field input:focus {
+            border-color: #1800ad;
+        }
+
+        .password-checks {
+            display: grid;
+            gap: 4px;
+            margin: 0 0 10px;
+            padding: 0;
+            list-style: none;
+            color: #666666;
+            font-size: 12px;
+        }
+
+        .password-checks li::before {
+            content: "○";
+            display: inline-block;
+            width: 18px;
+            color: #777777;
+        }
+
+        .password-checks li.met {
+            color: #16803c;
+        }
+
+        .password-checks li.met::before {
+            content: "✓";
+            font-weight: 700;
+        }
+
+        .profile-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: auto;
+            padding-top: 8px;
+        }
+
+        .profile-save {
+            min-width: 132px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            background: #1800ad;
+            color: #ffffff;
+            font-family: "Poppins", sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .profile-save:hover {
+            background: #13008a;
+        }
+
+        .profile-save:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .profile-status {
+            min-height: 18px;
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .profile-status.loading {
+            color: #666666;
+        }
+
+        .profile-status.success {
+            color: #16803c;
+        }
+
+        .profile-status.error {
+            color: #c62828;
+        }
+
+        @media (max-width: 1024px) {
+            .main {
+                margin-left: 0;
+            }
+
+            .profile-content {
+                width: calc(100% - 24px);
+                margin: 0 12px;
+                padding: 14px 0 24px;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .profile-page-title {
+                font-size: 22px;
+                margin-bottom: 10px;
+            }
+
+            .profile-card {
+                padding: 14px;
+            }
+
+            .profile-actions {
+                justify-content: stretch;
+            }
+
+            .profile-save {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="css/nav.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1>TILE DEPOT INVENTORY</h1>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="dashboard.html">
+                <i class="fa-solid fa-house"></i>
+                <span>DASHBOARD</span>
+            </a>
+
+            <a href="deliveries.html">
+                <i class="fa-solid fa-truck"></i>
+                <span>DELIVERIES</span>
+            </a>
+
+            <a href="products.html">
+                <i class="fa-solid fa-box"></i>
+                <span>PRODUCTS</span>
+            </a>
+
+            <a href="sales.html">
+                <i class="fa-solid fa-peso-sign"></i>
+                <span>SALES</span>
+            </a>
+
+            <a href="event-logs.html">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>EVENT LOGS</span>
+            </a>
+
+            <a href="profile.html" class="active">
+                <i class="fa-solid fa-user"></i>
+                <span>PROFILE</span>
+            </a>
+        </nav>
+
+        <button class="logout-button" onclick="window.logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+    </aside>
+
+    <div class="nav-overlay"></div>
+
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="topbar-branding">
+                <p class="mobile-brand">TILE DEPOT INVENTORY</p>
+                <div class="date" data-current-date></div>
+            </div>
+        </div>
+
+        <div class="profile">
+            <div class="profile-circle">
+                <i class="fa-regular fa-user"></i>
+            </div>
+            <div class="profile-name">ACCOUNT</div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="profile-content">
+            <h1 class="profile-page-title">Profile</h1>
+
+            <div class="profile-grid">
+                <section class="profile-card">
+                    <h2>Account</h2>
+                    <p class="profile-card-copy">Your signed-in email stays the same. Update the name shown in the app.</p>
+                    <div class="profile-email">
+                        Email: <span id="profileEmail">—</span>
+                    </div>
+
+                    <form id="nameForm">
+                        <div class="field">
+                            <label for="lastName">Last Name</label>
+                            <input id="lastName" type="text" maxlength="80" autocomplete="family-name" required>
+                        </div>
+                        <div class="field">
+                            <label for="firstName">First Name</label>
+                            <input id="firstName" type="text" maxlength="80" autocomplete="given-name" required>
+                        </div>
+                        <div class="field">
+                            <label for="middleName">Middle Name (Optional)</label>
+                            <input id="middleName" type="text" maxlength="80" autocomplete="additional-name">
+                        </div>
+                        <div class="profile-actions">
+                            <button class="profile-save" type="submit">Save Name</button>
+                        </div>
+                        <div id="nameStatus" class="profile-status" role="status" aria-live="polite"></div>
+                    </form>
+                </section>
+
+                <section class="profile-card">
+                    <h2>Change Password</h2>
+                    <p class="profile-card-copy">Enter your current password, then choose a new one.</p>
+
+                    <form id="passwordForm">
+                        <div class="field">
+                            <label for="currentPassword">Current Password</label>
+                            <input id="currentPassword" type="password" autocomplete="current-password" required>
+                        </div>
+                        <div class="field">
+                            <label for="newPassword">New Password</label>
+                            <input id="newPassword" type="password" minlength="12" autocomplete="new-password" required>
+                        </div>
+                        <ul class="password-checks" aria-live="polite">
+                            <li id="ruleLength">At least 12 characters</li>
+                            <li id="ruleUpper">At least one uppercase letter</li>
+                            <li id="ruleLower">At least one lowercase letter</li>
+                            <li id="ruleDigit">At least one digit</li>
+                            <li id="ruleSymbol">At least one symbol</li>
+                        </ul>
+                        <div class="field">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input id="confirmPassword" type="password" minlength="12" autocomplete="new-password" required>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="profile-save" type="submit">Update Password</button>
+                        </div>
+                        <div id="passwordStatus" class="profile-status" role="status" aria-live="polite"></div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="js/auth-guard.js"></script>
+    <script type="module" src="js/profile.js"></script>
+    <script src="js/password-toggle.js" defer></script>
+    <script src="js/nav.js"></script>
+    <script src="js/header-date.js"></script>
+
+</body>
+
+</html>

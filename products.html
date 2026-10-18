@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Products - Tile Depot Inventory</title>
+    <link rel="icon" type="image/png" href="images/inventory_icon.png">
 
     <!-- Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -292,9 +293,8 @@
         ========================================= */
 
         .products-panel {
-            width: 890px;
-
-            flex-shrink: 0;
+            flex: 1;
+            min-width: 0;
         }
 
 
@@ -414,20 +414,6 @@
         }
 
 
-        /* Reorder */
-
-        .reorder-product {
-            min-width: 100px;
-
-            background: #1800ad;
-        }
-
-
-        .reorder-product:hover {
-            background: #100078;
-        }
-
-
         /* =========================================
            SEARCH
         ========================================= */
@@ -513,7 +499,6 @@
             background: #e7e7e7;
         }
 
-
         /* =========================================
            PRODUCT CHECKBOX
         ========================================= */
@@ -565,7 +550,7 @@
         ========================================= */
 
         .product-name {
-            width: 135px;
+            width: 120px;
 
             font-size: 12px;
             font-weight: 500;
@@ -575,7 +560,17 @@
 
 
         .product-code {
-            width: 135px;
+            width: 120px;
+
+            font-size: 12px;
+            font-weight: 500;
+
+            white-space: nowrap;
+        }
+
+
+        .product-size {
+            width: 90px;
 
             font-size: 12px;
             font-weight: 500;
@@ -585,7 +580,7 @@
 
 
         .product-quantity {
-            width: 140px;
+            width: 120px;
 
             font-size: 12px;
             font-weight: 500;
@@ -676,7 +671,8 @@
            CATEGORY CHECKBOX
         ========================================= */
 
-        .category-checkbox {
+        .category-checkbox,
+        .size-checkbox {
             appearance: none;
 
             width: 20px;
@@ -692,7 +688,8 @@
         }
 
 
-        .category-checkbox:checked::after {
+        .category-checkbox:checked::after,
+        .size-checkbox:checked::after {
             content: "✓";
 
             position: absolute;
@@ -801,6 +798,46 @@
             width: min(830px, 100%);
         }
 
+        #deleteConfirmModal {
+            padding: 24px;
+        }
+
+        #deleteConfirmModal .modal-card {
+            width: min(860px, 80vw);
+            background: #f0f0f0;
+            border-radius: 14px;
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
+            padding: 26px 34px 24px;
+        }
+
+        #deleteConfirmModal h3 {
+            font-size: 38px;
+            line-height: 1.2;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+
+        #deleteConfirmModal .delete-product-copy {
+            margin: -8px 0 16px;
+            color: #333333;
+            font-size: 16px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        #deleteConfirmModal .modal-actions {
+            gap: 30px;
+            margin-top: 18px;
+        }
+
+        #deleteConfirmModal .modal-action {
+            min-width: 180px;
+            height: 50px;
+            border-radius: 10px;
+            font-size: 24px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
         .modal-title {
             font-size: 32px;
             font-weight: 800;
@@ -833,7 +870,8 @@
             color: #222222;
         }
 
-        .field input {
+        .field input,
+        .field select {
             width: 100%;
             height: 42px;
             border: 1px solid #999999;
@@ -848,6 +886,10 @@
         .field input:focus {
             border-color: #1800ad;
             box-shadow: 0 0 0 2px rgba(24, 0, 173, 0.1);
+        }
+
+        .field input.force-uppercase {
+            text-transform: uppercase;
         }
 
         .modal-actions {
@@ -912,6 +954,33 @@
             text-align: left;
             color: #111111;
             font-weight: 700;
+        }
+
+        #deleteProductSummary {
+            display: grid;
+            gap: 8px;
+            max-height: 240px;
+            margin-bottom: 18px;
+            overflow-y: auto;
+        }
+
+        .delete-product-item {
+            display: grid;
+            gap: 4px;
+            padding: 12px 14px;
+            border: 1px solid #d9d9d9;
+            border-radius: 8px;
+            background: #ffffff;
+        }
+
+        .delete-product-item strong {
+            color: #111111;
+            font-size: 15px;
+        }
+
+        .delete-product-item span {
+            color: #555555;
+            font-size: 13px;
         }
 
         .deleted-table {
@@ -1019,7 +1088,8 @@
             }
 
             .products-panel {
-                width: 520px;
+                flex: 1;
+                min-width: 0;
             }
 
             .categories-panel {
@@ -1067,17 +1137,376 @@
                 gap: 25px;
             }
 
-            .products-panel {
-                width: 500px;
+            .products-content {
+                flex-direction: column;
             }
 
+            .products-panel,
             .categories-panel {
-                width: 210px;
+                width: 100%;
             }
 
         }
 
+        @media (min-width: 768px) and (max-width: 1100px) {
+
+            .products-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .products-panel,
+            .categories-panel {
+                width: 100%;
+            }
+
+            .products-header {
+                height: auto;
+                min-height: 40px;
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 8px 0;
+            }
+
+            .products-title {
+                flex: 0 0 100%;
+            }
+
+            .product-actions {
+                flex-wrap: wrap;
+            }
+
+            .product-row {
+                display: grid;
+                grid-template-columns: 36px minmax(80px, 1.1fr) minmax(90px, 1fr) minmax(70px, 0.7fr) minmax(100px, 0.9fr) minmax(60px, 0.6fr);
+                gap: 6px;
+                height: auto;
+                min-height: 43px;
+                padding: 7px;
+            }
+
+            .product-checkbox {
+                width: auto;
+            }
+
+            .product-name,
+            .product-code,
+            .product-size,
+            .product-quantity,
+            .product-price {
+                width: auto;
+                min-width: 0;
+                white-space: normal;
+                overflow-wrap: anywhere;
+            }
+
+        }
+
+        @media (max-width: 767px) {
+
+            #recentlyDeletedModal {
+                padding: 12px;
+            }
+
+            #recentlyDeletedModal .modal-card.wide {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                max-width: 100%;
+                max-height: calc(100dvh - 24px);
+                overflow: hidden;
+                padding: 16px 12px 12px;
+            }
+
+            #recentlyDeletedModal .deleted-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            #recentlyDeletedModal .deleted-header-left {
+                min-width: 0;
+                gap: 10px;
+            }
+
+            #recentlyDeletedModal .deleted-header h3 {
+                min-width: 0;
+                font-size: 24px;
+                line-height: 1.15;
+            }
+
+            #recentlyDeletedModal .deleted-search {
+                width: 100%;
+                max-width: 100%;
+                height: 38px;
+                flex: 0 0 auto;
+            }
+
+            .deleted-table-container {
+                width: 100%;
+                max-width: 100%;
+                max-height: calc(100dvh - 190px);
+                overflow-x: hidden;
+                overflow-y: auto;
+                overscroll-behavior: contain;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #recentlyDeletedModal .deleted-table {
+                display: block !important;
+                width: 100%;
+                min-width: 0;
+                border: 0;
+                border-radius: 0;
+                overflow: visible;
+            }
+
+            #recentlyDeletedModal .deleted-table thead {
+                display: none;
+            }
+
+            #recentlyDeletedModal .deleted-table tbody {
+                display: grid;
+                gap: 8px;
+            }
+
+            #recentlyDeletedModal .deleted-table tbody tr {
+                display: grid;
+                grid-template-columns: 24px minmax(0, 1fr);
+                grid-template-areas:
+                    "select product"
+                    "select code"
+                    "select quantity"
+                    "select price"
+                    "select actions";
+                gap: 5px 10px;
+                padding: 10px;
+                border: 1px solid #d5d5d5;
+                border-radius: 8px;
+                background: #ffffff;
+            }
+
+            #recentlyDeletedModal .deleted-table td {
+                display: block;
+                min-width: 0;
+                padding: 2px 0;
+                border: 0;
+                overflow-wrap: anywhere;
+            }
+
+            #recentlyDeletedModal .deleted-table td:first-child {
+                grid-area: select;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                padding-top: 8px;
+            }
+
+            #recentlyDeletedModal .deleted-table td:nth-child(2) {
+                grid-area: product;
+            }
+
+            #recentlyDeletedModal .deleted-table td:nth-child(3) {
+                grid-area: code;
+            }
+
+            #recentlyDeletedModal .deleted-table td:nth-child(4) {
+                grid-area: quantity;
+            }
+
+            #recentlyDeletedModal .deleted-table td:nth-child(5) {
+                grid-area: price;
+            }
+
+            #recentlyDeletedModal .deleted-table td:nth-child(6) {
+                grid-area: actions;
+            }
+
+            #recentlyDeletedModal .deleted-table td:nth-child(2)::before,
+            #recentlyDeletedModal .deleted-table td:nth-child(3)::before,
+            #recentlyDeletedModal .deleted-table td:nth-child(4)::before,
+            #recentlyDeletedModal .deleted-table td:nth-child(5)::before {
+                display: block;
+                color: #666666;
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+
+            #recentlyDeletedModal .deleted-table td:nth-child(2)::before {
+                content: "PRODUCT";
+            }
+
+            #recentlyDeletedModal .deleted-table td:nth-child(3)::before {
+                content: "CODE";
+            }
+
+            #recentlyDeletedModal .deleted-table td:nth-child(4)::before {
+                content: "QUANTITY";
+            }
+
+            #recentlyDeletedModal .deleted-table td:nth-child(5)::before {
+                content: "PRICE";
+            }
+
+            #recentlyDeletedModal .deleted-actions {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            #deleteConfirmModal {
+                padding: 16px;
+            }
+
+            #deleteConfirmModal .modal-card {
+                width: min(100%, 420px);
+                max-height: calc(100dvh - 32px);
+                overflow-y: auto;
+                padding: 22px 18px 20px;
+            }
+
+            #deleteConfirmModal h3 {
+                font-size: 30px;
+                line-height: 1.15;
+                margin-bottom: 18px;
+            }
+
+            #deleteConfirmModal .delete-product-copy {
+                font-size: 14px;
+            }
+
+            #deleteProductSummary {
+                max-height: 180px;
+                margin-bottom: 14px;
+            }
+
+            #deleteConfirmModal .modal-actions {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+                margin-top: 12px;
+            }
+
+            #deleteConfirmModal .modal-action {
+                width: 100%;
+                min-width: 0;
+                min-height: 46px;
+                height: auto;
+                padding: 6px;
+                font-size: 16px;
+                line-height: 1.1;
+                white-space: normal;
+            }
+
+            .products-header {
+                height: auto;
+                flex-wrap: wrap;
+                gap: 8px;
+                padding-bottom: 8px;
+            }
+
+            .product-actions {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                width: 100%;
+                gap: 7px;
+            }
+
+            .product-button {
+                width: 100%;
+                min-width: 0;
+                min-height: 34px;
+                height: auto;
+                padding: 6px 8px;
+                white-space: normal;
+                line-height: 1.2;
+            }
+
+            .product-row {
+                display: grid;
+                grid-template-columns: 32px minmax(0, 1.1fr) minmax(0, 1fr);
+                grid-template-areas:
+                    "checkbox name code"
+                    "checkbox size quantity"
+                    "checkbox price price";
+                gap: 6px 8px;
+                height: auto;
+                min-height: 76px;
+                padding: 8px;
+            }
+
+            .product-checkbox {
+                grid-area: checkbox;
+                width: auto;
+                align-self: stretch;
+            }
+
+            .product-name,
+            .product-code,
+            .product-size,
+            .product-quantity,
+            .product-price {
+                width: auto;
+                min-width: 0;
+                font-size: 12px;
+                white-space: normal;
+                overflow-wrap: anywhere;
+            }
+
+            .product-name {
+                grid-area: name;
+            }
+
+            .product-size {
+                grid-area: size;
+            }
+
+            .product-size::before {
+                content: "SIZE";
+                display: block;
+                color: #666666;
+                font-size: 10px;
+                font-weight: 600;
+            }
+
+            .product-code {
+                grid-area: code;
+            }
+
+            .product-quantity {
+                grid-area: quantity;
+            }
+
+            .product-price {
+                grid-area: price;
+            }
+
+            .product-name::before,
+            .product-code::before,
+            .product-price::before {
+                display: block;
+                margin-bottom: 2px;
+                color: #666666;
+                font-size: 9px;
+                font-weight: 700;
+            }
+
+            .product-name::before {
+                content: "PRODUCT NAME";
+            }
+
+            .product-code::before {
+                content: "PRODUCT ID";
+            }
+
+            .product-price::before {
+                content: "PRICE";
+            }
+        }
+
     </style>
+    <link rel="stylesheet" href="css/nav.css">
 
 </head>
 
@@ -1151,12 +1580,34 @@
             </a>
 
 
+            <a href="event-logs.html">
+
+                <i class="fa-solid fa-clipboard-list"></i>
+
+                <span>
+                    EVENT LOGS
+                </span>
+
+            </a>
+
+
+            <a href="profile.html">
+
+                <i class="fa-solid fa-user"></i>
+
+                <span>
+                    PROFILE
+                </span>
+
+            </a>
+
+
         </nav>
 
 
         <button
             class="logout-button"
-            onclick="logout()"
+            onclick="window.logout()"
         >
 
             <i class="fa-solid fa-right-from-bracket"></i>
@@ -1166,7 +1617,7 @@
 
     </aside>
 
-
+    <div class="nav-overlay"></div>
 
     <!-- =========================================
          TOPBAR
@@ -1174,11 +1625,14 @@
 
     <header class="topbar">
 
-
-        <div class="date">
-
-            May 8, 2026, 08:51 PM
-
+        <div class="topbar-left">
+            <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="topbar-branding">
+                <p class="mobile-brand">TILE DEPOT INVENTORY</p>
+                <div class="date" data-current-date></div>
+            </div>
         </div>
 
 
@@ -1270,18 +1724,6 @@
                         </button>
 
 
-                        <button
-                            class="product-button reorder-product"
-                            onclick="reorderProducts()"
-                        >
-
-                            <i class="fa-solid fa-arrows-up-down"></i>
-
-                            REORDER
-
-                        </button>
-
-
                     </div>
 
 
@@ -1324,6 +1766,7 @@
 
                     <div
                         class="product-row"
+                        data-size="30x60"
                         data-category="CERAMIC TILES"
                     >
 
@@ -1343,7 +1786,14 @@
 
                         <div class="product-code">
 
-                            Tile #00101101
+                            Tile #001
+
+                        </div>
+
+
+                        <div class="product-size">
+
+                            Size: 30x60
 
                         </div>
 
@@ -1369,6 +1819,7 @@
 
                     <div
                         class="product-row"
+                        data-size="60x60"
                         data-category="CERAMIC TILES"
                     >
 
@@ -1388,7 +1839,14 @@
 
                         <div class="product-code">
 
-                            Tile #0101011
+                            Tile #002
+
+                        </div>
+
+
+                        <div class="product-size">
+
+                            Size: 60x60
 
                         </div>
 
@@ -1414,7 +1872,8 @@
 
                     <div
                         class="product-row"
-                        data-category="CEMENT TILES"
+                        data-size="40x40"
+                        data-category="CERAMIC TILES"
                     >
 
                         <div class="product-checkbox">
@@ -1433,7 +1892,14 @@
 
                         <div class="product-code">
 
-                            Tile #0101011
+                            Tile #003
+
+                        </div>
+
+
+                        <div class="product-size">
+
+                            Size: 40x40
 
                         </div>
 
@@ -1459,7 +1925,8 @@
 
                     <div
                         class="product-row"
-                        data-category="PAVING TILES"
+                        data-size="30x60"
+                        data-category="PORCELAIN TILES"
                     >
 
                         <div class="product-checkbox">
@@ -1478,7 +1945,14 @@
 
                         <div class="product-code">
 
-                            Tile #0101011
+                            Tile #004
+
+                        </div>
+
+
+                        <div class="product-size">
+
+                            Size: 30x60
 
                         </div>
 
@@ -1504,6 +1978,7 @@
 
                     <div
                         class="product-row"
+                        data-size="60x60"
                         data-category="PORCELAIN TILES"
                     >
 
@@ -1523,7 +1998,14 @@
 
                         <div class="product-code">
 
-                            Tile #0101011
+                            Tile #005
+
+                        </div>
+
+
+                        <div class="product-size">
+
+                            Size: 60x60
 
                         </div>
 
@@ -1549,7 +2031,8 @@
 
                     <div
                         class="product-row"
-                        data-category="PAVING BLOCKS"
+                        data-size="40x40"
+                        data-category="CERAMIC TILES"
                     >
 
                         <div class="product-checkbox">
@@ -1568,7 +2051,14 @@
 
                         <div class="product-code">
 
-                            Tile #0101011
+                            Tile #006
+
+                        </div>
+
+
+                        <div class="product-size">
+
+                            Size: 40x40
 
                         </div>
 
@@ -1594,7 +2084,8 @@
 
                     <div
                         class="product-row"
-                        data-category="VITRIFIED TILES"
+                        data-size="30x60"
+                        data-category="PORCELAIN TILES"
                     >
 
                         <div class="product-checkbox">
@@ -1613,7 +2104,14 @@
 
                         <div class="product-code">
 
-                            Tile #0101011
+                            Tile #007
+
+                        </div>
+
+
+                        <div class="product-size">
+
+                            Size: 30x60
 
                         </div>
 
@@ -1635,7 +2133,6 @@
 
 
                 </div>
-
 
             </section>
 
@@ -1684,44 +2181,6 @@
 
 
 
-                    <!-- CEMENT -->
-
-                    <div class="category-row">
-
-                        <span class="category-name">
-                            CEMENT TILES
-                        </span>
-
-
-                        <input
-                            type="checkbox"
-                            class="category-checkbox"
-                            data-category="CEMENT TILES"
-                        >
-
-                    </div>
-
-
-
-                    <!-- PAVING -->
-
-                    <div class="category-row">
-
-                        <span class="category-name">
-                            PAVING TILES
-                        </span>
-
-
-                        <input
-                            type="checkbox"
-                            class="category-checkbox"
-                            data-category="PAVING TILES"
-                        >
-
-                    </div>
-
-
-
                     <!-- PORCELAIN -->
 
                     <div class="category-row">
@@ -1735,44 +2194,6 @@
                             type="checkbox"
                             class="category-checkbox"
                             data-category="PORCELAIN TILES"
-                        >
-
-                    </div>
-
-
-
-                    <!-- PAVING BLOCKS -->
-
-                    <div class="category-row">
-
-                        <span class="category-name">
-                            PAVING BLOCKS
-                        </span>
-
-
-                        <input
-                            type="checkbox"
-                            class="category-checkbox"
-                            data-category="PAVING BLOCKS"
-                        >
-
-                    </div>
-
-
-
-                    <!-- VITRIFIED -->
-
-                    <div class="category-row">
-
-                        <span class="category-name">
-                            VITRIFIED TILES
-                        </span>
-
-
-                        <input
-                            type="checkbox"
-                            class="category-checkbox"
-                            data-category="VITRIFIED TILES"
                         >
 
                     </div>
@@ -1796,6 +2217,56 @@
 
                     </div>
 
+
+                </div>
+
+
+                <div class="categories-header" style="margin-top: 18px;">
+
+                    <h2 class="categories-title">
+                        SIZES
+                    </h2>
+
+                </div>
+
+
+                <div class="category-list">
+
+                    <div class="category-row">
+                        <span class="category-name">30x60</span>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            data-size="30x60"
+                        >
+                    </div>
+
+                    <div class="category-row">
+                        <span class="category-name">60x60</span>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            data-size="60x60"
+                        >
+                    </div>
+
+                    <div class="category-row">
+                        <span class="category-name">40x40</span>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            data-size="40x40"
+                        >
+                    </div>
+
+                    <div class="category-row">
+                        <span class="category-name">ALL</span>
+                        <input
+                            type="checkbox"
+                            class="size-checkbox"
+                            id="allSize"
+                        >
+                    </div>
 
                 </div>
 
@@ -1849,19 +2320,28 @@
             <div class="modal-form">
                 <div class="field">
                     <label for="newProductName">Code Name</label>
-                    <input id="newProductName" type="text" value="">
+                    <input id="newProductName" class="force-uppercase" type="text" value="" autocapitalize="characters">
                 </div>
                 <div class="field">
                     <label for="newBatchNumber">Batch Number</label>
-                    <input id="newBatchNumber" type="text" value="">
+                    <input id="newBatchNumber" type="text" value="" readonly>
+                </div>
+                <div class="field">
+                    <label for="newProductSize">Size</label>
+                    <select id="newProductSize">
+                        <option value="">Select size</option>
+                        <option value="30x60">30x60</option>
+                        <option value="60x60">60x60</option>
+                        <option value="40x40">40x40</option>
+                    </select>
                 </div>
                 <div class="field">
                     <label for="newQuantity">Quantity</label>
-                    <input id="newQuantity" type="text" value="">
+                    <input id="newQuantity" type="number" min="0" step="1" inputmode="numeric" value="">
                 </div>
                 <div class="field">
                     <label for="newPrice">Price</label>
-                    <input id="newPrice" type="text" value="">
+                    <input id="newPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="₱" value="">
                 </div>
                 <div class="modal-actions">
                     <button class="modal-action cancel" type="button" onclick="closeModal('addProductModal')">Cancel</button>
@@ -1872,32 +2352,12 @@
     </div>
 
     <div class="modal-overlay" id="deleteConfirmModal">
-        <div class="modal-card">
-            <h3 class="modal-title" style="font-size:30px;">Are you sure you want to delete this product?</h3>
-            <div class="confirm-summary">
-                <div class="summary-row">
-                    <div class="summary-label">CODE NAME</div>
-                    <div class="summary-colon">:</div>
-                    <div class="summary-value" id="deleteCodeName">CODE NAME</div>
-                </div>
-                <div class="summary-row">
-                    <div class="summary-label">BATCH NUMBER</div>
-                    <div class="summary-colon">:</div>
-                    <div class="summary-value" id="deleteBatchNumber">BATCH NUMBER</div>
-                </div>
-                <div class="summary-row">
-                    <div class="summary-label">QUANTITY</div>
-                    <div class="summary-colon">:</div>
-                    <div class="summary-value" id="deleteQuantity">QUANTITY</div>
-                </div>
-                <div class="summary-row">
-                    <div class="summary-label">PRICE</div>
-                    <div class="summary-colon">:</div>
-                    <div class="summary-value" id="deletePrice">PRICE</div>
-                </div>
-            </div>
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="deleteProductTitle">
+            <h3 id="deleteProductTitle">Delete Product</h3>
+            <p class="delete-product-copy" id="deleteProductPrompt">Are you sure you want to delete this product?</p>
+            <div id="deleteProductSummary"></div>
             <div class="modal-actions">
-                <button class="modal-action cancel" type="button" onclick="closeModal('deleteConfirmModal')">Cancel</button>
+                <button class="modal-action cancel" type="button" onclick="cancelDeleteSelectedProducts()">Cancel</button>
                 <button class="modal-action confirm" type="button" onclick="confirmDeleteSelectedProduct()">Delete</button>
             </div>
         </div>
@@ -1909,19 +2369,28 @@
             <div class="modal-form">
                 <div class="field">
                     <label for="editProductName">Code Name</label>
-                    <input id="editProductName" type="text" value="">
+                    <input id="editProductName" class="force-uppercase" type="text" value="" autocapitalize="characters">
                 </div>
                 <div class="field">
                     <label for="editBatchNumber">Batch Number</label>
-                    <input id="editBatchNumber" type="text" value="">
+                    <input id="editBatchNumber" type="text" value="" readonly>
+                </div>
+                <div class="field">
+                    <label for="editProductSize">Size</label>
+                    <select id="editProductSize">
+                        <option value="">Select size</option>
+                        <option value="30x60">30x60</option>
+                        <option value="60x60">60x60</option>
+                        <option value="40x40">40x40</option>
+                    </select>
                 </div>
                 <div class="field">
                     <label for="editQuantity">Quantity</label>
-                    <input id="editQuantity" type="text" value="">
+                    <input id="editQuantity" type="number" min="0" step="1" inputmode="numeric" value="">
                 </div>
                 <div class="field">
                     <label for="editPrice">Price</label>
-                    <input id="editPrice" type="text" value="">
+                    <input id="editPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="₱" value="">
                 </div>
                 <div class="modal-actions">
                     <button class="modal-action cancel" type="button" onclick="closeModal('editProductModal')">Cancel</button>
@@ -1940,6 +2409,7 @@
                 </div>
                 <input class="deleted-search" type="text" placeholder="Search" id="deletedSearch">
             </div>
+            <div class="deleted-table-container">
             <table class="deleted-table" id="deletedTable">
                 <thead>
                     <tr>
@@ -1952,10 +2422,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-product-name="LUXURY WHITE" data-product-code="Tile #00101101" data-quantity="223 pcs" data-price="₱65.00">
+                    <tr data-product-name="LUXURY WHITE" data-product-code="Tile #008" data-quantity="223 pcs" data-price="₱65.00">
                         <td><input type="checkbox"></td>
                         <td>LUXURY WHITE</td>
-                        <td>Tile #00101101</td>
+                        <td>Tile #008</td>
                         <td>223 pcs</td>
                         <td>₱65.00</td>
                         <td>
@@ -1965,10 +2435,10 @@
                             </div>
                         </td>
                     </tr>
-                    <tr data-product-name="LUXURY BLACK" data-product-code="Tile #0101011" data-quantity="243 pcs" data-price="₱35.00">
+                    <tr data-product-name="LUXURY BLACK" data-product-code="Tile #009" data-quantity="243 pcs" data-price="₱35.00">
                         <td><input type="checkbox"></td>
                         <td>LUXURY BLACK</td>
-                        <td>Tile #0101011</td>
+                        <td>Tile #009</td>
                         <td>243 pcs</td>
                         <td>₱35.00</td>
                         <td>
@@ -1980,6 +2450,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 
@@ -2112,12 +2583,17 @@
 
 
         /* =========================================
-           CATEGORY FILTER
+           CATEGORY + SIZE FILTER
         ========================================= */
 
         const categoryCheckboxes =
             document.querySelectorAll(
                 ".category-checkbox[data-category]"
+            );
+
+        const sizeCheckboxes =
+            document.querySelectorAll(
+                ".size-checkbox[data-size]"
             );
 
 
@@ -2126,13 +2602,29 @@
                 "allCategory"
             );
 
+        const allSize =
+            document.getElementById(
+                "allSize"
+            );
+
 
         categoryCheckboxes.forEach(
             function (checkbox) {
 
                 checkbox.addEventListener(
                     "change",
-                    filterCategories
+                    applyProductFilters
+                );
+
+            }
+        );
+
+        sizeCheckboxes.forEach(
+            function (checkbox) {
+
+                checkbox.addEventListener(
+                    "change",
+                    applyProductFilters
                 );
 
             }
@@ -2153,77 +2645,79 @@
                         }
                     );
 
+                }
 
-                    showAllProducts();
+                applyProductFilters();
+
+            }
+        );
+
+        allSize.addEventListener(
+            "change",
+            function () {
+
+                if (allSize.checked) {
+
+                    sizeCheckboxes.forEach(
+                        function (checkbox) {
+
+                            checkbox.checked = false;
+
+                        }
+                    );
 
                 }
+
+                applyProductFilters();
 
             }
         );
 
 
-        function filterCategories() {
+        function getSelectedValues(checkboxes, datasetKey) {
+            const selected = [];
 
-            const selectedCategories = [];
-
-
-            categoryCheckboxes.forEach(
-                function (checkbox) {
-
-                    if (checkbox.checked) {
-
-                        selectedCategories.push(
-                            checkbox.dataset.category
-                        );
-
-                    }
-
+            checkboxes.forEach(function (checkbox) {
+                if (checkbox.checked) {
+                    selected.push(checkbox.dataset[datasetKey]);
                 }
-            );
+            });
 
+            return selected;
+        }
+
+
+        function applyProductFilters() {
+
+            const selectedCategories = getSelectedValues(categoryCheckboxes, "category");
+            const selectedSizes = getSelectedValues(sizeCheckboxes, "size");
+
+            if (selectedCategories.length) {
+                allCategory.checked = false;
+            }
+
+            if (selectedSizes.length) {
+                allSize.checked = false;
+            }
 
             const products =
                 productList.querySelectorAll(
                     ".product-row"
                 );
 
-
-            if (
-                selectedCategories.length === 0
-            ) {
-
-                showAllProducts();
-
-                return;
-
-            }
-
-
-            allCategory.checked = false;
-
-
             products.forEach(
                 function (product) {
 
-                    const category =
-                        product.dataset.category;
+                    const categoryMatch =
+                        selectedCategories.length === 0 ||
+                        selectedCategories.includes(product.dataset.category);
 
+                    const sizeMatch =
+                        selectedSizes.length === 0 ||
+                        selectedSizes.includes(product.dataset.size);
 
-                    if (
-                        selectedCategories.includes(
-                            category
-                        )
-                    ) {
-
-                        product.style.display =
-                            "flex";
-
-                    } else {
-
-                        product.style.display =
-                            "none";
-
-                    }
+                    product.style.display =
+                        categoryMatch && sizeMatch ? "flex" : "none";
 
                 }
             );
@@ -2234,20 +2728,18 @@
 
         function showAllProducts() {
 
-            const products =
-                productList.querySelectorAll(
-                    ".product-row"
-                );
+            categoryCheckboxes.forEach(function (checkbox) {
+                checkbox.checked = false;
+            });
 
+            sizeCheckboxes.forEach(function (checkbox) {
+                checkbox.checked = false;
+            });
 
-            products.forEach(
-                function (product) {
+            if (allCategory) allCategory.checked = true;
+            if (allSize) allSize.checked = true;
 
-                    product.style.display =
-                        "flex";
-
-                }
-            );
+            applyProductFilters();
 
         }
 
@@ -2264,8 +2756,94 @@
         const deletedSelectAll =
             document.getElementById("deletedSelectAll");
 
+        function resolveActivityActor() {
+            if (typeof window.getActivityActor === "function") {
+                return window.getActivityActor();
+            }
+
+            const fromDom = document.querySelector(".profile-name")?.textContent?.trim();
+            return fromDom && fromDom.toUpperCase() !== "ACCOUNT"
+                ? fromDom.toUpperCase()
+                : "Unknown User";
+        }
+
+        function logProductActivity(action, row) {
+            const data = getProductData(row);
+            if (typeof window.appendEventLog !== "function") return;
+
+            window.appendEventLog({
+                source: "Products",
+                action,
+                details: `${data.name} (${data.code})`,
+                actor: resolveActivityActor(),
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        const BATCH_COUNTER_KEY = "tileDepotBatchCounter";
+        const BATCH_NUMBER_MAX = 999;
+
+        function formatBatchNumber(value) {
+            return `Tile #${String(value).padStart(3, "0")}`;
+        }
+
+        function parseBatchNumber(code) {
+            const match = String(code || "").trim().match(/^(?:Tile\s*#\s*)?(\d{1,3})$/i);
+            if (!match) return null;
+            const number = Number(match[1]);
+            return Number.isInteger(number) && number >= 1 && number <= BATCH_NUMBER_MAX
+                ? number
+                : null;
+        }
+
+        function getHighestBatchNumber() {
+            let highest = 0;
+
+            document.querySelectorAll(".product-row .product-code").forEach((el) => {
+                const number = parseBatchNumber(el.textContent);
+                if (number !== null && number > highest) highest = number;
+            });
+
+            document.querySelectorAll("#deletedTable tbody tr").forEach((row) => {
+                const number = parseBatchNumber(
+                    row.dataset.productCode || row.children[2]?.textContent
+                );
+                if (number !== null && number > highest) highest = number;
+            });
+
+            try {
+                const stored = Number(localStorage.getItem(BATCH_COUNTER_KEY) || "0");
+                if (Number.isInteger(stored) && stored > highest) highest = stored;
+            } catch {
+                // Ignore storage read errors.
+            }
+
+            return highest;
+        }
+
+        function peekNextBatchNumber() {
+            const next = getHighestBatchNumber() + 1;
+            if (next > BATCH_NUMBER_MAX) return null;
+            return formatBatchNumber(next);
+        }
+
+        function commitBatchNumber(code) {
+            const number = parseBatchNumber(code);
+            if (number === null) return;
+
+            try {
+                const stored = Number(localStorage.getItem(BATCH_COUNTER_KEY) || "0");
+                if (!Number.isInteger(stored) || number > stored) {
+                    localStorage.setItem(BATCH_COUNTER_KEY, String(number));
+                }
+            } catch (error) {
+                console.warn("Could not save batch counter:", error);
+            }
+        }
+
         const actionState = {
             selectedProductRow: null,
+            selectedProductRows: [],
             restoreProductRow: null,
             permanentDeleteRow: null
         };
@@ -2313,28 +2891,46 @@
         }
 
 
-        function fillProductSummary(row, targetId) {
+        function getSelectedProductRows() {
+            return Array.from(
+                productList.querySelectorAll("input[type='checkbox']:checked")
+            )
+                .map((checkbox) => checkbox.closest(".product-row"))
+                .filter(Boolean);
+        }
 
-            const name =
-                row?.querySelector(".product-name")?.textContent.trim() ||
-                "CODE NAME";
 
-            const code =
-                row?.querySelector(".product-code")?.textContent.trim() ||
-                "BATCH NUMBER";
+        function fillProductSummary(rows) {
+            const summary = document.getElementById("deleteProductSummary");
+            summary.replaceChildren();
 
-            const quantity =
-                row?.querySelector(".product-quantity")?.textContent.trim() ||
-                "QUANTITY";
+            rows.forEach((row) => {
+                const data = getProductData(row);
+                const item = document.createElement("div");
+                item.className = "delete-product-item";
 
-            const price =
-                row?.querySelector(".product-price")?.textContent.trim() ||
-                "PRICE";
+                const name = document.createElement("strong");
+                name.textContent = data.name;
+                item.appendChild(name);
 
-            document.getElementById(targetId + "CodeName").textContent = name;
-            document.getElementById(targetId + "BatchNumber").textContent = code;
-            document.getElementById(targetId + "Quantity").textContent = quantity;
-            document.getElementById(targetId + "Price").textContent = price;
+                [
+                    ["BATCH NUMBER", data.code],
+                    ["QUANTITY", data.quantity],
+                    ["PRICE", data.price]
+                ].forEach(([label, value]) => {
+                    const detail = document.createElement("span");
+                    detail.textContent = `${label}: ${value}`;
+                    item.appendChild(detail);
+                });
+
+                summary.appendChild(item);
+            });
+
+            const count = rows.length;
+            document.getElementById("deleteProductPrompt").textContent =
+                count === 1
+                    ? "Are you sure you want to delete this product?"
+                    : `Are you sure you want to delete these ${count} products?`;
 
         }
 
@@ -2343,11 +2939,13 @@
 
             const name =
                 row?.querySelector(".product-name")?.textContent.trim() ||
+                row?.dataset?.productName ||
                 "Product";
 
             const code =
                 row?.querySelector(".product-code")?.textContent.trim() ||
-                "Tile #000000";
+                row?.dataset?.productCode ||
+                "Tile #000";
 
             const quantity =
                 row?.querySelector(".product-quantity")?.textContent
@@ -2364,6 +2962,9 @@
                 code,
                 quantity,
                 price,
+                size: row?.dataset?.size ||
+                    row?.querySelector(".product-size")?.textContent.replace("Size:", "").trim() ||
+                    "30x60",
                 category: row?.dataset?.category || "CERAMIC TILES"
             };
 
@@ -2379,6 +2980,7 @@
             deletedRow.dataset.productCode = data.code;
             deletedRow.dataset.quantity = data.quantity;
             deletedRow.dataset.price = data.price;
+            deletedRow.dataset.size = data.size;
             deletedRow.dataset.category = data.category;
 
             deletedRow.innerHTML = `
@@ -2457,18 +3059,17 @@
 
         function deleteProducts() {
 
-            const row =
-                getSelectedProductRow();
+            const rows = getSelectedProductRows();
 
-            if (!row) {
+            if (rows.length === 0) {
 
                 alert("Please select a product first.");
                 return;
 
             }
 
-            actionState.selectedProductRow = row;
-            fillProductSummary(row, "delete");
+            actionState.selectedProductRows = rows;
+            fillProductSummary(rows);
             openModal("deleteConfirmModal");
 
         }
@@ -2476,33 +3077,47 @@
 
         function confirmDeleteSelectedProduct() {
 
-            if (actionState.selectedProductRow) {
-
-                addDeletedProductRow(actionState.selectedProductRow);
-                actionState.selectedProductRow.remove();
-
-            }
+            actionState.selectedProductRows.forEach((row) => {
+                logProductActivity("Deleted", row);
+                addDeletedProductRow(row);
+                row.remove();
+            });
 
             closeModal("deleteConfirmModal");
-            actionState.selectedProductRow = null;
+            actionState.selectedProductRows = [];
+
+        }
+
+
+        function cancelDeleteSelectedProducts() {
+            actionState.selectedProductRows = [];
+            closeModal("deleteConfirmModal");
 
         }
 
 
         function addProduct() {
+            const nextBatch = peekNextBatchNumber();
+            if (!nextBatch) {
+                alert("Batch numbers are full (Tile #001–Tile #999).");
+                return;
+            }
 
+            document.getElementById("newBatchNumber").value = nextBatch;
             openModal("addProductModal");
-
         }
 
 
         function confirmAddProduct() {
 
             const name =
-                document.getElementById("newProductName").value.trim();
+                document.getElementById("newProductName").value.trim().toUpperCase();
 
             const code =
-                document.getElementById("newBatchNumber").value.trim();
+                document.getElementById("newBatchNumber").value.trim() || peekNextBatchNumber();
+
+            const size =
+                document.getElementById("newProductSize").value.trim();
 
             const quantity =
                 document.getElementById("newQuantity").value.trim();
@@ -2510,11 +3125,16 @@
             const price =
                 document.getElementById("newPrice").value.trim();
 
-            if (!name || !code || !quantity || !price) {
+            if (!name || !code || !size || !quantity || !price) {
 
                 alert("Please fill in all fields.");
                 return;
 
+            }
+
+            if (parseBatchNumber(code) === null) {
+                alert("Batch number must be Tile #001 to Tile #999.");
+                return;
             }
 
             const row =
@@ -2522,19 +3142,24 @@
 
             row.className = "product-row";
             row.dataset.category = "CERAMIC TILES";
+            row.dataset.size = size;
             row.innerHTML = `
                 <div class="product-checkbox"><input type="checkbox"></div>
                 <div class="product-name">${name}</div>
                 <div class="product-code">${code}</div>
+                <div class="product-size">Size: ${size}</div>
                 <div class="product-quantity">Quantity: ${quantity} pcs</div>
                 <div class="product-price">₱${price}</div>
             `;
 
             productList.prepend(row);
+            commitBatchNumber(code);
+            logProductActivity("Added", row);
             closeModal("addProductModal");
 
             document.getElementById("newProductName").value = "";
             document.getElementById("newBatchNumber").value = "";
+            document.getElementById("newProductSize").value = "";
             document.getElementById("newQuantity").value = "";
             document.getElementById("newPrice").value = "";
 
@@ -2561,6 +3186,10 @@
             document.getElementById("editBatchNumber").value =
                 row.querySelector(".product-code")?.textContent.trim() || "";
 
+            document.getElementById("editProductSize").value =
+                row.dataset.size ||
+                (row.querySelector(".product-size")?.textContent.replace("Size:", "").trim() || "");
+
             const qText =
                 row.querySelector(".product-quantity")?.textContent.trim() || "";
 
@@ -2584,12 +3213,30 @@
                 return;
             }
 
-            const row = actionState.selectedProductRow;
-            row.querySelector(".product-name").textContent =
-                document.getElementById("editProductName").value.trim();
+            const size =
+                document.getElementById("editProductSize").value.trim();
 
-            row.querySelector(".product-code").textContent =
-                document.getElementById("editBatchNumber").value.trim();
+            if (!size) {
+                alert("Please select a size.");
+                return;
+            }
+
+            const row = actionState.selectedProductRow;
+            const batchNumber =
+                document.getElementById("editBatchNumber").value.trim() ||
+                row.querySelector(".product-code")?.textContent.trim() ||
+                "";
+
+            row.dataset.size = size;
+            row.querySelector(".product-name").textContent =
+                document.getElementById("editProductName").value.trim().toUpperCase();
+
+            row.querySelector(".product-code").textContent = batchNumber;
+
+            const sizeEl = row.querySelector(".product-size");
+            if (sizeEl) {
+                sizeEl.textContent = "Size: " + size;
+            }
 
             row.querySelector(".product-quantity").textContent =
                 "Quantity: " + document.getElementById("editQuantity").value.trim() + " pcs";
@@ -2597,25 +3244,9 @@
             row.querySelector(".product-price").textContent =
                 "₱" + document.getElementById("editPrice").value.trim();
 
+            logProductActivity("Edited", row);
             closeModal("editProductModal");
             actionState.selectedProductRow = null;
-
-        }
-
-
-        function reorderProducts() {
-
-            const selected =
-                productList.querySelectorAll("input[type='checkbox']:checked");
-
-            if (!selected.length) {
-
-                alert("Please select a product to reorder.");
-                return;
-
-            }
-
-            alert("Reorder Product button clicked.");
 
         }
 
@@ -2661,16 +3292,20 @@
             const row = actionState.restoreProductRow;
 
             if (row) {
+                logProductActivity("Restored", row);
 
                 const newRow =
                     document.createElement("div");
 
+                const size = row.dataset.size || "30x60";
                 newRow.className = "product-row";
                 newRow.dataset.category = row.dataset.category || "CERAMIC TILES";
+                newRow.dataset.size = size;
                 newRow.innerHTML = `
                     <div class="product-checkbox"><input type="checkbox"></div>
                     <div class="product-name">${row.dataset.productName || "Product"}</div>
-                    <div class="product-code">${row.dataset.productCode || "Tile #000000"}</div>
+                    <div class="product-code">${row.dataset.productCode || "Tile #000"}</div>
+                    <div class="product-size">Size: ${size}</div>
                     <div class="product-quantity">Quantity: ${row.dataset.quantity || "0 pcs"}</div>
                     <div class="product-price">${row.dataset.price || "₱0.00"}</div>
                 `;
@@ -2711,7 +3346,7 @@
         function confirmPermanentDeleteProduct() {
 
             if (actionState.permanentDeleteRow) {
-
+                logProductActivity("Permanently deleted", actionState.permanentDeleteRow);
                 actionState.permanentDeleteRow.remove();
 
             }
@@ -2721,15 +3356,23 @@
 
         }
 
+        document.querySelectorAll("input.force-uppercase").forEach((input) => {
+            input.addEventListener("input", () => {
+                const start = input.selectionStart;
+                const end = input.selectionEnd;
+                input.value = input.value.toUpperCase();
+                if (typeof start === "number" && typeof end === "number") {
+                    input.setSelectionRange(start, end);
+                }
+            });
+        });
 
-        function logout() {
-
-            window.location.href = "index.html";
-
-        }
 
     </script>
     <script type="module" src="js/auth-guard.js"></script>
+    <script type="module" src="js/event-log.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/header-date.js"></script>
 
 
 </body>
