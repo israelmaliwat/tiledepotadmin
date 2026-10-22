@@ -355,14 +355,17 @@
             gap: 8px;
         }
 
-        .field label {
+        .field label,
+        .field-heading {
             font-size: 16px;
             font-weight: 700;
             color: #111;
             margin-left: 4px;
         }
 
-        .field input {
+        .field input,
+        .field textarea,
+        .field select {
             width: 100%;
             height: 42px;
             border: 2px solid #444;
@@ -374,8 +377,125 @@
             color: #111;
         }
 
+        .field textarea {
+            height: auto;
+            min-height: 120px;
+            padding: 10px 14px;
+            line-height: 1.45;
+            resize: vertical;
+        }
+
         .field input.force-uppercase {
             text-transform: uppercase;
+        }
+
+        #addDeliveryModal .modal-card,
+        #editDeliveryModal .modal-card {
+            width: min(720px, 94vw);
+            max-height: calc(100dvh - 40px);
+            overflow-y: auto;
+        }
+
+        .field-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .item-editor {
+            display: grid;
+            gap: 8px;
+        }
+
+        .item-editor-head,
+        .item-editor-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(108px, 0.75fr) minmax(76px, 0.55fr) 42px;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .item-editor-head {
+            padding-left: 4px;
+            color: #5b6478;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .item-editor-row input,
+        .item-editor-row select {
+            width: 100%;
+            height: 42px;
+            border: 2px solid #444;
+            border-radius: 10px;
+            background: #ffffff;
+            padding: 0 10px;
+            font-family: "Poppins", sans-serif;
+            font-size: 16px;
+            color: #111;
+        }
+
+        .peso-field {
+            position: relative;
+        }
+
+        .peso-field .peso-sign {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 19px;
+            font-weight: 700;
+            color: #111;
+            pointer-events: none;
+        }
+
+        .peso-field input {
+            padding-left: 34px;
+        }
+
+        .courier-other,
+        .field textarea.email-comment {
+            margin-top: 8px;
+        }
+
+        .field textarea.email-comment {
+            min-height: 72px;
+        }
+
+        .field-note {
+            margin: 8px 0 0;
+            color: #9a3412;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .item-remove {
+            width: 42px;
+            height: 42px;
+            border: 2px solid #e3e6ee;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #b42318;
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .item-add {
+            justify-self: start;
+            margin-top: 4px;
+            border: none;
+            border-radius: 8px;
+            background: #eceefe;
+            color: #1800ad;
+            font-family: "Poppins", sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 8px 12px;
+            cursor: pointer;
         }
 
         .modal-actions {
@@ -417,15 +537,29 @@
         .delete-delivery-summary {
             display: grid;
             gap: 8px;
-            max-height: 240px;
+            max-height: 260px;
             margin-bottom: 18px;
             overflow-y: auto;
         }
 
+        #completeDeliveryModal .modal-card,
+        #deleteDeliveryModal .modal-card,
+        #permanentDeleteDeliveryModal .modal-card {
+            width: min(520px, 92vw);
+            padding: 18px 18px 16px;
+        }
+
+        #completeDeliveryModal .modal-card h3,
+        #deleteDeliveryModal .modal-card h3,
+        #permanentDeleteDeliveryModal .modal-card h3 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
         .delete-delivery-item {
             display: grid;
-            gap: 4px;
-            padding: 12px 14px;
+            gap: 2px;
+            padding: 8px 10px;
             border: 1px solid #d9d9d9;
             border-radius: 8px;
             background: #ffffff;
@@ -433,64 +567,282 @@
 
         .delete-delivery-item strong {
             color: #111111;
-            font-size: 15px;
+            font-size: 13px;
+            letter-spacing: 0.02em;
         }
 
-        .delete-delivery-item span {
-            color: #555555;
+        .delete-delivery-field {
+            color: #222222;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        .delete-delivery-field .field-label {
+            font-weight: 700;
+            color: #111111;
+        }
+
+        .delete-delivery-field .order-summary {
+            margin-top: 2px;
+        }
+
+        .delete-delivery-item .summary-field {
+            font-size: 12px;
+        }
+
+        .delete-reason-note {
+            margin-top: 10px;
+        }
+
+        #recentDeletedDeliveryModal .modal-card {
+            width: min(760px, 96vw);
+            max-height: calc(100dvh - 40px);
+            overflow-x: hidden;
+            overflow-y: auto;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 20px 20px 16px;
+        }
+
+        .deleted-delivery-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .deleted-delivery-groups {
+            display: grid;
+            gap: 8px;
+        }
+
+        .deleted-group-title {
+            margin: 14px 0 4px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #1800ad;
+            color: #1800ad;
             font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+        }
+
+        .deleted-card {
+            display: grid;
+            grid-template-columns: 28px minmax(0, 1fr);
+            gap: 10px;
+            align-items: start;
+            padding: 12px 2px;
+            border-bottom: 1px solid #eef0f5;
+        }
+
+        .deleted-card input {
+            margin-top: 2px;
+        }
+
+        .deleted-card-top {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .deleted-card-top strong {
+            color: #161616;
+            font-size: 14px;
+        }
+
+        .deleted-card-total {
+            color: #161616;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .deleted-card-date {
+            color: #5b6478;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .deleted-card .deleted-reason {
+            padding: 4px 0 0;
+        }
+
+        .deleted-delivery-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #1800ad;
+        }
+
+        .deleted-delivery-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .deleted-delivery-header h3 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1;
+            text-align: left;
+        }
+
+        .deleted-back-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            background: #f3f5fb;
+            color: #1800ad;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .deleted-back-btn:hover {
+            background: #eceefe;
+        }
+
+        .deleted-delivery-entry {
+            background: #ffffff;
+            border-bottom: 1px solid #eef0f5;
+        }
+
+        .deleted-reason {
+            padding: 0 16px 12px 54px;
+            color: #5b6478;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        #deletedDeliveryEmpty {
+            margin: 16px 0 8px;
+            text-align: center;
+            color: #666666;
+            font-size: 14px;
+            font-weight: 600;
         }
 
         /* =========================
            DELIVERY TABLE
         ========================= */
 
-        .delivery-list {
+        .delivery-scroll {
             width: 100%;
-            margin-top: 9px;
+            overflow-x: auto;
+
+            margin-top: 12px;
+
+            background: #ffffff;
+
+            border: 1px solid #e3e6ee;
+            border-radius: 12px;
+
+            box-shadow: 0 10px 28px rgba(24, 0, 173, 0.06);
         }
 
-        .delivery-row {
+        .delivery-list,
+        .history-list {
             width: 100%;
-            height: 43px;
+            min-width: 1100px;
+            margin-top: 0;
+        }
 
+        .delivery-head,
+        .delivery-row,
+        .history-row {
+            width: 100%;
+            min-width: 1100px;
+
+            display: grid;
+            grid-template-columns: 42px 275px 175px minmax(0, 1fr) 128px;
+            align-items: stretch;
+        }
+
+        .delivery-head > div,
+        .delivery-row > div,
+        .history-row > div {
             display: flex;
             align-items: center;
 
-            background: #f8f8f8;
+            min-width: 0;
 
-            border-bottom: 1px solid #bcbcbc;
-
-            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.18);
-
-            margin-bottom: 0;
+            padding: 0 12px;
         }
 
-        .delivery-row:nth-child(1) {
-            background: #e7e7e7;
+        .delivery-head {
+            min-height: 44px;
+
+            background: #f3f5fb;
+
+            border-bottom: 1px solid #e3e6ee;
+
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+
+            color: #5b6478;
+        }
+
+        .delivery-row,
+        .history-row {
+            min-height: 58px;
+            height: auto;
+
+            background: #ffffff;
+
+            border-bottom: 1px solid #eef0f5;
+
+            font-size: 13px;
+            font-weight: 500;
+
+            color: #1b1f2a;
+        }
+
+        .delivery-row:last-child,
+        .history-row:last-child {
+            border-bottom: none;
+        }
+
+        .delivery-row:nth-child(even),
+        .history-row:nth-child(even) {
+            background: #fbfbfd;
+        }
+
+        .delivery-row:hover,
+        .history-row:hover {
+            background: #f4f6fd;
         }
 
         .delivery-checkbox {
-            width: 48px;
-
-            display: flex;
             justify-content: center;
-            align-items: center;
         }
 
         .delivery-checkbox input {
             appearance: none;
 
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
 
-            background: #f8f8f8;
+            background: #ffffff;
 
-            border: 1px solid #555555;
+            border: 1.5px solid #c5cad6;
+            border-radius: 4px;
 
             cursor: pointer;
 
             position: relative;
+        }
+
+        .delivery-checkbox input:checked {
+            background: #1800ad;
+            border-color: #1800ad;
         }
 
         .delivery-checkbox input:checked::after {
@@ -499,39 +851,208 @@
             position: absolute;
 
             left: 2px;
-            top: -5px;
+            top: -3px;
 
-            font-size: 21px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
 
-            color: #00a51a;
+            color: #ffffff;
         }
 
         .delivery-supplier {
-            width: 105px;
-
-            font-size: 12px;
-            font-weight: 500;
-
-            white-space: nowrap;
+            font-weight: 700;
+            color: #161616;
         }
 
         .delivery-date {
-            width: 130px;
+            font-variant-numeric: tabular-nums;
+        }
 
-            font-size: 12px;
+        .delivery-row > .col-summary,
+        .history-row > .col-summary {
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+
+            padding-top: 16px;
+            padding-bottom: 16px;
+
+            color: #1b1f2a;
+        }
+
+        .order-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .delivery-row > .order-summary.is-collapsed,
+        .history-row > .order-summary.is-collapsed {
+            display: grid;
+            grid-template-columns: minmax(108px, 0.55fr) minmax(140px, 0.9fr) minmax(180px, 1.4fr) auto;
+            align-items: center;
+            column-gap: 24px;
+            row-gap: 0;
+        }
+
+        .delivery-row > .order-summary.is-collapsed .summary-meta,
+        .history-row > .order-summary.is-collapsed .summary-meta {
+            display: contents;
+        }
+
+        .delivery-row > .order-summary.is-collapsed .summary-meta-row,
+        .history-row > .order-summary.is-collapsed .summary-meta-row {
+            min-width: 0;
+        }
+
+        .order-summary.is-collapsed .summary-meta-row .field-label {
+            display: none;
+        }
+
+        .order-summary.is-collapsed .summary-meta-row {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .order-summary.is-collapsed .summary-name,
+        .order-summary.is-collapsed .summary-address {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+
+        .order-summary.is-collapsed .summary-toggle {
+            margin-top: 0;
+            padding: 4px 0;
+        }
+
+        .order-summary.is-collapsed .summary-meta-row:nth-child(n + 3),
+        .order-summary.is-collapsed .summary-item-head,
+        .order-summary.is-collapsed .summary-item:nth-child(n + 3) {
+            display: none;
+        }
+
+        .order-summary.is-collapsed .summary-items {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .order-summary.is-collapsed .summary-item:nth-child(2) {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 76px 76px;
+            align-items: baseline;
+            column-gap: 24px;
+            width: 100%;
+        }
+
+        .order-summary.is-collapsed .summary-size,
+        .order-summary.is-collapsed .summary-qty {
+            text-align: left;
+            color: #5b6478;
             font-weight: 500;
+        }
 
+        .summary-toggle {
+            align-self: flex-start;
+            margin-top: 2px;
+            padding: 0;
+            border: none;
+            background: none;
+            color: #1800ad;
+            font-family: "Poppins", sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.4;
+            cursor: pointer;
+        }
+
+        .summary-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .summary-meta {
+            display: grid;
+            gap: 3px;
+        }
+
+        .summary-meta-row {
+            display: grid;
+            grid-template-columns: 72px minmax(0, 1fr);
+            gap: 8px;
+            align-items: baseline;
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .summary-meta-row .field-label {
+            color: #8b93a7;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .summary-name {
+            font-weight: 700;
+            color: #161616;
+        }
+
+        .summary-address,
+        .summary-email,
+        .summary-comment,
+        .summary-date {
+            color: #3d4556;
+        }
+
+        .summary-items {
+            display: grid;
+            gap: 3px;
+            padding-top: 6px;
+            border-top: 1px solid #eef0f5;
+        }
+
+        .summary-item {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 72px 64px;
+            gap: 10px;
+            align-items: baseline;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .summary-item-head {
+            color: #8b93a7;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .summary-tile {
+            font-weight: 600;
+            color: #161616;
+        }
+
+        .summary-size,
+        .summary-qty {
+            text-align: right;
+            color: #3d4556;
             white-space: nowrap;
         }
 
-        .delivery-quantity {
-            flex: 1;
+        .delivery-head .col-total,
+        .delivery-row > .col-total,
+        .history-row > .col-total {
+            justify-content: flex-end;
 
-            font-size: 12px;
-            font-weight: 500;
+            border-left: 1px solid #eef0f5;
 
-            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .delivery-total {
+            font-weight: 700;
+            color: #161616;
         }
 
         /* =========================
@@ -547,25 +1068,7 @@
         }
 
         .history-list {
-            margin-top: 17px;
-        }
-
-        .history-row {
-            width: 100%;
-            height: 43px;
-
-            display: flex;
-            align-items: center;
-
-            background: #f8f8f8;
-
-            border-bottom: 1px solid #bcbcbc;
-
-            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.18);
-        }
-
-        .history-row .delivery-checkbox input {
-            background: white;
+            margin-top: 0;
         }
 
         /* =========================
@@ -629,6 +1132,16 @@
                 margin-bottom: 18px;
             }
 
+            .field-pair,
+            .item-editor-head,
+            .item-editor-row {
+                grid-template-columns: 1fr;
+            }
+
+            .item-editor-head {
+                display: none;
+            }
+
             .modal-form {
                 gap: 16px;
             }
@@ -642,10 +1155,18 @@
                 margin-left: 2px;
             }
 
-            .field input {
+            .field input,
+            .field textarea,
+            .field select {
                 height: 44px;
                 padding: 0 12px;
                 font-size: 16px;
+            }
+
+            .field textarea {
+                height: auto;
+                min-height: 110px;
+                padding: 10px 12px;
             }
 
             .modal-actions {
@@ -672,7 +1193,7 @@
             }
 
             .delete-delivery-summary {
-                max-height: 180px;
+                max-height: 220px;
                 margin-bottom: 14px;
             }
 
@@ -731,78 +1252,8 @@
                 white-space: nowrap;
             }
 
-            .delivery-list,
-            .history-list {
-                display: grid;
-                gap: 10px;
-            }
-
-            .history-list {
-                margin-top: 12px;
-            }
-
-            .delivery-row,
-            .history-row {
-                display: grid;
-                grid-template-columns: 32px minmax(0, 1fr);
-                grid-template-areas:
-                    "checkbox supplier"
-                    "checkbox date"
-                    "checkbox quantity";
-                gap: 9px 10px;
-                height: auto;
-                min-height: 118px;
-                padding: 12px;
-            }
-
-            .delivery-checkbox {
-                grid-area: checkbox;
-                width: auto;
-                align-self: stretch;
-            }
-
-            .delivery-supplier,
-            .delivery-date,
-            .delivery-quantity {
-                width: auto;
-                min-width: 0;
-                font-size: 12px;
-                white-space: normal;
-                overflow-wrap: break-word;
-            }
-
-            .delivery-supplier {
-                grid-area: supplier;
-            }
-
-            .delivery-date {
-                grid-area: date;
-            }
-
-            .delivery-quantity {
-                grid-area: quantity;
-            }
-
-            .delivery-supplier::before,
-            .delivery-date::before,
-            .delivery-quantity::before {
-                display: block;
-                margin-bottom: 2px;
-                color: #666666;
-                font-size: 9px;
-                font-weight: 700;
-            }
-
-            .delivery-supplier::before {
-                content: "SUPPLIER / CUSTOMER";
-            }
-
-            .delivery-date::before {
-                content: "DATE";
-            }
-
-            .delivery-quantity::before {
-                content: "QUANTITY";
+            .delivery-scroll {
+                overflow-x: auto;
             }
         }
 
@@ -1013,7 +1464,7 @@
                         </button>
 
                         <button class="action-button add-button"
-                                onclick="addDelivery()">
+                                onclick="addDelivery('supplier')">
                             <i class="fa-solid fa-plus"></i>
                             ADD NEW DELIVERY
                         </button>
@@ -1029,70 +1480,38 @@
                 </div>
 
 
-                <div class="delivery-list" id="supplierList">
-
-                    <div class="delivery-row">
-
-                        <div class="delivery-checkbox">
-                            <input type="checkbox">
-                        </div>
-
-                        <div class="delivery-supplier">
-                            J&T EXPRESS
-                        </div>
-
-                        <div class="delivery-date">
-                            DATE: 5/20/2026
-                        </div>
-
-                        <div class="delivery-quantity">
-                            Quantity: 100 pcs
-                        </div>
-
+                <div class="delivery-scroll">
+                    <div class="delivery-head">
+                        <div class="delivery-checkbox"></div>
+                        <div class="col-courier">DELIVERY COURIER</div>
+                        <div class="col-date">DATE</div>
+                        <div class="col-summary">ORDER SUMMARY</div>
+                        <div class="col-total">TOTAL</div>
                     </div>
 
-
-                    <div class="delivery-row">
-
-                        <div class="delivery-checkbox">
-                            <input type="checkbox">
+                    <div class="delivery-list" id="supplierList">
+                        <div class="delivery-row">
+                            <div class="delivery-checkbox"><input type="checkbox" aria-label="Select J&T EXPRESS"></div>
+                            <div class="col-courier delivery-supplier">J&T EXPRESS</div>
+                            <div class="col-date delivery-date">5/20/2026</div>
+                            <div class="col-summary order-summary delivery-quantity is-collapsed"><div class="summary-meta"><div class="summary-meta-row"><span class="field-label">Name</span><span class="field-value summary-name">Anna Reyes</span></div><div class="summary-meta-row"><span class="field-label">Address</span><span class="field-value summary-address">12 Mabini St, Quezon City</span></div><div class="summary-meta-row"><span class="field-label">Email</span><span class="field-value summary-email">anna.reyes@example.com</span></div><div class="summary-meta-row"><span class="field-label">Date</span><span class="field-value summary-date">5/20/2026</span></div></div><div class="summary-items"><div class="summary-item summary-item-head"><span>Tile</span><span>Size</span><span>Qty</span></div><div class="summary-item" data-name="LUXURY WHITE" data-size="30x60" data-qty="100 pcs"><span class="summary-tile">LUXURY WHITE</span><span class="summary-size">30x60</span><span class="summary-qty">100 pcs</span></div><div class="summary-item" data-name="LUXURY BLACK" data-size="60x60" data-qty="80 pcs"><span class="summary-tile">LUXURY BLACK</span><span class="summary-size">60x60</span><span class="summary-qty">80 pcs</span></div></div></div>
+                            <div class="col-total delivery-total">₱9,300.00</div>
                         </div>
-
-                        <div class="delivery-supplier">
-                            TRANSPORTIFY
+                        <div class="delivery-row">
+                            <div class="delivery-checkbox"><input type="checkbox" aria-label="Select TRANSPORTIFY"></div>
+                            <div class="col-courier delivery-supplier">TRANSPORTIFY</div>
+                            <div class="col-date delivery-date">5/25/2026</div>
+                            <div class="col-summary order-summary delivery-quantity is-collapsed"><div class="summary-meta"><div class="summary-meta-row"><span class="field-label">Name</span><span class="field-value summary-name">Carlo Mendoza</span></div><div class="summary-meta-row"><span class="field-label">Address</span><span class="field-value summary-address">45 Rizal Ave, Manila</span></div><div class="summary-meta-row"><span class="field-label">Email</span><span class="field-value summary-email">carlo.mendoza@example.com</span></div><div class="summary-meta-row"><span class="field-label">Date</span><span class="field-value summary-date">5/25/2026</span></div></div><div class="summary-items"><div class="summary-item summary-item-head"><span>Tile</span><span>Size</span><span>Qty</span></div><div class="summary-item" data-name="BRICK-LIGHT" data-size="40x40" data-qty="120 pcs"><span class="summary-tile">BRICK-LIGHT</span><span class="summary-size">40x40</span><span class="summary-qty">120 pcs</span></div><div class="summary-item" data-name="LONGITUDE" data-size="30x60" data-qty="60 pcs"><span class="summary-tile">LONGITUDE</span><span class="summary-size">30x60</span><span class="summary-qty">60 pcs</span></div></div></div>
+                            <div class="col-total delivery-total">₱18,000.00</div>
                         </div>
-
-                        <div class="delivery-date">
-                            DATE: 5/25/2026
+                        <div class="delivery-row">
+                            <div class="delivery-checkbox"><input type="checkbox" aria-label="Select LALAMOVE"></div>
+                            <div class="col-courier delivery-supplier">LALAMOVE</div>
+                            <div class="col-date delivery-date">5/31/2026</div>
+                            <div class="col-summary order-summary delivery-quantity is-collapsed"><div class="summary-meta"><div class="summary-meta-row"><span class="field-label">Name</span><span class="field-value summary-name">Liza Cruz</span></div><div class="summary-meta-row"><span class="field-label">Address</span><span class="field-value summary-address">8 Luna St, Pasig</span></div><div class="summary-meta-row"><span class="field-label">Email</span><span class="field-value summary-email">liza.cruz@example.com</span></div><div class="summary-meta-row"><span class="field-label">Date</span><span class="field-value summary-date">5/31/2026</span></div></div><div class="summary-items"><div class="summary-item summary-item-head"><span>Tile</span><span>Size</span><span>Qty</span></div><div class="summary-item" data-name="WOODEN-BROWN" data-size="60x60" data-qty="90 pcs"><span class="summary-tile">WOODEN-BROWN</span><span class="summary-size">60x60</span><span class="summary-qty">90 pcs</span></div><div class="summary-item" data-name="WOODEN-DARK" data-size="40x40" data-qty="70 pcs"><span class="summary-tile">WOODEN-DARK</span><span class="summary-size">40x40</span><span class="summary-qty">70 pcs</span></div><div class="summary-item" data-name="WOODEN-LIGHT" data-size="30x60" data-qty="40 pcs"><span class="summary-tile">WOODEN-LIGHT</span><span class="summary-size">30x60</span><span class="summary-qty">40 pcs</span></div></div></div>
+                            <div class="col-total delivery-total">₱11,350.00</div>
                         </div>
-
-                        <div class="delivery-quantity">
-                            Quantity: 100 pcs
-                        </div>
-
                     </div>
-
-
-                    <div class="delivery-row">
-
-                        <div class="delivery-checkbox">
-                            <input type="checkbox">
-                        </div>
-
-                        <div class="delivery-supplier">
-                            LALAMOVE
-                        </div>
-
-                        <div class="delivery-date">
-                            DATE: 5/31/2026
-                        </div>
-
-                        <div class="delivery-quantity">
-                            Quantity: 100 pcs
-                        </div>
-
-                    </div>
-
                 </div>
 
             </section>
@@ -1124,6 +1543,12 @@
                             DELETE
                         </button>
 
+                        <button class="action-button add-button"
+                                onclick="addDelivery('customer')">
+                            <i class="fa-solid fa-plus"></i>
+                            ADD NEW DELIVERY
+                        </button>
+
                         <button class="action-button edit-button"
                                 onclick="editDelivery('customer')">
                             <i class="fa-solid fa-pencil"></i>
@@ -1135,70 +1560,38 @@
                 </div>
 
 
-                <div class="delivery-list" id="customerList">
-
-                    <div class="delivery-row">
-
-                        <div class="delivery-checkbox">
-                            <input type="checkbox">
-                        </div>
-
-                        <div class="delivery-supplier">
-                            J&T EXPRESS
-                        </div>
-
-                        <div class="delivery-date">
-                            DATE: 5/20/2026
-                        </div>
-
-                        <div class="delivery-quantity">
-                            Quantity: 100 pcs
-                        </div>
-
+                <div class="delivery-scroll">
+                    <div class="delivery-head">
+                        <div class="delivery-checkbox"></div>
+                        <div class="col-courier">DELIVERY COURIER</div>
+                        <div class="col-date">DATE</div>
+                        <div class="col-summary">ORDER SUMMARY</div>
+                        <div class="col-total">TOTAL</div>
                     </div>
 
-
-                    <div class="delivery-row">
-
-                        <div class="delivery-checkbox">
-                            <input type="checkbox">
+                    <div class="delivery-list" id="customerList">
+                        <div class="delivery-row">
+                            <div class="delivery-checkbox"><input type="checkbox" aria-label="Select J&T EXPRESS"></div>
+                            <div class="col-courier delivery-supplier">J&T EXPRESS</div>
+                            <div class="col-date delivery-date">5/20/2026</div>
+                            <div class="col-summary order-summary delivery-quantity is-collapsed"><div class="summary-meta"><div class="summary-meta-row"><span class="field-label">Name</span><span class="field-value summary-name">Paolo Garcia</span></div><div class="summary-meta-row"><span class="field-label">Address</span><span class="field-value summary-address">21 Bonifacio, Makati</span></div><div class="summary-meta-row"><span class="field-label">Email</span><span class="field-value summary-email">paolo.garcia@example.com</span></div><div class="summary-meta-row"><span class="field-label">Date</span><span class="field-value summary-date">5/20/2026</span></div></div><div class="summary-items"><div class="summary-item summary-item-head"><span>Tile</span><span>Size</span><span>Qty</span></div><div class="summary-item" data-name="LUXURY WHITE" data-size="30x60" data-qty="5 pcs"><span class="summary-tile">LUXURY WHITE</span><span class="summary-size">30x60</span><span class="summary-qty">5 pcs</span></div><div class="summary-item" data-name="WOODEN-LIGHT" data-size="30x60" data-qty="40 pcs"><span class="summary-tile">WOODEN-LIGHT</span><span class="summary-size">30x60</span><span class="summary-qty">40 pcs</span></div></div></div>
+                            <div class="col-total delivery-total">₱2,325.00</div>
                         </div>
-
-                        <div class="delivery-supplier">
-                            TRANSPORTIFY
+                        <div class="delivery-row">
+                            <div class="delivery-checkbox"><input type="checkbox" aria-label="Select TRANSPORTIFY"></div>
+                            <div class="col-courier delivery-supplier">TRANSPORTIFY</div>
+                            <div class="col-date delivery-date">5/25/2026</div>
+                            <div class="col-summary order-summary delivery-quantity is-collapsed"><div class="summary-meta"><div class="summary-meta-row"><span class="field-label">Name</span><span class="field-value summary-name">Elena Ramos</span></div><div class="summary-meta-row"><span class="field-label">Address</span><span class="field-value summary-address">33 Burgos St, Cebu</span></div><div class="summary-meta-row"><span class="field-label">Email</span><span class="field-value summary-email">elena.ramos@example.com</span></div><div class="summary-meta-row"><span class="field-label">Date</span><span class="field-value summary-date">5/25/2026</span></div></div><div class="summary-items"><div class="summary-item summary-item-head"><span>Tile</span><span>Size</span><span>Qty</span></div><div class="summary-item" data-name="LUXURY BLACK" data-size="60x60" data-qty="25 pcs"><span class="summary-tile">LUXURY BLACK</span><span class="summary-size">60x60</span><span class="summary-qty">25 pcs</span></div><div class="summary-item" data-name="WOODEN-BROWN" data-size="60x60" data-qty="48 pcs"><span class="summary-tile">WOODEN-BROWN</span><span class="summary-size">60x60</span><span class="summary-qty">48 pcs</span></div></div></div>
+                            <div class="col-total delivery-total">₱3,995.00</div>
                         </div>
-
-                        <div class="delivery-date">
-                            DATE: 5/25/2026
+                        <div class="delivery-row">
+                            <div class="delivery-checkbox"><input type="checkbox" aria-label="Select LALAMOVE"></div>
+                            <div class="col-courier delivery-supplier">LALAMOVE</div>
+                            <div class="col-date delivery-date">5/31/2026</div>
+                            <div class="col-summary order-summary delivery-quantity is-collapsed"><div class="summary-meta"><div class="summary-meta-row"><span class="field-label">Name</span><span class="field-value summary-name">Marco Santos</span></div><div class="summary-meta-row"><span class="field-label">Address</span><span class="field-value summary-address">17 Del Pilar, Davao</span></div><div class="summary-meta-row"><span class="field-label">Email</span><span class="field-value summary-email">marco.santos@example.com</span></div><div class="summary-meta-row"><span class="field-label">Date</span><span class="field-value summary-date">5/31/2026</span></div></div><div class="summary-items"><div class="summary-item summary-item-head"><span>Tile</span><span>Size</span><span>Qty</span></div><div class="summary-item" data-name="BRICK-LIGHT" data-size="40x40" data-qty="30 pcs"><span class="summary-tile">BRICK-LIGHT</span><span class="summary-size">40x40</span><span class="summary-qty">30 pcs</span></div><div class="summary-item" data-name="LONGITUDE" data-size="30x60" data-qty="20 pcs"><span class="summary-tile">LONGITUDE</span><span class="summary-size">30x60</span><span class="summary-qty">20 pcs</span></div><div class="summary-item" data-name="WOODEN-DARK" data-size="40x40" data-qty="22 pcs"><span class="summary-tile">WOODEN-DARK</span><span class="summary-size">40x40</span><span class="summary-qty">22 pcs</span></div></div></div>
+                            <div class="col-total delivery-total">₱6,100.00</div>
                         </div>
-
-                        <div class="delivery-quantity">
-                            Quantity: 100 pcs
-                        </div>
-
                     </div>
-
-
-                    <div class="delivery-row">
-
-                        <div class="delivery-checkbox">
-                            <input type="checkbox">
-                        </div>
-
-                        <div class="delivery-supplier">
-                            LALAMOVE
-                        </div>
-
-                        <div class="delivery-date">
-                            DATE: 5/31/2026
-                        </div>
-
-                        <div class="delivery-quantity">
-                            Quantity: 100 pcs
-                        </div>
-
-                    </div>
-
                 </div>
 
             </section>
@@ -1224,33 +1617,35 @@
                             RESTORE
                         </button>
 
+                        <button class="action-button add-button"
+                                onclick="openRecentlyDeletedDeliveries()">
+                            <i class="fa-solid fa-trash-can"></i>
+                            RECENTLY DELETED
+                        </button>
+
                     </div>
 
                 </div>
 
 
-                <div class="history-list" id="historyList">
-
-                    <div class="history-row">
-
-                        <div class="delivery-checkbox">
-                            <input type="checkbox">
-                        </div>
-
-                        <div class="delivery-supplier">
-                            LALAMOVE
-                        </div>
-
-                        <div class="delivery-date">
-                            DATE: 5/31/2026
-                        </div>
-
-                        <div class="delivery-quantity">
-                            Quantity: 100 pcs
-                        </div>
-
+                <div class="delivery-scroll">
+                    <div class="delivery-head">
+                        <div class="delivery-checkbox"></div>
+                        <div class="col-courier">DELIVERY COURIER</div>
+                        <div class="col-date">DATE</div>
+                        <div class="col-summary">ORDER SUMMARY</div>
+                        <div class="col-total">TOTAL</div>
                     </div>
 
+                    <div class="history-list" id="historyList">
+                        <div class="history-row">
+                            <div class="delivery-checkbox"><input type="checkbox" aria-label="Select LALAMOVE"></div>
+                            <div class="col-courier delivery-supplier">LALAMOVE</div>
+                            <div class="col-date delivery-date">5/31/2026</div>
+                            <div class="col-summary order-summary delivery-quantity is-collapsed"><div class="summary-meta"><div class="summary-meta-row"><span class="field-label">Name</span><span class="field-value summary-name">Sofia Lim</span></div><div class="summary-meta-row"><span class="field-label">Address</span><span class="field-value summary-address">9 Session Rd, Baguio</span></div><div class="summary-meta-row"><span class="field-label">Email</span><span class="field-value summary-email">sofia.lim@example.com</span></div><div class="summary-meta-row"><span class="field-label">Date</span><span class="field-value summary-date">5/31/2026</span></div></div><div class="summary-items"><div class="summary-item summary-item-head"><span>Tile</span><span>Size</span><span>Qty</span></div><div class="summary-item" data-name="LUXURY WHITE" data-size="30x60" data-qty="10 pcs"><span class="summary-tile">LUXURY WHITE</span><span class="summary-size">30x60</span><span class="summary-qty">10 pcs</span></div><div class="summary-item" data-name="LUXURY BLACK" data-size="60x60" data-qty="20 pcs"><span class="summary-tile">LUXURY BLACK</span><span class="summary-size">60x60</span><span class="summary-qty">20 pcs</span></div></div></div>
+                            <div class="col-total delivery-total">₱1,350.00</div>
+                        </div>
+                    </div>
                 </div>
 
             </section>
@@ -1265,15 +1660,61 @@
             <div class="modal-form">
                 <div class="field">
                     <label for="newDeliveryCourier">Delivery Courier</label>
-                    <input id="newDeliveryCourier" class="force-uppercase" type="text" value="" autocapitalize="characters">
+                    <select id="newDeliveryCourier">
+                        <option value="">Select a courier</option>
+                        <option value="SELF-PICKUP">Self-pickup</option>
+                        <option value="LBC EXPRESS">LBC Express</option>
+                        <option value="TRANSPORTIFY">Transportify</option>
+                        <option value="LALAMOVE">Lalamove</option>
+                        <option value="others">Others</option>
+                    </select>
+                    <input id="newDeliveryCourierOther" class="courier-other force-uppercase" type="text" placeholder="Courier name" hidden>
+                </div>
+                <div class="field-pair">
+                    <div class="field">
+                        <label for="newDeliveryFirstName">First name</label>
+                        <input id="newDeliveryFirstName" type="text" placeholder="First name" autocomplete="given-name">
+                    </div>
+                    <div class="field">
+                        <label for="newDeliveryLastName">Last name</label>
+                        <input id="newDeliveryLastName" type="text" placeholder="Last name" autocomplete="family-name">
+                    </div>
                 </div>
                 <div class="field">
-                    <label for="newDeliveryDate">Date Ordered / Delivery</label>
-                    <input id="newDeliveryDate" type="date" value="">
+                    <label for="newDeliveryAddress">Address</label>
+                    <input id="newDeliveryAddress" type="text" placeholder="Street, city" autocomplete="street-address">
+                </div>
+                <div class="field-pair">
+                    <div class="field">
+                        <label for="newDeliveryEmail">Email</label>
+                        <input id="newDeliveryEmail" type="email" placeholder="buyer@email.com" autocomplete="email">
+                        <div id="newDeliveryEmailCommentWrap" hidden>
+                            <p class="field-note">This is not an email. Add a comment.</p>
+                            <textarea id="newDeliveryEmailComment" class="email-comment" rows="2" placeholder="Comment"></textarea>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="newDeliveryDate">Date ordered</label>
+                        <input id="newDeliveryDate" type="date" value="">
+                    </div>
                 </div>
                 <div class="field">
-                    <label for="newDeliveryQuantity">Quantity</label>
-                    <input id="newDeliveryQuantity" type="number" min="1" step="1" inputmode="numeric" placeholder="e.g. 100" value="">
+                    <span class="field-heading" id="newDeliveryItemsLabel">Tiles</span>
+                    <div class="item-editor-head" aria-hidden="true">
+                        <span>Tile name</span>
+                        <span>Size</span>
+                        <span>Quantity</span>
+                        <span></span>
+                    </div>
+                    <div class="item-editor" id="newDeliveryItems" aria-labelledby="newDeliveryItemsLabel"></div>
+                    <button class="item-add" type="button" onclick="addItemRow('newDeliveryItems')">+ Add another tile</button>
+                </div>
+                <div class="field">
+                    <label for="newDeliveryTotal">Total</label>
+                    <div class="peso-field">
+                        <span class="peso-sign" aria-hidden="true">₱</span>
+                        <input id="newDeliveryTotal" type="text" inputmode="decimal" placeholder="0.00">
+                    </div>
                 </div>
                 <div class="modal-actions">
                     <button class="modal-action cancel" type="button" onclick="closeModal('addDeliveryModal')">Cancel</button>
@@ -1289,15 +1730,61 @@
             <div class="modal-form">
                 <div class="field">
                     <label for="editDeliveryCourier">Delivery Courier</label>
-                    <input id="editDeliveryCourier" class="force-uppercase" type="text" value="" autocapitalize="characters">
+                    <select id="editDeliveryCourier">
+                        <option value="">Select a courier</option>
+                        <option value="SELF-PICKUP">Self-pickup</option>
+                        <option value="LBC EXPRESS">LBC Express</option>
+                        <option value="TRANSPORTIFY">Transportify</option>
+                        <option value="LALAMOVE">Lalamove</option>
+                        <option value="others">Others</option>
+                    </select>
+                    <input id="editDeliveryCourierOther" class="courier-other force-uppercase" type="text" placeholder="Courier name" hidden>
+                </div>
+                <div class="field-pair">
+                    <div class="field">
+                        <label for="editDeliveryFirstName">First name</label>
+                        <input id="editDeliveryFirstName" type="text" placeholder="First name" autocomplete="given-name">
+                    </div>
+                    <div class="field">
+                        <label for="editDeliveryLastName">Last name</label>
+                        <input id="editDeliveryLastName" type="text" placeholder="Last name" autocomplete="family-name">
+                    </div>
                 </div>
                 <div class="field">
-                    <label for="editDeliveryDate">Date Ordered / Delivery</label>
-                    <input id="editDeliveryDate" type="date" value="">
+                    <label for="editDeliveryAddress">Address</label>
+                    <input id="editDeliveryAddress" type="text" placeholder="Street, city" autocomplete="street-address">
+                </div>
+                <div class="field-pair">
+                    <div class="field">
+                        <label for="editDeliveryEmail">Email</label>
+                        <input id="editDeliveryEmail" type="email" placeholder="buyer@email.com" autocomplete="email">
+                        <div id="editDeliveryEmailCommentWrap" hidden>
+                            <p class="field-note">This is not an email. Add a comment.</p>
+                            <textarea id="editDeliveryEmailComment" class="email-comment" rows="2" placeholder="Comment"></textarea>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="editDeliveryDate">Date ordered</label>
+                        <input id="editDeliveryDate" type="date" value="">
+                    </div>
                 </div>
                 <div class="field">
-                    <label for="editDeliveryQuantity">Quantity</label>
-                    <input id="editDeliveryQuantity" type="number" min="1" step="1" inputmode="numeric" placeholder="e.g. 100" value="">
+                    <span class="field-heading" id="editDeliveryItemsLabel">Tiles</span>
+                    <div class="item-editor-head" aria-hidden="true">
+                        <span>Tile name</span>
+                        <span>Size</span>
+                        <span>Quantity</span>
+                        <span></span>
+                    </div>
+                    <div class="item-editor" id="editDeliveryItems" aria-labelledby="editDeliveryItemsLabel"></div>
+                    <button class="item-add" type="button" onclick="addItemRow('editDeliveryItems')">+ Add another tile</button>
+                </div>
+                <div class="field">
+                    <label for="editDeliveryTotal">Total</label>
+                    <div class="peso-field">
+                        <span class="peso-sign" aria-hidden="true">₱</span>
+                        <input id="editDeliveryTotal" type="text" inputmode="decimal" placeholder="0.00">
+                    </div>
                 </div>
                 <div class="modal-actions">
                     <button class="modal-action cancel" type="button" onclick="closeModal('editDeliveryModal')">Cancel</button>
@@ -1307,11 +1794,78 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="completeDeliveryModal">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="completeDeliveryTitle">
+            <h3 id="completeDeliveryTitle">Complete Delivery</h3>
+            <p class="delete-delivery-copy" id="completeDeliveryPrompt"></p>
+            <div class="delete-delivery-summary" id="completeDeliverySummary"></div>
+            <div class="modal-actions">
+                <button class="modal-action cancel" type="button" onclick="cancelCompleteSelectedDeliveries()">Cancel</button>
+                <button class="modal-action confirm" type="button" onclick="confirmCompleteSelectedDeliveries()">Complete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="recentDeletedDeliveryModal">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="recentDeletedDeliveryTitle">
+            <div class="deleted-delivery-header">
+                <div class="deleted-delivery-heading">
+                    <button class="deleted-back-btn" type="button" onclick="closeModal('recentDeletedDeliveryModal')" aria-label="Back">&lt;</button>
+                    <h3 id="recentDeletedDeliveryTitle">Recently Deleted</h3>
+                </div>
+                <div class="deleted-delivery-actions">
+                    <button class="action-button restore-button" type="button" onclick="restoreDeletedDeliveries()">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        RESTORE
+                    </button>
+                    <button class="action-button delete-button" type="button" onclick="deleteDeletedDeliveries()">
+                        <i class="fa-solid fa-trash-can"></i>
+                        DELETE
+                    </button>
+                </div>
+            </div>
+            <div class="deleted-delivery-groups" id="deletedDeliveryList">
+                <section id="deletedSupplierGroup">
+                    <h4 class="deleted-group-title">SUPPLIER</h4>
+                    <div id="deletedSupplierList"></div>
+                </section>
+                <section id="deletedCustomerGroup">
+                    <h4 class="deleted-group-title">CUSTOMER</h4>
+                    <div id="deletedCustomerList"></div>
+                </section>
+            </div>
+            <p id="deletedDeliveryEmpty" hidden>No deleted deliveries.</p>
+        </div>
+    </div>
+    <div class="modal-overlay" id="permanentDeleteDeliveryModal">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="permanentDeleteDeliveryTitle">
+            <h3 id="permanentDeleteDeliveryTitle">Delete Delivery</h3>
+            <p class="delete-delivery-copy" id="permanentDeleteDeliveryPrompt"></p>
+            <div class="delete-delivery-summary" id="permanentDeleteDeliverySummary"></div>
+            <div class="modal-actions">
+                <button class="modal-action cancel" type="button" onclick="cancelPermanentDeleteDeliveries()">Cancel</button>
+                <button class="modal-action confirm" type="button" onclick="confirmPermanentDeleteDeliveries()">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="deleteDeliveryModal">
         <div class="modal-card delete-delivery-card" role="dialog" aria-modal="true" aria-labelledby="deleteDeliveryTitle">
             <h3 id="deleteDeliveryTitle">Delete Delivery</h3>
             <p class="delete-delivery-copy" id="deleteDeliveryPrompt"></p>
             <div class="delete-delivery-summary" id="deleteDeliverySummary"></div>
+            <div class="field">
+                <label for="deleteDeliveryReason">Reason for cancelling</label>
+                <select id="deleteDeliveryReason">
+                    <option value="">Select a reason</option>
+                    <option value="Changing the delivery courier">Changing the delivery courier</option>
+                    <option value="Customer cancelled the order">Customer cancelled the order</option>
+                    <option value="Wrong order details">Wrong order details</option>
+                    <option value="Out of stock">Out of stock</option>
+                    <option value="others">Others</option>
+                </select>
+                <textarea id="deleteDeliveryReasonNote" class="delete-reason-note" rows="3" hidden placeholder="Write the reason"></textarea>
+            </div>
             <div class="modal-actions">
                 <button class="modal-action cancel" type="button" onclick="cancelDeleteSelectedDeliveries()">Cancel</button>
                 <button class="modal-action confirm" type="button" onclick="confirmDeleteSelectedDeliveries()">Delete</button>
@@ -1328,7 +1882,11 @@
         const deliveryState = {
             editRow: null,
             editListId: null,
-            deleteRows: []
+            addListId: "supplierList",
+            deleteListId: "supplierList",
+            deleteRows: [],
+            completeRows: [],
+            permanentRows: []
         };
 
         function resolveActivityActor() {
@@ -1342,20 +1900,254 @@
                 : "Unknown User";
         }
 
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function formatPeso(amount) {
+            const number = Number(amount);
+            const safe = Number.isFinite(number) ? number : 0;
+            return "₱" + safe.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function parseMoney(value) {
+            const number = Number(String(value ?? "").replace(/[₱,\s]/g, ""));
+            return Number.isFinite(number) ? number : NaN;
+        }
+
+        function parseItemLine(line) {
+            const parts = String(line).split(/[·,]/).map((part) => part.trim()).filter(Boolean);
+
+            if (parts.length >= 3) {
+                const quantity = parts.slice(2).join(" ");
+                return {
+                    name: parts[0],
+                    size: parts[1],
+                    quantity: /pcs/i.test(quantity) ? quantity : `${quantity} pcs`
+                };
+            }
+
+            if (parts.length === 2) {
+                return { name: parts[0], size: parts[1], quantity: "" };
+            }
+
+            return { name: String(line).trim(), size: "", quantity: "" };
+        }
+
+        function parseOrderSummary(summary) {
+            const order = { buyer: "", address: "", email: "", comment: "", items: [] };
+
+            String(summary || "")
+                .split(/\n+/)
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .forEach((line) => {
+                    const nameMatch = line.match(/^Name:\s*(.*)$/i);
+                    const addressMatch = line.match(/^Address:\s*(.*)$/i);
+                    const emailMatch = line.match(/^Email:\s*(.*)$/i);
+                    const commentMatch = line.match(/^Comment:\s*(.*)$/i);
+
+                    if (nameMatch) {
+                        order.buyer = nameMatch[1].trim();
+                        return;
+                    }
+
+                    if (addressMatch) {
+                        order.address = addressMatch[1].trim();
+                        return;
+                    }
+
+                    if (emailMatch) {
+                        order.email = emailMatch[1].trim();
+                        return;
+                    }
+
+                    if (commentMatch) {
+                        order.comment = commentMatch[1].trim();
+                        return;
+                    }
+
+                    order.items.push(parseItemLine(line));
+                });
+
+            return order;
+        }
+
+        function serializeOrderSummary(order) {
+            const items = (order.items || [])
+                .filter((item) => item.name || item.size || item.quantity)
+                .map((item) => [item.name, item.size, item.quantity].filter(Boolean).join(" · "));
+
+            const lines = [
+                `Name: ${order.buyer || ""}`,
+                `Address: ${order.address || ""}`,
+                `Email: ${order.email || ""}`
+            ];
+            if (order.comment) lines.push(`Comment: ${order.comment}`);
+
+            return [...lines, ...items].join("\n");
+        }
+
+        function summaryMarkup(summary, date, full) {
+            const order = typeof summary === "object" && summary !== null
+                ? summary
+                : parseOrderSummary(summary);
+            const items = order.items.length
+                ? order.items
+                : [{ name: "", size: "", quantity: "" }];
+            const metaFields = [
+                ["Name", order.buyer, "summary-name"],
+                ["Address", order.address, "summary-address"],
+                ["Email", order.email, "summary-email"]
+            ];
+            if (order.comment) metaFields.push(["Comment", order.comment, "summary-comment"]);
+            metaFields.push(["Date", date || "", "summary-date"]);
+            const meta = metaFields.map(([label, value, className]) => `
+                <div class="summary-meta-row">
+                    <span class="field-label">${label}</span>
+                    <span class="field-value ${className}">${escapeHtml(value)}</span>
+                </div>
+            `).join("");
+            const rows = items.map((item) => `
+                <div class="summary-item" data-name="${escapeHtml(item.name)}" data-size="${escapeHtml(item.size)}" data-qty="${escapeHtml(item.quantity)}">
+                    <span class="summary-tile">${escapeHtml(item.name)}</span>
+                    <span class="summary-size">${escapeHtml(item.size)}</span>
+                    <span class="summary-qty">${escapeHtml(item.quantity)}</span>
+                </div>
+            `).join("");
+            const extra = Math.max(0, items.filter((item) => item.name || item.size || item.quantity).length - 1);
+            const toggle = full
+                ? ""
+                : `<button type="button" class="summary-toggle">${extra ? `See more (+${extra})` : "See more"}</button>`;
+
+            return `
+                <div class="summary-meta">${meta}</div>
+                <div class="summary-items">
+                    <div class="summary-item summary-item-head"><span>Tile</span><span>Size</span><span>Qty</span></div>
+                    ${rows}
+                </div>
+                ${toggle}
+            `;
+        }
+
+        function readStructuredOrder(summary) {
+            if (!summary?.querySelector(".summary-name, .summary-item")) return null;
+
+            return {
+                buyer: summary.querySelector(".summary-name")?.textContent.trim() || "",
+                address: summary.querySelector(".summary-address")?.textContent.trim() || "",
+                email: summary.querySelector(".summary-email")?.textContent.trim() || "",
+                comment: summary.querySelector(".summary-comment")?.textContent.trim() || "",
+                items: Array.from(summary.querySelectorAll(".summary-item:not(.summary-item-head)")).map((item) => ({
+                    name: item.dataset.name || item.querySelector(".summary-tile")?.textContent.trim() || "",
+                    size: item.dataset.size || item.querySelector(".summary-size")?.textContent.trim() || "",
+                    quantity: item.dataset.qty || item.querySelector(".summary-qty")?.textContent.trim() || ""
+                }))
+            };
+        }
+
+        function readDelivery(row) {
+            const summary = row.querySelector(".order-summary, .delivery-quantity");
+            const structured = readStructuredOrder(summary);
+            if (structured) {
+                return {
+                    courier: row.querySelector(".delivery-supplier")?.textContent.trim() || row.dataset?.courier || "",
+                    date: row.querySelector(".delivery-date")?.textContent.replace(/^DATE:\s*/i, "").trim() || row.dataset?.date || summary.querySelector(".summary-date")?.textContent.trim() || "",
+                    buyer: structured.buyer,
+                    address: structured.address,
+                    email: structured.email,
+                    comment: structured.comment,
+                    items: structured.items,
+                    itemsText: structured.items
+                        .map((item) => [item.name, item.size, item.quantity].filter(Boolean).join(" · "))
+                        .join("\n"),
+                    summary: serializeOrderSummary(structured),
+                    total: row.querySelector(".delivery-total")?.textContent.trim() || row.dataset?.total || ""
+                };
+            }
+
+            const fields = summary ? Array.from(summary.querySelectorAll(".summary-field")) : [];
+            const order = { buyer: "", address: "", email: "", comment: "", items: [] };
+            let currentItem = null;
+
+            fields.forEach((field) => {
+                const label = (field.querySelector(".field-label")?.textContent || "")
+                    .replace(/:$/, "")
+                    .trim()
+                    .toLowerCase();
+                const value = field.querySelector(".field-value")?.textContent.trim() || "";
+
+                if (label === "name") {
+                    order.buyer = value;
+                } else if (label === "address") {
+                    order.address = value;
+                } else if (label === "email") {
+                    order.email = value;
+                } else if (label === "comment") {
+                    order.comment = value;
+                } else if (label === "item description") {
+                    const splitAt = value.lastIndexOf(" & ");
+                    currentItem = splitAt === -1
+                        ? { name: value, size: "", quantity: "" }
+                        : {
+                            name: value.slice(0, splitAt).trim(),
+                            size: value.slice(splitAt + 3).trim(),
+                            quantity: ""
+                        };
+                    order.items.push(currentItem);
+                } else if (label === "quantity" && currentItem) {
+                    currentItem.quantity = value;
+                    currentItem = null;
+                }
+            });
+
+            const summaryText = fields.length
+                ? serializeOrderSummary(order)
+                : (summary?.textContent.trim() || row.dataset?.summary || "");
+
+            return {
+                courier: row.querySelector(".delivery-supplier")?.textContent.trim() || row.dataset?.courier || "",
+                date: row.querySelector(".delivery-date")?.textContent.replace(/^DATE:\s*/i, "").trim() || row.dataset?.date || "",
+                buyer: order.buyer,
+                address: order.address,
+                email: order.email,
+                comment: order.comment,
+                items: order.items,
+                itemsText: order.items
+                    .map((item) => [item.name, item.size, item.quantity].filter(Boolean).join(" · "))
+                    .join("\n"),
+                summary: summaryText,
+                total: row.querySelector(".delivery-total")?.textContent.trim() || row.dataset?.total || ""
+            };
+        }
+
+        function deliveryRowMarkup(data) {
+            return `
+                <div class="delivery-checkbox"><input type="checkbox" aria-label="Select ${escapeHtml(data.courier)}"></div>
+                <div class="col-courier delivery-supplier">${escapeHtml(data.courier)}</div>
+                <div class="col-date delivery-date">${escapeHtml(data.date)}</div>
+                <div class="col-summary order-summary delivery-quantity is-collapsed">${summaryMarkup(data.summary, data.date)}</div>
+                <div class="col-total delivery-total">${escapeHtml(data.total)}</div>
+            `;
+        }
+
         function logDeliveryActivity(action, row) {
             if (typeof window.appendEventLog !== "function") return;
 
-            const courier = row.querySelector(".delivery-supplier").textContent.trim();
-            const date = row.querySelector(".delivery-date").textContent.replace("DATE:", "").trim();
-            const quantity = row.querySelector(".delivery-quantity").textContent
-                .replace("Quantity:", "")
-                .replace("pcs", "")
-                .trim();
+            const data = readDelivery(row);
+            const reason = row.dataset.cancelReason ? ` · ${row.dataset.cancelReason}` : "";
 
             window.appendEventLog({
                 source: "Deliveries",
                 action,
-                details: `${courier} · ${date} · Quantity: ${quantity} pcs`,
+                details: `${data.courier} · ${data.date} · ${data.summary.replace(/\s*\n\s*/g, " / ")} · ${data.total}${reason}`,
                 actor: resolveActivityActor(),
                 timestamp: new Date().toISOString()
             });
@@ -1389,6 +2181,40 @@
         }
 
 
+        function deliveryConfirmMarkup(data, extraLines) {
+            const extras = (extraLines || [])
+                .map((line) => `<div class="delete-delivery-field"><span class="field-label">${escapeHtml(line.label)}:</span> ${escapeHtml(line.value)}</div>`)
+                .join("");
+
+            return `
+                <strong>${escapeHtml(data.courier)}</strong>
+                <div class="delete-delivery-field"><span class="field-label">DATE:</span> ${escapeHtml(data.date)}</div>
+                <div class="delete-delivery-field">
+                    <span class="field-label">ORDER SUMMARY:</span>
+                    <div class="order-summary">${summaryMarkup(data.summary, data.date, true)}</div>
+                </div>
+                <div class="delete-delivery-field"><span class="field-label">TOTAL:</span> ${escapeHtml(data.total)}</div>
+                ${extras}
+            `;
+        }
+
+        function fillDeliveryConfirm(summaryId, promptId, rows, singleText, manyText) {
+            const summary = document.getElementById(summaryId);
+            summary.replaceChildren();
+
+            rows.forEach((row) => {
+                const data = readDelivery(row);
+                const item = document.createElement("div");
+                item.className = "delete-delivery-item";
+                item.innerHTML = deliveryConfirmMarkup(data);
+                summary.appendChild(item);
+            });
+
+            const count = rows.length;
+            document.getElementById(promptId).textContent =
+                count === 1 ? singleText : manyText.replace("{count}", String(count));
+        }
+
         function completeSelected(type) {
 
             const listId =
@@ -1403,21 +2229,37 @@
                 return;
             }
 
-            selected.forEach(function (checkbox) {
+            deliveryState.completeRows = selected
+                .map((checkbox) => checkbox.closest(".delivery-row, .history-row"))
+                .filter(Boolean);
 
-                const row = checkbox.closest(".delivery-row");
+            fillDeliveryConfirm(
+                "completeDeliverySummary",
+                "completeDeliveryPrompt",
+                deliveryState.completeRows,
+                "Are you sure you want to mark this delivery as completed?",
+                "Are you sure you want to mark these {count} deliveries as completed?"
+            );
 
-                if (row) {
-                    logDeliveryActivity("Completed", row);
-                    document.getElementById("historyList").appendChild(
-                        createHistoryRow(row)
-                    );
+            openModal("completeDeliveryModal");
 
-                    row.remove();
-                }
+        }
 
+        function cancelCompleteSelectedDeliveries() {
+            deliveryState.completeRows = [];
+            closeModal("completeDeliveryModal");
+        }
+
+        function confirmCompleteSelectedDeliveries() {
+            deliveryState.completeRows.forEach((row) => {
+                logDeliveryActivity("Completed", row);
+                document.getElementById("historyList").appendChild(createHistoryRow(row));
+                row.remove();
             });
 
+            deliveryState.completeRows = [];
+            closeModal("completeDeliveryModal");
+            if (typeof syncDeliveriesCount === "function") syncDeliveriesCount();
         }
 
 
@@ -1427,23 +2269,8 @@
 
             historyRow.className = "history-row";
 
-            historyRow.innerHTML = `
-                <div class="delivery-checkbox">
-                    <input type="checkbox">
-                </div>
-
-                <div class="delivery-supplier">
-                    ${row.querySelector(".delivery-supplier").textContent.trim()}
-                </div>
-
-                <div class="delivery-date">
-                    ${row.querySelector(".delivery-date").textContent.trim()}
-                </div>
-
-                <div class="delivery-quantity">
-                    ${row.querySelector(".delivery-quantity").textContent.trim()}
-                </div>
-            `;
+            const data = readDelivery(row);
+            historyRow.innerHTML = deliveryRowMarkup(data);
 
             return historyRow;
         }
@@ -1466,32 +2293,21 @@
             deliveryState.deleteRows = selected
                 .map((checkbox) => checkbox.closest(".delivery-row"))
                 .filter(Boolean);
+            deliveryState.deleteListId = listId;
 
-            const summary = document.getElementById("deleteDeliverySummary");
-            summary.replaceChildren();
+            fillDeliveryConfirm(
+                "deleteDeliverySummary",
+                "deleteDeliveryPrompt",
+                deliveryState.deleteRows,
+                "Are you sure you want to cancel this delivery?",
+                "Are you sure you want to cancel these {count} deliveries?"
+            );
 
-            deliveryState.deleteRows.forEach((row) => {
-                const item = document.createElement("div");
-                item.className = "delete-delivery-item";
-
-                const supplier = document.createElement("strong");
-                supplier.textContent = row.querySelector(".delivery-supplier").textContent.trim();
-
-                const details = document.createElement("span");
-                details.textContent = [
-                    row.querySelector(".delivery-date").textContent.trim(),
-                    row.querySelector(".delivery-quantity").textContent.trim()
-                ].join(" | ");
-
-                item.append(supplier, details);
-                summary.appendChild(item);
-            });
-
-            const count = deliveryState.deleteRows.length;
-            document.getElementById("deleteDeliveryPrompt").textContent =
-                count === 1
-                    ? "Are you sure you want to delete this delivery?"
-                    : `Are you sure you want to delete these ${count} deliveries?`;
+            const reason = document.getElementById("deleteDeliveryReason");
+            const note = document.getElementById("deleteDeliveryReasonNote");
+            reason.value = "";
+            note.value = "";
+            note.hidden = true;
 
             openModal("deleteDeliveryModal");
         }
@@ -1502,12 +2318,156 @@
         }
 
         function confirmDeleteSelectedDeliveries() {
+            const reasonSelect = document.getElementById("deleteDeliveryReason");
+            const note = document.getElementById("deleteDeliveryReasonNote").value.trim();
+            const selectedReason = reasonSelect.value;
+
+            if (!selectedReason) {
+                alert("Please choose a reason for cancelling.");
+                return;
+            }
+
+            if (selectedReason === "others" && !note) {
+                alert("Please write the reason for cancelling.");
+                return;
+            }
+
+            const reasonText = selectedReason === "others" ? note : selectedReason;
+
             deliveryState.deleteRows.forEach((row) => {
-                logDeliveryActivity("Deleted", row);
+                const data = readDelivery(row);
+                row.dataset.cancelReason = reasonText;
+                logDeliveryActivity("Cancelled", row);
+
+                const entry = document.createElement("label");
+                entry.className = "deleted-card";
+                entry.dataset.sourceList = deliveryState.deleteListId;
+                entry.dataset.courier = data.courier;
+                entry.dataset.date = data.date;
+                entry.dataset.summary = data.summary;
+                entry.dataset.total = data.total;
+                entry.dataset.cancelReason = reasonText;
+                entry.innerHTML = `
+                    <input type="checkbox" aria-label="Select ${escapeHtml(data.courier)}">
+                    <div>
+                        <div class="deleted-card-top">
+                            <strong>${escapeHtml(data.courier)}</strong>
+                            <span class="deleted-card-total">${escapeHtml(data.total)}</span>
+                        </div>
+                        <div class="deleted-card-date">${escapeHtml(data.date)}</div>
+                        <div class="order-summary is-collapsed">${summaryMarkup(data.summary, data.date)}</div>
+                        <div class="deleted-reason">Reason: ${escapeHtml(reasonText)}</div>
+                    </div>
+                `;
+
+                const listId = deliveryState.deleteListId === "customerList"
+                    ? "deletedCustomerList"
+                    : "deletedSupplierList";
+                document.getElementById(listId).appendChild(entry);
                 row.remove();
             });
+
             deliveryState.deleteRows = [];
+            refreshDeletedDeliveries();
             closeModal("deleteDeliveryModal");
+            if (typeof syncDeliveriesCount === "function") syncDeliveriesCount();
+        }
+
+        function refreshDeletedDeliveries() {
+            const supplierCount = document.querySelectorAll("#deletedSupplierList .deleted-card").length;
+            const customerCount = document.querySelectorAll("#deletedCustomerList .deleted-card").length;
+            document.getElementById("deletedSupplierGroup").hidden = supplierCount === 0;
+            document.getElementById("deletedCustomerGroup").hidden = customerCount === 0;
+            document.getElementById("deletedDeliveryEmpty").hidden = supplierCount + customerCount > 0;
+        }
+
+        function selectedDeletedCards() {
+            return Array.from(document.querySelectorAll("#deletedDeliveryList .deleted-card"))
+                .filter((entry) => entry.querySelector("input[type='checkbox']")?.checked);
+        }
+
+        function openRecentlyDeletedDeliveries() {
+            refreshDeletedDeliveries();
+            openModal("recentDeletedDeliveryModal");
+        }
+
+        function restoreDeletedDeliveries() {
+            const entries = selectedDeletedCards();
+
+            if (entries.length === 0) {
+                alert("Please select a delivery to restore.");
+                return;
+            }
+
+            entries.forEach((entry) => {
+                const listId = entry.dataset.sourceList === "customerList" ? "customerList" : "supplierList";
+                const row = document.createElement("div");
+                row.className = "delivery-row";
+                row.innerHTML = deliveryRowMarkup({
+                    courier: entry.dataset.courier,
+                    date: entry.dataset.date,
+                    summary: entry.dataset.summary,
+                    total: entry.dataset.total
+                });
+                document.getElementById(listId).appendChild(row);
+                logDeliveryActivity("Restored", row);
+                entry.remove();
+            });
+
+            refreshDeletedDeliveries();
+            if (typeof syncDeliveriesCount === "function") syncDeliveriesCount();
+        }
+
+        function deleteDeletedDeliveries() {
+            const entries = selectedDeletedCards();
+
+            if (entries.length === 0) {
+                alert("Please select a delivery to delete.");
+                return;
+            }
+
+            deliveryState.permanentRows = entries;
+            const summary = document.getElementById("permanentDeleteDeliverySummary");
+            summary.replaceChildren();
+
+            entries.forEach((entry) => {
+                const item = document.createElement("div");
+                item.className = "delete-delivery-item";
+                const group = entry.dataset.sourceList === "customerList" ? "Customer" : "Supplier";
+                item.innerHTML = deliveryConfirmMarkup({
+                    courier: entry.dataset.courier || "Delivery",
+                    date: entry.dataset.date,
+                    summary: entry.dataset.summary,
+                    total: entry.dataset.total
+                }, [
+                    { label: "TYPE", value: group },
+                    { label: "REASON", value: entry.dataset.cancelReason || "" }
+                ]);
+                summary.appendChild(item);
+            });
+
+            const count = entries.length;
+            document.getElementById("permanentDeleteDeliveryPrompt").textContent =
+                count === 1
+                    ? "Are you sure you want to permanently delete this delivery?"
+                    : `Are you sure you want to permanently delete these ${count} deliveries?`;
+
+            openModal("permanentDeleteDeliveryModal");
+        }
+
+        function cancelPermanentDeleteDeliveries() {
+            deliveryState.permanentRows = [];
+            closeModal("permanentDeleteDeliveryModal");
+        }
+
+        function confirmPermanentDeleteDeliveries() {
+            deliveryState.permanentRows.forEach((entry) => {
+                logDeliveryActivity("Permanently deleted", entry);
+                entry.remove();
+            });
+            deliveryState.permanentRows = [];
+            refreshDeletedDeliveries();
+            closeModal("permanentDeleteDeliveryModal");
         }
 
         function formatDeliveryDateDisplay(isoDate) {
@@ -1548,11 +2508,140 @@
             return `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
         }
 
-        function addDelivery() {
+        const TILE_SIZES = ["30x60", "40x40", "60x60"];
+        const KNOWN_COURIERS = ["SELF-PICKUP", "LBC EXPRESS", "TRANSPORTIFY", "LALAMOVE"];
 
-            document.getElementById("newDeliveryCourier").value = "";
+        function isValidEmail(value) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+        }
+
+        function moneyInputValue(value) {
+            if (!String(value ?? "").trim()) return "";
+            const number = parseMoney(value);
+            if (!Number.isFinite(number)) return "";
+            return number.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function sizeOptions(selected) {
+            const size = String(selected || "").trim();
+            const sizes = !size || TILE_SIZES.includes(size) ? TILE_SIZES : [size, ...TILE_SIZES];
+            return [`<option value="">Size</option>`]
+                .concat(sizes.map((option) => `<option value="${escapeHtml(option)}"${option === size ? " selected" : ""}>${escapeHtml(option)}</option>`))
+                .join("");
+        }
+
+        function setCourierField(prefix, courier) {
+            const select = document.getElementById(`${prefix}Courier`);
+            const other = document.getElementById(`${prefix}CourierOther`);
+            const normalized = String(courier || "").trim().toUpperCase();
+
+            if (KNOWN_COURIERS.includes(normalized)) {
+                select.value = normalized;
+                other.hidden = true;
+                other.value = "";
+                return;
+            }
+
+            if (normalized) {
+                select.value = "others";
+                other.hidden = false;
+                other.value = normalized;
+                return;
+            }
+
+            select.value = "";
+            other.hidden = true;
+            other.value = "";
+        }
+
+        function syncEmailComment(prefix) {
+            const email = document.getElementById(`${prefix}Email`).value.trim();
+            const wrap = document.getElementById(`${prefix}EmailCommentWrap`);
+            const note = document.getElementById(`${prefix}EmailComment`);
+            const show = email.length > 0 && !isValidEmail(email);
+            wrap.hidden = !show;
+            if (!show) note.value = "";
+        }
+
+        function splitBuyerName(buyer) {
+            const parts = String(buyer || "").trim().split(/\s+/).filter(Boolean);
+            if (parts.length <= 1) return { first: parts[0] || "", last: "" };
+            return { first: parts.slice(0, -1).join(" "), last: parts[parts.length - 1] };
+        }
+
+        function quantityWithUnit(value) {
+            const digits = String(value || "").replace(/\D/g, "");
+            if (!digits || Number(digits) <= 0) return "";
+            return `${Number(digits)} pcs`;
+        }
+
+        function itemRowMarkup(item) {
+            const tile = item || { name: "", size: "", quantity: "" };
+            const quantity = String(tile.quantity || "").replace(/\D/g, "");
+            return `
+                <div class="item-editor-row">
+                    <input class="item-name" type="text" placeholder="Tile name" value="${escapeHtml(tile.name)}" aria-label="Tile name">
+                    <select class="item-size" aria-label="Tile size">${sizeOptions(tile.size)}</select>
+                    <input class="item-qty" type="text" inputmode="numeric" placeholder="Qty" value="${escapeHtml(quantity)}" aria-label="Quantity">
+                    <button class="item-remove" type="button" aria-label="Remove tile">&times;</button>
+                </div>
+            `;
+        }
+
+        function setItemEditor(containerId, items) {
+            const list = items && items.length ? items : [{ name: "", size: "", quantity: "" }];
+            document.getElementById(containerId).innerHTML = list.map(itemRowMarkup).join("");
+        }
+
+        function addItemRow(containerId) {
+            document.getElementById(containerId).insertAdjacentHTML("beforeend", itemRowMarkup());
+        }
+
+        function readItemEditor(containerId) {
+            return Array.from(document.querySelectorAll(`#${containerId} .item-editor-row`)).map((row) => ({
+                name: row.querySelector(".item-name").value.trim().toUpperCase(),
+                size: row.querySelector(".item-size").value.trim(),
+                quantity: quantityWithUnit(row.querySelector(".item-qty").value)
+            })).filter((item) => item.name || item.size || item.quantity);
+        }
+
+        function readDeliveryForm(prefix) {
+            const first = document.getElementById(`${prefix}FirstName`).value.trim();
+            const last = document.getElementById(`${prefix}LastName`).value.trim();
+            const courierChoice = document.getElementById(`${prefix}Courier`).value;
+            const courier = courierChoice === "others"
+                ? document.getElementById(`${prefix}CourierOther`).value.trim().toUpperCase()
+                : courierChoice;
+            const email = document.getElementById(`${prefix}Email`).value.trim();
+            const comment = document.getElementById(`${prefix}EmailComment`).value.trim();
+            return {
+                courier,
+                buyer: [first, last].filter(Boolean).join(" "),
+                address: document.getElementById(`${prefix}Address`).value.trim(),
+                email,
+                comment: isValidEmail(email) ? "" : comment,
+                dateValue: document.getElementById(`${prefix}Date`).value.trim(),
+                items: readItemEditor(`${prefix}Items`),
+                totalValue: document.getElementById(`${prefix}Total`).value.trim()
+            };
+        }
+
+        function addDelivery(type) {
+
+            deliveryState.addListId = type === "customer" ? "customerList" : "supplierList";
+            setCourierField("newDelivery", "");
+            document.getElementById("newDeliveryFirstName").value = "";
+            document.getElementById("newDeliveryLastName").value = "";
+            document.getElementById("newDeliveryAddress").value = "";
+            document.getElementById("newDeliveryEmail").value = "";
+            document.getElementById("newDeliveryEmailComment").value = "";
+            syncEmailComment("newDelivery");
             document.getElementById("newDeliveryDate").value = "";
-            document.getElementById("newDeliveryQuantity").value = "";
+            document.getElementById("newDeliveryTotal").value = "";
+            setItemEditor("newDeliveryItems");
             openModal("addDeliveryModal");
 
         }
@@ -1560,37 +2649,37 @@
 
         function confirmAddDelivery() {
 
-            const courier = document.getElementById("newDeliveryCourier").value.trim().toUpperCase();
-            const dateValue = document.getElementById("newDeliveryDate").value.trim();
-            const quantityValue = document.getElementById("newDeliveryQuantity").value.trim();
-            const quantity = Number(quantityValue);
+            const form = readDeliveryForm("newDelivery");
+            const totalNumber = parseMoney(form.totalValue);
+            const itemsReady = form.items.length > 0 && form.items.every((item) => item.name && item.size && item.quantity);
 
-            if (!courier || !dateValue || !quantityValue) {
-                alert("Please fill in all fields.");
+            if (!form.courier || !form.buyer || !form.address || !form.email || !form.dateValue || !itemsReady || !form.totalValue || !Number.isFinite(totalNumber)) {
+                alert("Please fill in the courier, buyer name, address, email, date, each tile, and total.");
                 return;
             }
 
-            if (!Number.isFinite(quantity) || quantity < 1 || !Number.isInteger(quantity)) {
-                alert("Please enter a whole number quantity.");
+            if (!isValidEmail(form.email) && !form.comment) {
+                alert("That is not an email. Add a comment.");
                 return;
             }
 
-            const date = formatDeliveryDateDisplay(dateValue);
-            const list = document.getElementById("supplierList");
+            const date = formatDeliveryDateDisplay(form.dateValue);
+            const summary = serializeOrderSummary({
+                buyer: form.buyer,
+                address: form.address,
+                email: form.email,
+                comment: form.comment,
+                items: form.items
+            });
+            const list = document.getElementById(deliveryState.addListId || "supplierList");
             const row = document.createElement("div");
             row.className = "delivery-row";
-            row.innerHTML = `
-                <div class="delivery-checkbox">
-                    <input type="checkbox">
-                </div>
-                <div class="delivery-supplier">${courier}</div>
-                <div class="delivery-date">DATE: ${date}</div>
-                <div class="delivery-quantity">Quantity: ${quantity} pcs</div>
-            `;
+            row.innerHTML = deliveryRowMarkup({ courier: form.courier, date, summary, total: formatPeso(totalNumber) });
 
             list.appendChild(row);
             logDeliveryActivity("Added", row);
             closeModal("addDeliveryModal");
+            if (typeof syncDeliveriesCount === "function") syncDeliveriesCount();
 
         }
 
@@ -1613,12 +2702,19 @@
             deliveryState.editRow = row;
             deliveryState.editListId = listId;
 
+            const data = readDelivery(row);
+            const buyer = splitBuyerName(data.buyer);
             document.getElementById("editDeliveryTitle").textContent = "Edit Delivery - " + (type.charAt(0).toUpperCase() + type.slice(1));
-            document.getElementById("editDeliveryCourier").value = row.querySelector(".delivery-supplier").textContent.trim();
-            document.getElementById("editDeliveryDate").value = toDeliveryDateInputValue(
-                row.querySelector(".delivery-date").textContent.replace("DATE:", "").trim()
-            );
-            document.getElementById("editDeliveryQuantity").value = row.querySelector(".delivery-quantity").textContent.replace("Quantity:", "").replace("pcs", "").trim();
+            setCourierField("editDelivery", data.courier);
+            document.getElementById("editDeliveryFirstName").value = buyer.first;
+            document.getElementById("editDeliveryLastName").value = buyer.last;
+            document.getElementById("editDeliveryAddress").value = data.address || "";
+            document.getElementById("editDeliveryEmail").value = data.email;
+            document.getElementById("editDeliveryEmailComment").value = data.comment || "";
+            syncEmailComment("editDelivery");
+            document.getElementById("editDeliveryDate").value = toDeliveryDateInputValue(data.date);
+            document.getElementById("editDeliveryTotal").value = moneyInputValue(data.total);
+            setItemEditor("editDeliveryItems", data.items);
 
             openModal("editDeliveryModal");
 
@@ -1631,26 +2727,37 @@
                 return;
             }
 
-            const courier = document.getElementById("editDeliveryCourier").value.trim().toUpperCase();
-            const dateValue = document.getElementById("editDeliveryDate").value.trim();
-            const quantityValue = document.getElementById("editDeliveryQuantity").value.trim();
-            const quantity = Number(quantityValue);
+            const form = readDeliveryForm("editDelivery");
+            const totalNumber = parseMoney(form.totalValue);
+            const itemsReady = form.items.length > 0 && form.items.every((item) => item.name && item.size && item.quantity);
 
-            if (!courier || !dateValue || !quantityValue) {
-                alert("Please fill in all fields.");
+            if (!form.courier || !form.buyer || !form.address || !form.email || !form.dateValue || !itemsReady || !form.totalValue || !Number.isFinite(totalNumber)) {
+                alert("Please fill in the courier, buyer name, address, email, date, each tile, and total.");
                 return;
             }
 
-            if (!Number.isFinite(quantity) || quantity < 1 || !Number.isInteger(quantity)) {
-                alert("Please enter a whole number quantity.");
+            if (!isValidEmail(form.email) && !form.comment) {
+                alert("That is not an email. Add a comment.");
                 return;
             }
 
-            const date = formatDeliveryDateDisplay(dateValue);
+            const date = formatDeliveryDateDisplay(form.dateValue);
+            const summary = serializeOrderSummary({
+                buyer: form.buyer,
+                address: form.address,
+                email: form.email,
+                comment: form.comment,
+                items: form.items
+            });
+            const courier = form.courier;
             const row = deliveryState.editRow;
+            const total = formatPeso(totalNumber);
             row.querySelector(".delivery-supplier").textContent = courier;
-            row.querySelector(".delivery-date").textContent = "DATE: " + date;
-            row.querySelector(".delivery-quantity").textContent = "Quantity: " + quantity + " pcs";
+            row.querySelector(".delivery-date").textContent = date;
+            row.querySelector(".order-summary").innerHTML = summaryMarkup(summary, date);
+            row.querySelector(".delivery-total").textContent = total;
+            const checkbox = row.querySelector("input[type='checkbox']");
+            if (checkbox) checkbox.setAttribute("aria-label", "Select " + courier);
 
             logDeliveryActivity("Edited", row);
             closeModal("editDeliveryModal");
@@ -1684,6 +2791,8 @@
 
             });
 
+            if (typeof syncDeliveriesCount === "function") syncDeliveriesCount();
+
         }
 
 
@@ -1693,39 +2802,92 @@
 
             deliveryRow.className = "delivery-row";
 
-            deliveryRow.innerHTML = `
-                <div class="delivery-checkbox">
-                    <input type="checkbox">
-                </div>
-
-                <div class="delivery-supplier">
-                    ${row.querySelector(".delivery-supplier").textContent.trim()}
-                </div>
-
-                <div class="delivery-date">
-                    ${row.querySelector(".delivery-date").textContent.trim()}
-                </div>
-
-                <div class="delivery-quantity">
-                    ${row.querySelector(".delivery-quantity").textContent.trim()}
-                </div>
-            `;
+            deliveryRow.innerHTML = deliveryRowMarkup(readDelivery(row));
 
             return deliveryRow;
         }
 
-        document.querySelectorAll("input.force-uppercase").forEach((input) => {
-            input.addEventListener("input", () => {
-                const start = input.selectionStart;
-                const end = input.selectionEnd;
-                input.value = input.value.toUpperCase();
-                if (typeof start === "number" && typeof end === "number") {
-                    input.setSelectionRange(start, end);
-                }
+        document.querySelectorAll(".delivery-row .order-summary, .history-row .order-summary").forEach((summary) => {
+            if (summary.querySelector(".summary-toggle")) return;
+            summary.classList.add("is-collapsed");
+            const row = summary.closest(".delivery-row, .history-row");
+            const data = readDelivery(row);
+            summary.innerHTML = summaryMarkup(data.summary, data.date);
+        });
+
+        document.addEventListener("click", (event) => {
+            const button = event.target.closest(".summary-toggle");
+            if (!button) return;
+            event.preventDefault();
+            event.stopPropagation();
+            const summary = button.closest(".order-summary");
+            if (!summary) return;
+            const collapsed = summary.classList.toggle("is-collapsed");
+            const extra = Math.max(0, summary.querySelectorAll(".summary-item:not(.summary-item-head)").length - 1);
+            button.textContent = collapsed ? (extra ? `See more (+${extra})` : "See more") : "See less";
+        });
+
+        document.getElementById("deleteDeliveryReason").addEventListener("change", function () {
+            const note = document.getElementById("deleteDeliveryReasonNote");
+            const isOthers = this.value === "others";
+            note.hidden = !isOthers;
+            if (!isOthers) note.value = "";
+        });
+
+        document.addEventListener("click", (event) => {
+            const button = event.target.closest(".item-remove");
+            if (!button) return;
+            const row = button.closest(".item-editor-row");
+            const list = row?.parentElement;
+            if (!row || !list) return;
+            if (list.querySelectorAll(".item-editor-row").length === 1) {
+                row.querySelectorAll("input").forEach((input) => {
+                    input.value = "";
+                });
+                row.querySelectorAll("select").forEach((select) => {
+                    select.value = "";
+                });
+                return;
+            }
+            row.remove();
+        });
+
+        document.addEventListener("input", (event) => {
+            const input = event.target;
+            if (!(input instanceof HTMLInputElement)) return;
+
+            if (input.classList.contains("item-qty")) {
+                const digits = input.value.replace(/\D/g, "");
+                if (input.value !== digits) input.value = digits;
+            }
+
+            if (!input.classList.contains("force-uppercase")) return;
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            input.value = input.value.toUpperCase();
+            if (typeof start === "number" && typeof end === "number") {
+                input.setSelectionRange(start, end);
+            }
+        });
+
+        ["newDelivery", "editDelivery"].forEach((prefix) => {
+            document.getElementById(`${prefix}Courier`).addEventListener("change", function () {
+                const other = document.getElementById(`${prefix}CourierOther`);
+                const isOthers = this.value === "others";
+                other.hidden = !isOthers;
+                if (!isOthers) other.value = "";
+            });
+
+            document.getElementById(`${prefix}Email`).addEventListener("input", function () {
+                syncEmailComment(prefix);
             });
         });
 
 
+    </script>
+    <script src="js/dashboard-stats.js"></script>
+    <script>
+        if (typeof syncDeliveriesCount === "function") syncDeliveriesCount();
     </script>
     <script type="module" src="js/auth-guard.js"></script>
     <script type="module" src="js/event-log.js"></script>

@@ -1094,7 +1094,7 @@ body {
     <div class="summary-info">
 
         <div class="summary-number">
-            3
+            6
         </div>
 
         <div class="summary-label">
@@ -1117,7 +1117,7 @@ body {
     <div class="summary-info">
 
         <div class="summary-number">
-            392
+            7
         </div>
 
         <div class="summary-label">
@@ -1140,11 +1140,11 @@ body {
     <div class="summary-info">
 
         <div class="summary-number sales-number">
-            30,670.00
+            0.00
         </div>
 
         <div class="summary-label">
-            Sales
+            Monthly Sales
         </div>
 
     </div>
@@ -1572,13 +1572,9 @@ body {
 </main>
 
 
+<script src="js/sales-data.js"></script>
+<script src="js/dashboard-stats.js"></script>
 <script>
-const dashboardSalesSearch = document.getElementById("dashboardSalesSearch");
-const dashboardSalesRows = Array.from(
-    document.querySelectorAll(".sales-table tbody tr")
-);
-const dashboardSalesCount = document.querySelector(".sales-clock");
-const dashboardOriginalSalesCount = dashboardSalesCount.textContent.trim();
 const dashboardSalesDate = document.getElementById("dashboardSalesDate");
 
 function updateDashboardSalesDate() {
@@ -1605,23 +1601,68 @@ function updateDashboardSalesDate() {
 updateDashboardSalesDate();
 window.setInterval(updateDashboardSalesDate, 60_000);
 
-dashboardSalesSearch.addEventListener("input", () => {
-    const searchTerm = dashboardSalesSearch.value.trim().toLowerCase();
-    let visibleRows = 0;
+if (typeof applyDashboardSummaryCounts === "function") {
+    applyDashboardSummaryCounts();
+}
 
-    dashboardSalesRows.forEach((row) => {
-        const matches = row.textContent.toLowerCase().includes(searchTerm);
-        row.style.display = matches ? "" : "none";
-        if (matches) visibleRows += 1;
+(function renderDashboardCurrentDaySales() {
+    const tbody = document.querySelector(".sales-table tbody");
+    const clock = document.querySelector(".sales-clock");
+    const dashboardSalesSearch = document.getElementById("dashboardSalesSearch");
+    if (!tbody || typeof SALES_DATA === "undefined") return;
+
+    const today = typeof toSalesDateValue === "function"
+        ? toSalesDateValue(new Date())
+        : new Date().toISOString().slice(0, 10);
+
+    const rows = SALES_DATA
+        .filter((row) => row.date === today)
+        .sort((a, b) => a.number - b.number);
+
+    tbody.innerHTML = "";
+
+    if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="padding: 18px; text-align: center; color: #666;">No sales found for today.</td></tr>';
+        if (clock) clock.textContent = "0";
+        return;
+    }
+
+    rows.forEach((row) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${row.timestamp}</td>
+            <td>${row.number}</td>
+            <td>${row.product}</td>
+            <td>${row.category}</td>
+            <td>${row.quantity}X</td>
+            <td>${Number(row.total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td>${row.date}</td>
+        `;
+        tbody.appendChild(tr);
     });
 
-    dashboardSalesCount.textContent = searchTerm
-        ? String(visibleRows)
-        : dashboardOriginalSalesCount;
-});
+    if (clock) clock.textContent = String(rows.length);
+    if (!dashboardSalesSearch || !clock) return;
+
+    const dashboardSalesRows = Array.from(tbody.querySelectorAll("tr"));
+    const dashboardOriginalSalesCount = clock.textContent.trim();
+
+    dashboardSalesSearch.addEventListener("input", () => {
+        const searchTerm = dashboardSalesSearch.value.trim().toLowerCase();
+        let visibleRows = 0;
+
+        dashboardSalesRows.forEach((row) => {
+            const matches = row.textContent.toLowerCase().includes(searchTerm);
+            row.style.display = matches ? "" : "none";
+            if (matches) visibleRows += 1;
+        });
+
+        clock.textContent = searchTerm
+            ? String(visibleRows)
+            : dashboardOriginalSalesCount;
+    });
+})();
 </script>
-
-
 <script type="module" src="js/auth-guard.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/header-date.js"></script>

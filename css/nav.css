@@ -1,3 +1,19 @@
+/* Laptop widths look zoomed in next to a 27-inch monitor.
+   90% scale is the same point of view as that monitor, and the tables fit. */
+@media (min-width: 768px) and (max-width: 1919px) {
+    html {
+        zoom: 0.9;
+    }
+
+    .sidebar {
+        height: calc(100vh / 0.9);
+    }
+
+    .main {
+        min-height: calc(100vh / 0.9);
+    }
+}
+
 .sidebar-header {
     padding-right: 16px;
 }

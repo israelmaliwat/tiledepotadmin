@@ -4,11 +4,24 @@ import { formatProfileName } from "./profile-name.js";
 const EVENT_LOG_STORAGE_KEY = "tileDepotEventLogs";
 const EVENT_LOG_RESET_KEY = "tileDepotEventLogsReset";
 const EVENT_LOG_RESET_TOKEN = "2026-10-15-reset";
-const EVENT_LOG_LIMIT = 200;
+const EVENT_LOG_RETENTION_DAYS = 90;
 const LEGACY_ACTIVITY_KEYS = [
     "tileDepotProductActivity",
     "tileDepotDeliveryActivity",
 ];
+
+function eventLogCutoff(now = new Date()) {
+    const cutoff = new Date(now);
+    cutoff.setHours(0, 0, 0, 0);
+    cutoff.setDate(cutoff.getDate() - EVENT_LOG_RETENTION_DAYS);
+    return cutoff.getTime();
+}
+
+function isWithinRetention(entry, cutoff = eventLogCutoff()) {
+    const time = Date.parse(entry?.timestamp || "");
+    if (Number.isNaN(time)) return true;
+    return time >= cutoff;
+}
 
 function resetEventLogsIfNeeded() {
     try {
@@ -42,7 +55,14 @@ export function getActivityActor() {
 export function loadEventLogs() {
     try {
         const entries = JSON.parse(localStorage.getItem(EVENT_LOG_STORAGE_KEY) || "[]");
-        return Array.isArray(entries) ? entries.slice(0, EVENT_LOG_LIMIT) : [];
+        if (!Array.isArray(entries)) return [];
+
+        const cutoff = eventLogCutoff();
+        const recent = entries.filter((entry) => isWithinRetention(entry, cutoff));
+        if (recent.length !== entries.length) {
+            localStorage.setItem(EVENT_LOG_STORAGE_KEY, JSON.stringify(recent));
+        }
+        return recent;
     } catch {
         return [];
     }
@@ -59,10 +79,9 @@ export function appendEventLog({ source, action, details, actor, timestamp }) {
 
     const entries = loadEventLogs();
     entries.unshift(entry);
-    const limited = entries.slice(0, EVENT_LOG_LIMIT);
 
     try {
-        localStorage.setItem(EVENT_LOG_STORAGE_KEY, JSON.stringify(limited));
+        localStorage.setItem(EVENT_LOG_STORAGE_KEY, JSON.stringify(entries));
     } catch (error) {
         console.warn("Could not save event log:", error);
     }

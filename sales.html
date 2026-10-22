@@ -302,9 +302,9 @@
 
             grid-template-columns: 1fr 1fr;
 
-            gap: 22px;
+            gap: 18px;
 
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
 
@@ -312,32 +312,57 @@
            CHART CONTAINER
         ========================================= */
 
-        .chart-card {
+        .chart-card,
+        .popular-card {
             background: white;
 
-            border: 1px solid #dddddd;
+            border: 1px solid #e6e6ee;
 
-            box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.15);
+            border-radius: 16px;
+
+            box-shadow: 0 10px 28px rgba(24, 0, 173, 0.06);
+
+            overflow: hidden;
         }
 
-        .chart-card-title {
-            height: 34px;
-
+        .chart-card-title,
+        .popular-title {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 2px;
 
-            padding: 0 12px;
+            padding: 14px 16px 12px;
 
-            border-bottom: 1px solid #1800ad;
+            border-bottom: 1px solid #ececf4;
 
-            font-size: 14px;
+            background: linear-gradient(180deg, #fbfbfe 0%, #ffffff 100%);
+        }
+
+        .chart-kicker {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #16161d;
+        }
+
+        .chart-subtitle {
+            font-size: 11px;
             font-weight: 500;
+            letter-spacing: 0;
+            color: #7d7d8d;
         }
 
         .chart-area {
-            height: 235px;
+            height: 268px;
 
-            padding: 12px 15px 10px 15px;
+            padding: 8px 12px 12px;
+        }
+
+        .chart-card:has(#categoryChart) .chart-area {
+            height: auto;
+            min-height: 268px;
         }
 
 
@@ -345,12 +370,15 @@
            BAR CHART
         ========================================= */
 
-        .bar-chart-wrapper {
+        .bar-chart-wrapper,
+        .popular-chart {
             width: 100%;
             height: 100%;
         }
 
-        #bestSellingChart {
+        #bestSellingChart,
+        #popularChart,
+        #categoryChart {
             width: 100% !important;
             height: 100% !important;
         }
@@ -364,16 +392,83 @@
             width: 100%;
             height: 100%;
 
-            display: flex;
+            display: grid;
+            grid-template-columns: minmax(150px, 190px) minmax(0, 1fr);
             align-items: center;
-            justify-content: center;
-
-            position: relative;
+            gap: 8px;
         }
 
-        #categoryChart {
-            max-width: 205px !important;
-            max-height: 205px !important;
+        .category-plot {
+            position: relative;
+            width: 100%;
+            height: 210px;
+        }
+
+        .category-legend {
+            list-style: none;
+            margin: 0;
+            padding: 0 8px 0 0;
+
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            min-width: 0;
+        }
+
+        .category-legend li {
+            display: grid;
+            grid-template-columns: 10px minmax(0, 1fr) auto;
+            gap: 8px;
+            align-items: center;
+
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        .legend-swatch {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+
+        .legend-name {
+            color: #2c2c36;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .legend-pct {
+            color: #1800ad;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .chart-empty {
+            display: none;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            color: #8a8a98;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            padding: 16px;
+        }
+
+        .chart-card.is-empty .chart-empty,
+        .popular-card.is-empty .chart-empty {
+            display: flex;
+        }
+
+        .chart-card.is-empty canvas,
+        .popular-card.is-empty canvas,
+        .chart-card.is-empty .category-legend,
+        .chart-card.is-empty .category-chart-wrapper,
+        .chart-card.is-empty .bar-chart-wrapper canvas {
+            display: none;
         }
 
 
@@ -383,39 +478,12 @@
 
         .popular-card {
             width: 100%;
-
-            background: white;
-
-            border: 1px solid #dddddd;
-
-            box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.15);
-
             margin-bottom: 24px;
         }
 
-        .popular-title {
-            height: 34px;
-
-            display: flex;
-            align-items: center;
-
-            padding: 0 24px;
-
-            border-bottom: 1px solid #1800ad;
-
-            font-size: 14px;
-            font-weight: 500;
-        }
-
         .popular-chart {
-            height: 270px;
-
-            padding: 14px 25px 20px 25px;
-        }
-
-        #popularChart {
-            width: 100% !important;
-            height: 100% !important;
+            height: 440px;
+            padding: 4px 12px 16px;
         }
 
 
@@ -742,11 +810,31 @@
             }
 
             .chart-area {
-                height: 250px;
+                height: 220px;
+            }
+
+            .chart-card:has(#categoryChart) .chart-area {
+                height: auto;
+                min-height: 0;
+            }
+
+            .category-chart-wrapper {
+                grid-template-columns: 1fr;
+                align-content: center;
+            }
+
+            .category-plot {
+                height: 180px;
+            }
+
+            .category-legend {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                padding: 0 8px 4px;
             }
 
             .popular-chart {
-                height: 250px;
+                height: 460px;
             }
 
         }
@@ -1099,7 +1187,8 @@
 
                     <div class="chart-card-title">
 
-                        BEST SELLING TILES SIZES
+                        <span class="chart-kicker">BEST SELLING TILE SIZES</span>
+                        <span class="chart-subtitle">Units sold, grouped by tile size</span>
 
                     </div>
 
@@ -1109,6 +1198,7 @@
                         <div class="bar-chart-wrapper">
 
                             <canvas id="bestSellingChart"></canvas>
+                            <div class="chart-empty">No sales to chart yet.</div>
 
                         </div>
 
@@ -1124,7 +1214,8 @@
 
                     <div class="chart-card-title">
 
-                        PRODUCT CATEGORY SPLIT
+                        <span class="chart-kicker">PRODUCT CATEGORY SPLIT</span>
+                        <span class="chart-subtitle">Share of units sold</span>
 
                     </div>
 
@@ -1133,9 +1224,13 @@
 
                         <div class="category-chart-wrapper">
 
-                            <canvas id="categoryChart"></canvas>
+                            <div class="category-plot">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                            <ul class="category-legend" id="categoryLegend"></ul>
 
                         </div>
+                        <div class="chart-empty">No sales to chart yet.</div>
 
                     </div>
 
@@ -1155,7 +1250,8 @@
 
                 <div class="popular-title">
 
-                    POPULAR PRODUCT LINES
+                    <span class="chart-kicker">POPULAR PRODUCT LINES</span>
+                    <span class="chart-subtitle">Sales volume vs days inventory outstanding</span>
 
                 </div>
 
@@ -1163,6 +1259,7 @@
                 <div class="popular-chart">
 
                     <canvas id="popularChart"></canvas>
+                    <div class="chart-empty">No sales to chart yet.</div>
 
                 </div>
 
@@ -1204,7 +1301,7 @@
                     <div class="sales-filter-controls">
                         <select class="sales-period-select" id="salesPeriodSelect">
                             <option value="day">Current Day</option>
-                            <option value="last30">Last 30 Days</option>
+                            <option value="month">Current Month</option>
                         </select>
 
                         <input class="sales-date-input" type="date" id="salesDatePicker" value="">
@@ -1298,26 +1395,15 @@
          JAVASCRIPT
     ========================================= -->
 
+    <script src="js/sales-data.js"></script>
     <script>
 
-        const salesData = [
-            { timestamp: "8:20 AM", number: 1, product: "BRICK-X", category: "TERRACOTTA", quantity: 30, total: 1200, date: "2026-09-26" },
-            { timestamp: "8:41 AM", number: 2, product: "LUXURY WHITE", category: "PORCELAIN", quantity: 5, total: 250, date: "2026-09-24" },
-            { timestamp: "10:39 AM", number: 3, product: "LUXURY WHITE", category: "PORCELAIN", quantity: 10, total: 500, date: "2026-09-20" },
-            { timestamp: "12:45 PM", number: 4, product: "WOODEN-NARA", category: "CERAMIC", quantity: 25, total: 750, date: "2026-09-18" },
-            { timestamp: "1:03 PM", number: 5, product: "WOODEN-BROWN", category: "CERAMIC", quantity: 48, total: 1440, date: "2026-09-16" },
-            { timestamp: "1:40 PM", number: 6, product: "BEIGE-MARBLE", category: "PORCELAIN", quantity: 30, total: 1500, date: "2026-09-12" },
-            { timestamp: "2:09 PM", number: 7, product: "WOODEN-LIGHT", category: "CERAMIC", quantity: 40, total: 1200, date: "2026-09-10" },
-            { timestamp: "3:30 PM", number: 8, product: "LUXURY BLACK", category: "PORCELAIN", quantity: 25, total: 1250, date: "2026-09-08" },
-            { timestamp: "9:15 AM", number: 9, product: "SANDSTONE", category: "CEMENT", quantity: 18, total: 900, date: "2026-09-22" },
-            { timestamp: "11:05 AM", number: 10, product: "MARBLE-ASH", category: "PORCELAIN", quantity: 12, total: 640, date: "2026-09-15" },
-            { timestamp: "4:25 PM", number: 11, product: "LUXURY BLACK", category: "PORCELAIN", quantity: 20, total: 1000, date: "2026-09-26" },
-            { timestamp: "7:10 AM", number: 12, product: "WOODEN-DARK", category: "CERAMIC", quantity: 22, total: 660, date: "2026-09-28" },
-            { timestamp: "10:20 AM", number: 13, product: "CHARCOAL", category: "PAVING BLOCKS", quantity: 14, total: 840, date: "2026-09-27" },
-            { timestamp: "12:10 PM", number: 14, product: "BROWN-EDGE", category: "VITRIFIED", quantity: 16, total: 1120, date: "2026-09-21" }
-        ];
+        const salesData = typeof SALES_DATA !== "undefined" ? SALES_DATA : [];
 
         function toDateInputValue(date) {
+            if (typeof toSalesDateValue === "function") {
+                return toSalesDateValue(date);
+            }
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, "0");
             const day = String(date.getDate()).padStart(2, "0");
@@ -1328,8 +1414,7 @@
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            const firstAllowedDate = new Date(today);
-            firstAllowedDate.setDate(firstAllowedDate.getDate() - 29);
+            const firstAllowedDate = new Date(today.getFullYear(), today.getMonth(), 1);
 
             return {
                 min: toDateInputValue(firstAllowedDate),
@@ -1367,15 +1452,15 @@
 
         function getSalesRows() {
             const selectedDate = new Date(salesState.selectedDate + "T00:00:00");
-            const firstDate = new Date(selectedDate);
-            firstDate.setDate(firstDate.getDate() - 29);
             const searchTerm = document.getElementById("salesSearchInput").value.trim().toLowerCase();
 
             const rows = salesData.filter((row) => {
                 const rowDate = new Date(row.date + "T00:00:00");
                 const matchesDate = salesState.mode === "day"
                     ? row.date === salesState.selectedDate
-                    : rowDate >= firstDate && rowDate <= selectedDate;
+                    : rowDate.getFullYear() === selectedDate.getFullYear()
+                        && rowDate.getMonth() === selectedDate.getMonth()
+                        && rowDate <= selectedDate;
 
                 if (!matchesDate) return false;
                 if (!searchTerm) return true;
@@ -1402,9 +1487,7 @@
             const tbody = document.getElementById("salesTableBody");
             const rows = getSalesRows();
             const selectedDate = new Date(salesState.selectedDate + "T00:00:00");
-            const endDate = selectedDate;
-            const startDate = new Date(selectedDate);
-            startDate.setDate(startDate.getDate() - 29);
+            const monthStart = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
 
             document.getElementById("salesDatePicker").value = salesState.selectedDate;
             document.getElementById("salesPeriodSelect").value = salesState.mode;
@@ -1414,9 +1497,12 @@
                 document.getElementById("salesTimeRange").textContent = formatShortDate(salesState.selectedDate) + " (Selected Day)";
                 document.getElementById("salesDateButtonText").textContent = formatLongDate(salesState.selectedDate);
             } else {
-                document.getElementById("salesTitle").textContent = "LAST 30 DAYS SALES";
-                document.getElementById("salesTimeRange").textContent = `${formatShortDate(startDate.toISOString().slice(0, 10))} – ${formatShortDate(endDate.toISOString().slice(0, 10))}`;
-                document.getElementById("salesDateButtonText").textContent = "LAST 30 DAYS";
+                document.getElementById("salesTitle").textContent = "CURRENT MONTH SALES";
+                document.getElementById("salesTimeRange").textContent = `${formatShortDate(toDateInputValue(monthStart))} – ${formatShortDate(salesState.selectedDate)}`;
+                document.getElementById("salesDateButtonText").textContent = new Intl.DateTimeFormat("en-US", {
+                    month: "long",
+                    year: "numeric"
+                }).format(selectedDate).toUpperCase();
             }
 
             document.getElementById("salesCountBadge").textContent = rows.length;
@@ -1470,588 +1556,538 @@
 
 
         /* =========================================
-           BEST SELLING TILE SIZES
+           SALES CHARTS
         ========================================= */
 
-        const bestSellingCtx =
-            document.getElementById(
-                "bestSellingChart"
-            );
+        const stockOnHand = {
+            "LUXURY WHITE": 223,
+            "LUXURY BLACK": 243,
+            "BRICK-LIGHT": 103,
+            "LONGITUDE": 343,
+            "WOODEN-BROWN": 233,
+            "WOODEN-DARK": 132,
+            "WOODEN-LIGHT": 421
+        };
 
+        const catalogSizes = {
+            "LUXURY WHITE": "30x60",
+            "LUXURY BLACK": "60x60",
+            "WOODEN-BROWN": "60x60",
+            "WOODEN-DARK": "40x40",
+            "WOODEN-LIGHT": "30x60"
+        };
 
-        new Chart(
-            bestSellingCtx,
-            {
+        const categoryColors = {
+            CERAMIC: "#1800ad",
+            PORCELAIN: "#4d42f5",
+            TERRACOTTA: "#d36b32",
+            CEMENT: "#8b8b98",
+            "PAVING BLOCKS": "#1f9d8a",
+            VITRIFIED: "#8d84ff"
+        };
 
+        const sizeColors = {
+            "30x60": "#1800ad",
+            "60x60": "#4d42f5",
+            "40x40": "#8d84ff",
+            unlisted: "#c5c6d0"
+        };
+
+        const fallbackColors = ["#1800ad", "#4d42f5", "#8d84ff", "#1f9d8a", "#d36b32", "#8b8b98"];
+
+        function toTitle(value) {
+            return String(value)
+                .toLowerCase()
+                .replace(/-/g, " ")
+                .replace(/\b[a-z]/g, (letter) => letter.toUpperCase());
+        }
+
+        function formatSize(size) {
+            if (!size || size === "unlisted") return "Unlisted size";
+            return size.replace("x", "×") + " cm";
+        }
+
+        function formatMoney(value) {
+            return Number(value).toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function groupSales(rows, getKey) {
+            const groups = new Map();
+
+            rows.forEach((row) => {
+                const key = getKey(row);
+                if (!groups.has(key)) {
+                    groups.set(key, { key, quantity: 0, total: 0, lines: [] });
+                }
+
+                const group = groups.get(key);
+                const quantity = Number(row.quantity) || 0;
+                const total = Number(row.total) || 0;
+                group.quantity += quantity;
+                group.total += total;
+
+                const line = group.lines.find((item) => item.product === row.product);
+                if (line) {
+                    line.quantity += quantity;
+                    line.total += total;
+                } else {
+                    group.lines.push({ product: row.product, quantity, total });
+                }
+            });
+
+            groups.forEach((group) => {
+                group.lines.sort((a, b) => b.quantity - a.quantity || b.total - a.total);
+            });
+
+            return [...groups.values()].sort((a, b) => b.quantity - a.quantity || b.total - a.total);
+        }
+
+        function sharePercents(groups) {
+            const total = groups.reduce((sum, group) => sum + group.quantity, 0);
+            const withShare = groups.map((group) => ({
+                ...group,
+                pct: total ? Math.round((group.quantity / total) * 1000) / 10 : 0
+            }));
+            const drift = Math.round((100 - withShare.reduce((sum, group) => sum + group.pct, 0)) * 10) / 10;
+            if (withShare.length && total && drift) {
+                withShare[0].pct = Math.round((withShare[0].pct + drift) * 10) / 10;
+            }
+            return { total, groups: withShare };
+        }
+
+        function lineSummary(lines) {
+            return lines.map((line) => `${toTitle(line.product)} · ${line.quantity.toLocaleString("en-US")} units · ${formatMoney(line.total)}`);
+        }
+
+        function setChartEmpty(card, isEmpty) {
+            if (!card) return;
+            card.classList.toggle("is-empty", isEmpty);
+        }
+
+        const barValuePlugin = {
+            id: "barValueLabels",
+            afterDatasetsDraw(chart) {
+                if (chart.config.type !== "bar") return;
+                const { ctx } = chart;
+                ctx.save();
+                ctx.font = "600 11px Poppins";
+                ctx.fillStyle = "#3d3d4a";
+                ctx.textAlign = "left";
+                ctx.textBaseline = "middle";
+                const meta = chart.getDatasetMeta(0);
+                meta.data.forEach((bar, index) => {
+                    const value = Number(chart.data.datasets[0].data[index]);
+                    if (!value) return;
+                    ctx.fillText(value.toLocaleString("en-US"), bar.x + 8, bar.y);
+                });
+                ctx.restore();
+            }
+        };
+
+        const centerUnitsPlugin = {
+            id: "centerUnits",
+            afterDraw(chart) {
+                if (chart.canvas.id !== "categoryChart") return;
+                const { ctx, chartArea } = chart;
+                if (!chartArea) return;
+                const total = chart.data.datasets[0].data.reduce((sum, value) => sum + Number(value), 0);
+                const x = (chartArea.left + chartArea.right) / 2;
+                const y = (chartArea.top + chartArea.bottom) / 2;
+                ctx.save();
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = "#1800ad";
+                ctx.font = "700 22px Poppins";
+                ctx.fillText(total.toLocaleString("en-US"), x, y - 9);
+                ctx.fillStyle = "#8a8a98";
+                ctx.font = "600 10px Poppins";
+                ctx.fillText("UNITS", x, y + 12);
+                ctx.restore();
+            }
+        };
+
+        const velocityGuidesPlugin = {
+            id: "velocityGuides",
+            afterDatasetsDraw(chart) {
+                if (chart.canvas.id !== "popularChart") return;
+                const guide = chart.options.plugins.velocityGuides || {};
+                const { ctx, chartArea, scales } = chart;
+                if (!chartArea || guide.x == null || guide.y == null) return;
+
+                const xPx = scales.x.getPixelForValue(guide.x);
+                const yPx = scales.y.getPixelForValue(guide.y);
+                ctx.save();
+                ctx.setLineDash([4, 6]);
+                ctx.strokeStyle = "rgba(80, 80, 80, 0.35)";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(xPx, chartArea.top);
+                ctx.lineTo(xPx, chartArea.bottom);
+                ctx.moveTo(chartArea.left, yPx);
+                ctx.lineTo(chartArea.right, yPx);
+                ctx.stroke();
+                ctx.restore();
+            }
+        };
+
+        const velocityLabelsPlugin = {
+            id: "velocityLabels",
+            afterDatasetsDraw(chart) {
+                if (chart.canvas.id !== "popularChart") return;
+                const { ctx } = chart;
+                ctx.save();
+                ctx.font = "600 11px Poppins";
+                ctx.fillStyle = "#2a2a34";
+                ctx.textBaseline = "middle";
+
+                const entries = [];
+                chart.data.datasets.forEach((dataset, datasetIndex) => {
+                    const meta = chart.getDatasetMeta(datasetIndex);
+                    meta.data.forEach((point, index) => {
+                        const item = dataset.data[index];
+                        if (item && point) entries.push({ point, item });
+                    });
+                });
+                entries.sort((a, b) => a.point.y - b.point.y || a.point.x - b.point.x);
+
+                const used = [];
+                entries.forEach((entry) => {
+                    const label = toTitle(entry.item.product);
+                    const width = ctx.measureText(label).width;
+                    const crowded = used.some((other) =>
+                        Math.hypot(other.px - entry.point.x, other.py - entry.point.y) < 90
+                    );
+                    const y = crowded ? entry.point.y + 22 : entry.point.y - 18;
+                    let x = entry.point.x + 10;
+                    if (x + width > chart.chartArea.right - 4) x = entry.point.x - width - 10;
+                    ctx.fillText(label, x, y);
+                    used.push({ px: entry.point.x, py: entry.point.y });
+                });
+
+                ctx.restore();
+            }
+        };
+
+        let bestSellingChart = null;
+        let categoryChart = null;
+        let popularChart = null;
+
+        function median(values) {
+            const sorted = values.filter((value) => Number.isFinite(value)).sort((a, b) => a - b);
+            if (!sorted.length) return 0;
+            const mid = Math.floor(sorted.length / 2);
+            if (sorted.length % 2) return sorted[mid];
+            return (sorted[mid - 1] + sorted[mid]) / 2;
+        }
+
+        function buildVelocityPoints(rows) {
+            const dated = rows
+                .map((row) => row.date)
+                .filter(Boolean)
+                .sort();
+            const spanDays = dated.length
+                ? Math.max(1, Math.round((new Date(dated[dated.length - 1] + "T00:00:00") - new Date(dated[0] + "T00:00:00")) / 86400000) + 1)
+                : 30;
+            const sold = groupSales(rows, (row) => row.product);
+            const points = sold
+                .filter((group) => stockOnHand[group.key] && group.quantity > 0)
+                .map((group) => ({
+                    product: group.key,
+                    stock: stockOnHand[group.key],
+                    units: group.quantity,
+                    monthly: group.quantity * (30 / spanDays),
+                    days: stockOnHand[group.key] * spanDays / group.quantity,
+                    x: stockOnHand[group.key] * spanDays / group.quantity,
+                    y: group.quantity * (30 / spanDays)
+                }));
+
+            return { points, spanDays };
+        }
+
+        function renderSalesCharts() {
+            if (!window.Chart) return;
+
+            Chart.defaults.font.family = "Poppins";
+            Chart.defaults.color = "#5c5c6e";
+            if (!Chart.registry.plugins.get("barValueLabels")) Chart.register(barValuePlugin);
+            if (!Chart.registry.plugins.get("centerUnits")) Chart.register(centerUnitsPlugin);
+            if (!Chart.registry.plugins.get("velocityGuides")) Chart.register(velocityGuidesPlugin);
+            if (!Chart.registry.plugins.get("velocityLabels")) Chart.register(velocityLabelsPlugin);
+
+            const rows = salesData;
+            const unitTotal = rows.reduce((sum, row) => sum + (Number(row.quantity) || 0), 0);
+            const salesCount = rows.length;
+            const sizedRows = rows.filter((row) => catalogSizes[row.product]);
+            const unlistedUnits = unitTotal - sizedRows.reduce((sum, row) => sum + (Number(row.quantity) || 0), 0);
+
+            const sizeGroups = groupSales(sizedRows, (row) => catalogSizes[row.product]);
+            const categoryGroups = sharePercents(groupSales(rows, (row) => row.category));
+            const velocity = buildVelocityPoints(rows);
+            const dayCutoff = median(velocity.points.map((point) => point.days));
+            const volumeCutoff = median(velocity.points.map((point) => point.monthly));
+            const fastPoints = velocity.points.filter((point) => point.days <= dayCutoff);
+            const slowPoints = velocity.points.filter((point) => point.days > dayCutoff);
+
+            const sizeCard = document.getElementById("bestSellingChart").closest(".chart-card");
+            const categoryCard = document.getElementById("categoryChart").closest(".chart-card");
+            const popularCard = document.getElementById("popularChart").closest(".popular-card");
+
+            sizeCard.querySelector(".chart-subtitle").textContent = unlistedUnits
+                ? `Catalog sizes · ${unlistedUnits.toLocaleString("en-US")} units have no listed size`
+                : `All recorded sales · ${unitTotal.toLocaleString("en-US")} units`;
+            categoryCard.querySelector(".chart-subtitle").textContent =
+                `All recorded sales · ${salesCount} transactions`;
+            popularCard.querySelector(".chart-subtitle").textContent = velocity.points.length
+                ? `${velocity.points.length} stocked lines with sales · fast-moving is at or under ${Math.round(dayCutoff)} days`
+                : "Needs stock on hand and recorded sales";
+
+            setChartEmpty(sizeCard, !sizeGroups.length);
+            setChartEmpty(categoryCard, !categoryGroups.groups.length);
+            setChartEmpty(popularCard, !velocity.points.length);
+
+            if (bestSellingChart) bestSellingChart.destroy();
+            if (categoryChart) categoryChart.destroy();
+            if (popularChart) popularChart.destroy();
+
+            const tooltipStyle = {
+                backgroundColor: "#1c1c28",
+                titleColor: "#ffffff",
+                bodyColor: "#ececf4",
+                padding: 12,
+                cornerRadius: 10,
+                titleFont: { family: "Poppins", size: 12, weight: "600" },
+                bodyFont: { family: "Poppins", size: 11 },
+                displayColors: false
+            };
+
+            const valueScale = {
+                beginAtZero: true,
+                grace: "22%",
+                grid: { color: "#f0f0f4", drawTicks: false },
+                border: { display: false },
+                ticks: {
+                    color: "#8d8d9a",
+                    precision: 0,
+                    font: { family: "Poppins", size: 11, weight: "500" }
+                }
+            };
+
+            const labelScale = {
+                grid: { display: false },
+                border: { display: false },
+                ticks: {
+                    color: "#2a2a34",
+                    padding: 8,
+                    font: { family: "Poppins", size: 11, weight: "600" }
+                }
+            };
+
+            bestSellingChart = new Chart(document.getElementById("bestSellingChart"), {
                 type: "bar",
-
                 data: {
-
-                    labels: [
-                        "30x60 cm",
-                        "60x60 cm",
-                        "40x40 cm"
-                    ],
-
-                    datasets: [
-
-                        {
-
-                            label: "Sales",
-
-                            data: [
-                                700,
-                                560,
-                                430
-                            ],
-
-                            backgroundColor: "#1800ad",
-
-                            borderWidth: 0
-
-                        }
-
-                    ]
-
+                    labels: sizeGroups.map((group) => formatSize(group.key)),
+                    datasets: [{
+                        data: sizeGroups.map((group) => group.quantity),
+                        backgroundColor: sizeGroups.map((group) => sizeColors[group.key] || "#c5c6d0"),
+                        borderRadius: 7,
+                        borderSkipped: false,
+                        maxBarThickness: 22
+                    }]
                 },
-
                 options: {
-
                     indexAxis: "y",
-
                     responsive: true,
-
                     maintainAspectRatio: false,
-
+                    layout: { padding: { right: 28, top: 6 } },
                     plugins: {
-
-                        legend: {
-                            display: false
-                        }
-
-                    },
-
-                    scales: {
-
-                        x: {
-
-                            beginAtZero: true,
-
-                            max: 850,
-
-                            ticks: {
-
-                                font: {
-                                    family: "Poppins",
-                                    size: 9
-                                }
-
-                            },
-
-                            grid: {
-                                color: "#bbbbbb"
-                            }
-
-                        },
-
-                        y: {
-
-                            ticks: {
-
-                                font: {
-                                    family: "Poppins",
-                                    size: 9
-                                }
-
-                            },
-
-                            grid: {
-                                display: false
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
-        );
-
-
-
-        /* =========================================
-           PRODUCT CATEGORY SPLIT
-        ========================================= */
-
-        const categoryCtx =
-            document.getElementById(
-                "categoryChart"
-            );
-
-
-        new Chart(
-            categoryCtx,
-            {
-
-                type: "doughnut",
-
-                data: {
-
-                    labels: [
-
-                        "Porcelain Tiles",
-                        "Vitrified Tiles",
-                        "Cement Tiles",
-                        "Paving Blocks",
-                        "Paving Tiles",
-                        "Ceramic Tiles"
-
-                    ],
-
-                    datasets: [
-
-                        {
-
-                            data: [
-                                40,
-                                1,
-                                2,
-                                4,
-                                25,
-                                28
-                            ],
-
-                            backgroundColor: [
-
-                                "#1800ad",
-                                "#666666",
-                                "#999999",
-                                "#b6afff",
-                                "#8176ff",
-                                "#5548ff"
-
-                            ],
-
-                            borderWidth: 0
-
-                        }
-
-                    ]
-
-                },
-
-                options: {
-
-                    responsive: true,
-
-                    maintainAspectRatio: false,
-
-                    cutout: "55%",
-
-                    plugins: {
-
-                        legend: {
-                            display: false
-                        }
-
-                    }
-
-                }
-
-            }
-        );
-
-
-
-        /* =========================================
-           POPULAR PRODUCT LINES
-        ========================================= */
-
-        const popularCtx =
-            document.getElementById(
-                "popularChart"
-            );
-
-
-        new Chart(
-            popularCtx,
-            {
-
-                type: "scatter",
-
-                data: {
-
-                    datasets: [
-
-                        {
-
-                            label: "Wooden Style Dark",
-
-                            data: [
-                                {
-                                    x: 35,
-                                    y: 420
-                                }
-                            ],
-
-                            pointRadius: 10,
-
-                            pointBackgroundColor:
-                                "transparent",
-
-                            pointBorderColor:
-                                "white",
-
-                            pointBorderWidth: 2
-
-                        },
-
-
-                        {
-
-                            label: "Wooden Style Light",
-
-                            data: [
-                                {
-                                    x: 38,
-                                    y: 385
-                                }
-                            ],
-
-                            pointRadius: 9,
-
-                            pointBackgroundColor:
-                                "transparent",
-
-                            pointBorderColor:
-                                "white",
-
-                            pointBorderWidth: 2
-
-                        },
-
-
-                        {
-
-                            label: "Wooden Style Brown",
-
-                            data: [
-                                {
-                                    x: 57,
-                                    y: 450
-                                }
-                            ],
-
-                            pointRadius: 9,
-
-                            pointBackgroundColor:
-                                "transparent",
-
-                            pointBorderColor:
-                                "white",
-
-                            pointBorderWidth: 2
-
-                        },
-
-
-                        {
-
-                            label: "Luxury White",
-
-                            data: [
-                                {
-                                    x: 88,
-                                    y: 405
-                                }
-                            ],
-
-                            pointRadius: 20,
-
-                            pointBackgroundColor:
-                                "transparent",
-
-                            pointBorderColor:
-                                "white",
-
-                            pointBorderWidth: 2
-
-                        },
-
-
-                        {
-
-                            label: "Luxury Black",
-
-                            data: [
-                                {
-                                    x: 108,
-                                    y: 355
-                                }
-                            ],
-
-                            pointRadius: 19,
-
-                            pointBackgroundColor:
-                                "transparent",
-
-                            pointBorderColor:
-                                "white",
-
-                            pointBorderWidth: 2
-
-                        },
-
-
-                        {
-
-                            label: "Wooden Style White",
-
-                            data: [
-                                {
-                                    x: 124,
-                                    y: 440
-                                }
-                            ],
-
-                            pointRadius: 13,
-
-                            pointBackgroundColor:
-                                "transparent",
-
-                            pointBorderColor:
-                                "white",
-
-                            pointBorderWidth: 2
-
-                        },
-
-
-                        {
-
-                            label: "Ash Gray Marble",
-
-                            data: [
-                                {
-                                    x: 123,
-                                    y: 370
-                                }
-                            ],
-
-                            pointRadius: 12,
-
-                            pointBackgroundColor:
-                                "transparent",
-
-                            pointBorderColor:
-                                "white",
-
-                            pointBorderWidth: 2
-
-                        },
-
-
-                        {
-
-                            label: "Brick Style",
-
-                            data: [
-                                {
-                                    x: 80,
-                                    y: 100
-                                }
-                            ],
-
-                            pointRadius: 9,
-
-                            pointBackgroundColor:
-                                "transparent",
-
-                            pointBorderColor:
-                                "white",
-
-                            pointBorderWidth: 2
-
-                        },
-
-
-                        {
-
-                            label: "Red Marble",
-
-                            data: [
-                                {
-                                    x: 122,
-                                    y: 160
-                                }
-                            ],
-
-                            pointRadius: 7,
-
-                            pointBackgroundColor:
-                                "transparent",
-
-                            pointBorderColor:
-                                "white",
-
-                            pointBorderWidth: 2
-
-                        },
-
-
-                        {
-
-                            label: "Cement Alloy",
-
-                            data: [
-                                {
-                                    x: 132,
-                                    y: 110
-                                }
-                            ],
-
-                            pointRadius: 12,
-
-                            pointBackgroundColor:
-                                "transparent",
-
-                            pointBorderColor:
-                                "white",
-
-                            pointBorderWidth: 2
-
-                        }
-
-                    ]
-
-                },
-
-                options: {
-
-                    responsive: true,
-
-                    maintainAspectRatio: false,
-
-                    plugins: {
-
-                        legend: {
-                            display: false
-                        },
-
+                        legend: { display: false },
                         tooltip: {
-                            enabled: true
-                        }
-
-                    },
-
-                    scales: {
-
-                        x: {
-
-                            min: 0,
-
-                            max: 160,
-
-                            title: {
-
-                                display: true,
-
-                                text:
-                                    "INVENTORY AGE (DAYS ON HAND)",
-
-                                font: {
-
-                                    family:
-                                        "Poppins",
-
-                                    size: 9
-
+                            ...tooltipStyle,
+                            callbacks: {
+                                title(items) {
+                                    return items[0].label;
+                                },
+                                label(item) {
+                                    const group = sizeGroups[item.dataIndex];
+                                    const share = unitTotal ? (group.quantity / unitTotal) * 100 : 0;
+                                    return `${group.quantity.toLocaleString("en-US")} units · ${share.toFixed(1)}% of all units · ${formatMoney(group.total)}`;
+                                },
+                                afterBody(items) {
+                                    return lineSummary(sizeGroups[items[0].dataIndex].lines);
                                 }
-
-                            },
-
-                            ticks: {
-
-                                stepSize: 10,
-
-                                font: {
-
-                                    family:
-                                        "Poppins",
-
-                                    size: 8
-
-                                }
-
-                            },
-
-                            grid: {
-
-                                color:
-                                    "rgba(80,80,80,0.3)"
-
                             }
-
-                        },
-
-                        y: {
-
-                            min: 0,
-
-                            max: 500,
-
-                            title: {
-
-                                display: true,
-
-                                text:
-                                    "MONTHLY SALES VOLUME (UNITS)",
-
-                                font: {
-
-                                    family:
-                                        "Poppins",
-
-                                    size: 9
-
-                                }
-
-                            },
-
-                            ticks: {
-
-                                stepSize: 100,
-
-                                font: {
-
-                                    family:
-                                        "Poppins",
-
-                                    size: 8
-
-                                }
-
-                            },
-
-                            grid: {
-
-                                color:
-                                    "rgba(80,80,80,0.3)"
-
-                            }
-
                         }
-
                     },
-
-                    animation: false
-
+                    scales: { x: valueScale, y: labelScale }
                 }
+            });
 
-            }
-        );
+            const legend = document.getElementById("categoryLegend");
+            legend.innerHTML = categoryGroups.groups.map((group, index) => {
+                const color = categoryColors[group.key] || fallbackColors[index % fallbackColors.length];
+                group.color = color;
+                return `
+                    <li>
+                        <span class="legend-swatch" style="background:${color}"></span>
+                        <span class="legend-name">${escapeHtml(toTitle(group.key))}</span>
+                        <span class="legend-pct">${group.pct.toFixed(1)}%</span>
+                    </li>
+                `;
+            }).join("");
 
+            categoryChart = new Chart(document.getElementById("categoryChart"), {
+                type: "doughnut",
+                data: {
+                    labels: categoryGroups.groups.map((group) => toTitle(group.key)),
+                    datasets: [{
+                        data: categoryGroups.groups.map((group) => group.quantity),
+                        backgroundColor: categoryGroups.groups.map((group) => group.color),
+                        borderColor: "#ffffff",
+                        borderWidth: 3,
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: "68%",
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            ...tooltipStyle,
+                            callbacks: {
+                                title(items) {
+                                    return items[0].label;
+                                },
+                                label(item) {
+                                    const group = categoryGroups.groups[item.dataIndex];
+                                    return `${group.quantity.toLocaleString("en-US")} units · ${group.pct.toFixed(1)}% · ${formatMoney(group.total)}`;
+                                },
+                                afterBody(items) {
+                                    return lineSummary(categoryGroups.groups[items[0].dataIndex].lines);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const maxDays = Math.max(...velocity.points.map((point) => point.days), 0);
+            const maxMonthly = Math.max(...velocity.points.map((point) => point.monthly), 0);
+
+            popularChart = new Chart(document.getElementById("popularChart"), {
+                type: "scatter",
+                data: {
+                    datasets: [
+                        {
+                            label: "Fast-Moving Products",
+                            data: fastPoints,
+                            backgroundColor: "#4c8dff",
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            pointHitRadius: 12
+                        },
+                        {
+                            label: "Slow-Moving Products",
+                            data: slowPoints,
+                            backgroundColor: "#f0a04b",
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            pointHitRadius: 12
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: { top: 8, right: 12 } },
+                    plugins: {
+                        velocityGuides: {
+                            x: dayCutoff,
+                            y: volumeCutoff
+                        },
+                        legend: {
+                            display: true,
+                            position: "top",
+                            align: "start",
+                            labels: {
+                                color: "#2a2a34",
+                                usePointStyle: true,
+                                pointStyle: "circle",
+                                boxWidth: 8,
+                                boxHeight: 8,
+                                padding: 18,
+                                font: { family: "Poppins", size: 12, weight: "500" }
+                            }
+                        },
+                        tooltip: {
+                            ...tooltipStyle,
+                            callbacks: {
+                                title(items) {
+                                    return toTitle(items[0].raw.product);
+                                },
+                                label(item) {
+                                    const point = item.raw;
+                                    return `${Math.round(point.monthly)} units / 30 days · ${Math.round(point.days)} days of stock`;
+                                },
+                                afterBody(items) {
+                                    const point = items[0].raw;
+                                    return `${point.stock.toLocaleString("en-US")} on hand · ${point.units.toLocaleString("en-US")} sold`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            min: 0,
+                            suggestedMax: Math.ceil(maxDays / 20) * 20 + 40,
+                            title: {
+                                display: true,
+                                text: "Days Inventory Outstanding (Days)",
+                                color: "#5c5c6e",
+                                font: { family: "Poppins", size: 12, weight: "500" }
+                            },
+                            grid: { color: "#f0f0f4", drawTicks: false },
+                            border: { display: false },
+                            ticks: {
+                                color: "#8d8d9a",
+                                font: { family: "Poppins", size: 11 }
+                            }
+                        },
+                        y: {
+                            min: 0,
+                            suggestedMax: Math.ceil(maxMonthly / 10) * 10 + 20,
+                            title: {
+                                display: true,
+                                text: "Monthly Sales Volume (Units)",
+                                color: "#5c5c6e",
+                                font: { family: "Poppins", size: 12, weight: "500" }
+                            },
+                            grid: { color: "#f0f0f4", drawTicks: false },
+                            border: { display: false },
+                            ticks: {
+                                color: "#8d8d9a",
+                                precision: 0,
+                                font: { family: "Poppins", size: 11 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        renderSalesCharts();
 
 
         /* =========================================

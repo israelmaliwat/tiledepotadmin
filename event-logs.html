@@ -225,6 +225,24 @@
         }
 
         .event-logs-list {
+            margin: 0;
+            padding: 0;
+        }
+
+        .event-log-day + .event-log-day {
+            margin-top: 22px;
+        }
+
+        .event-log-day-label {
+            margin: 0 0 4px;
+            padding: 4px 8px 8px;
+            border-bottom: 2px solid #1800ad;
+            font-size: 15px;
+            font-weight: 800;
+            color: #1800ad;
+        }
+
+        .event-log-day-list {
             list-style: none;
             margin: 0;
             padding: 0;
@@ -239,7 +257,7 @@
             border-bottom: 1px solid #bcbcbc;
         }
 
-        .event-log-entry:last-child {
+        .event-log-day-list .event-log-entry:last-child {
             border-bottom: none;
         }
 
@@ -425,7 +443,7 @@
 
             <section class="event-logs-panel" aria-labelledby="eventLogsHeading">
                 <div class="event-logs-toolbar">
-                    <p id="eventLogsHeading">Recent activity</p>
+                    <p id="eventLogsHeading">Last 90 days</p>
                     <label class="visually-hidden" for="eventLogSourceFilter">Filter by source</label>
                     <select id="eventLogSourceFilter" class="event-logs-filter" aria-label="Filter by source">
                         <option value="all">All sources</option>
@@ -434,7 +452,7 @@
                     </select>
                 </div>
 
-                <ol class="event-logs-list" id="eventLogsList" aria-live="polite"></ol>
+                <div class="event-logs-list" id="eventLogsList" aria-live="polite"></div>
             </section>
         </div>
     </main>
@@ -475,6 +493,36 @@
                 });
         }
 
+        const dayHeadingFormatter = new Intl.DateTimeFormat("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+        });
+
+        const timeFormatter = new Intl.DateTimeFormat(undefined, {
+            timeStyle: "short",
+        });
+
+        function startOfLocalDay(date) {
+            const day = new Date(date);
+            day.setHours(0, 0, 0, 0);
+            return day.getTime();
+        }
+
+        function dayHeading(timestamp) {
+            const parsed = new Date(timestamp);
+            if (Number.isNaN(parsed.getTime())) return "Unknown date";
+
+            const day = startOfLocalDay(parsed);
+            const today = startOfLocalDay(new Date());
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (day === today) return "Today";
+            if (day === yesterday.getTime()) return "Yesterday";
+            return dayHeadingFormatter.format(parsed);
+        }
+
         function renderEventLogs() {
             const selectedSource = sourceFilter.value;
             const entries = collectEventLogs().filter((entry) =>
@@ -484,60 +532,81 @@
             eventLogsList.replaceChildren();
 
             if (!entries.length) {
-                const emptyState = document.createElement("li");
+                const emptyState = document.createElement("p");
                 emptyState.className = "event-logs-empty";
-                emptyState.textContent = "No event logs yet.";
+                emptyState.textContent = "No event logs in the last 90 days.";
                 eventLogsList.appendChild(emptyState);
                 return;
             }
 
-            const formatter = new Intl.DateTimeFormat(undefined, {
-                dateStyle: "medium",
-                timeStyle: "short",
+            const groups = [];
+            entries.forEach((entry) => {
+                const label = dayHeading(entry.timestamp);
+                const current = groups[groups.length - 1];
+                if (!current || current.label !== label) {
+                    groups.push({ label, entries: [entry] });
+                    return;
+                }
+                current.entries.push(entry);
             });
 
-            entries.forEach((entry) => {
-                const listItem = document.createElement("li");
-                const actionKey = String(entry.action || "").toLowerCase();
-                let toneClass = "";
-                if (actionKey.includes("delete")) {
-                    toneClass = " is-deleted";
-                } else if (actionKey.includes("complete")) {
-                    toneClass = " is-complete";
-                } else if (actionKey.includes("restore")) {
-                    toneClass = " is-restored";
-                }
-                listItem.className = `event-log-entry${toneClass}`;
+            groups.forEach((group) => {
+                const section = document.createElement("section");
+                section.className = "event-log-day";
 
-                const source = document.createElement("span");
-                source.className = "event-log-source";
-                source.textContent = entry.source;
+                const heading = document.createElement("h2");
+                heading.className = "event-log-day-label";
+                heading.textContent = group.label;
 
-                const description = document.createElement("div");
-                description.className = "event-log-description";
+                const list = document.createElement("ol");
+                list.className = "event-log-day-list";
 
-                const action = document.createElement("strong");
-                action.textContent = `${entry.action} by ${entry.actor}`;
+                group.entries.forEach((entry) => {
+                    const listItem = document.createElement("li");
+                    const actionKey = String(entry.action || "").toLowerCase();
+                    let toneClass = "";
+                    if (actionKey.includes("delete")) {
+                        toneClass = " is-deleted";
+                    } else if (actionKey.includes("complete")) {
+                        toneClass = " is-complete";
+                    } else if (actionKey.includes("restore")) {
+                        toneClass = " is-restored";
+                    }
+                    listItem.className = `event-log-entry${toneClass}`;
 
-                const details = document.createElement("span");
-                details.className = "event-log-details";
-                details.textContent = entry.details;
+                    const source = document.createElement("span");
+                    source.className = "event-log-source";
+                    source.textContent = entry.source;
 
-                const time = document.createElement("time");
-                time.className = "event-log-time";
-                if (entry.timestamp) {
-                    time.dateTime = entry.timestamp;
-                    const parsed = new Date(entry.timestamp);
-                    time.textContent = Number.isNaN(parsed.getTime())
-                        ? entry.timestamp
-                        : formatter.format(parsed);
-                } else {
-                    time.textContent = "—";
-                }
+                    const description = document.createElement("div");
+                    description.className = "event-log-description";
 
-                description.append(action, details);
-                listItem.append(source, description, time);
-                eventLogsList.appendChild(listItem);
+                    const action = document.createElement("strong");
+                    action.textContent = `${entry.action} by ${entry.actor}`;
+
+                    const details = document.createElement("span");
+                    details.className = "event-log-details";
+                    details.textContent = entry.details;
+
+                    const time = document.createElement("time");
+                    time.className = "event-log-time";
+                    if (entry.timestamp) {
+                        time.dateTime = entry.timestamp;
+                        const parsed = new Date(entry.timestamp);
+                        time.textContent = Number.isNaN(parsed.getTime())
+                            ? entry.timestamp
+                            : timeFormatter.format(parsed);
+                    } else {
+                        time.textContent = "—";
+                    }
+
+                    description.append(action, details);
+                    listItem.append(source, description, time);
+                    list.appendChild(listItem);
+                });
+
+                section.append(heading, list);
+                eventLogsList.appendChild(section);
             });
         }
 
